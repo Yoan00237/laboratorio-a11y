@@ -561,6 +561,10 @@ body.arrastrando .mat-zona-soltar { border-color: #B8C3CF; }
 .pieza[aria-pressed="true"] { box-shadow: none; }
 .pieza:active { transform: none; }
 .chip-sw .codigo { font-family: var(--font-mono); font-size: 14px; }
+
+/* Sin sombras en el material de los ejercicios: nadie debe preguntarse si la sombra tiene que contrastar */
+.lienzo { --material-profundidad-principal: none; --material-profundidad-secundaria: none; }
+.lienzo .mat-btn, .lienzo .mat-btn[aria-pressed="true"], .lienzo .mat-card--seleccionable, .lienzo .mat-card--seleccionable[aria-checked="true"], .lienzo .nota-handoff.actual { box-shadow: none; }
 </style>
 </head>
 <body>
@@ -774,16 +778,16 @@ const C1_PREG = C1.map(c => ({
   id: c.id, item: c.item, ok: c.ok,
   esOk: v => c.ok === "exento" ? v === "exento" : v !== "exento" && ratio(v, c.fijo) >= 4.5,
   ver: v => v === "exento" ? "No requiere ajuste" : `${v} (${fmt(ratio(v, c.fijo))})`,
-  explica: c.ok === "exento" ? "No requiere ajuste: los componentes deshabilitados están exentos del contraste mínimo, y ninguno de sus tonos llega a 4.5:1" : `Cumple cualquier tono con 4.5:1 o más: ${c.tonos.filter(h => ratio(h, c.fijo) >= 4.5).map(h => `${h} (${fmt(ratio(h, c.fijo))})`).join(" o ")}`
+  explica: c.ok === "exento" ? "No requiere ajuste (exenta)" : c.tonos.filter(h => ratio(h, c.fijo) >= 4.5).map(h => `${h} (${fmt(ratio(h, c.fijo))})`).join(" o ")
 }));
 
 /* ---- Contraste 2 ---- */
 const C2_PREG = [
-  { id: "r1", item: "Ronda 1 · Borde de un input", ok: "A", explica: "A: #949494 llega a 3.03:1. B (#959595) se queda en 2.99:1 y no se redondea" },
-  { id: "r2", item: "Ronda 2 · Botón cerrar con solo ícono", ok: "B", explica: "B: #949494 llega a 3.03:1. A (#999999) se queda en 2.85:1. El borde muestra dónde está el botón, pero la X es lo que dice qué hace: también necesita 3:1" },
-  { id: "r3", item: "Ronda 3 · Toggle encendido", ok: "B", explica: "B: color sólido a 5.57:1. En el degradado de A se mide el punto más claro (2.66:1)" },
-  { id: "r4", item: "Ronda 4 · Card con sombra (no interactiva)", ok: "Ambos", explica: "Ambos: la sombra no es obligatoria si la card no es un control" },
-  { id: "r5", item: "Ronda 5 · Card seleccionable", ok: "Ambos", explica: "Ambos cumplen 3:1, pero el borde completo de A es mejor práctica" }
+  { id: "r1", item: "Ronda 1 · Borde de un input", ok: "A", explica: "A · borde #949494 (3.03:1)" },
+  { id: "r2", item: "Ronda 2 · Botón cerrar con solo ícono", ok: "B", explica: "B · ícono #949494 (3.03:1)" },
+  { id: "r3", item: "Ronda 3 · Toggle encendido", ok: "B", explica: "B · riel #0066CC (5.57:1)" },
+  { id: "r4", item: "Ronda 4 · Card con sombra (no interactiva)", ok: "Ambos", explica: "Ambos · no es un control" },
+  { id: "r5", item: "Ronda 5 · Card seleccionable", ok: "Ambos", explica: "Ambos · borde #767676 (4.54:1)" }
 ];
 
 const C2 = [
@@ -806,12 +810,12 @@ const irPaso = n => (st, b) => { const a = b.dataset.accion, k = st.paso || 0; s
 const T1 = [
   { nombre: "Botón", comp: "Botón", pregunta: "¿Cuál necesita texto alternativo funcional?" },
   { nombre: "Alerta y tarjeta", comp: "Alerta y tarjeta de noticia", pregunta: "¿Cuál lleva un texto alternativo informativo?" },
-  { nombre: "Gráfico", comp: "Gráfico de barras en una tarjeta", pregunta: "¿Cuál necesita una descripción extendida?" }
+  { nombre: "Gráfico", comp: "Gráfico de inscritos en una tarjeta", pregunta: "Los dos muestran el mismo gráfico. ¿Cuál necesita una descripción extendida?" }
 ];
 const T1_PREG = [
   { id: "r1", item: "Ronda 1 · Botón: texto alternativo funcional", ok: "A", explica: 'A: el botón solo tiene la lupa, así que su texto alternativo dice la acción: "Buscar". En B la lupa es decorativa porque el botón ya dice "Buscar"' },
   { id: "r2", item: "Ronda 2 · Texto alternativo informativo", ok: "B", explica: "B: el pie dice quién la pintó, pero no qué muestra; el texto alternativo describe la pintura. El ícono de la alerta (A) es decorativo porque el texto ya da el mensaje" },
-  { id: "r3", item: "Ronda 3 · Descripción extendida", ok: "B", explica: "B: no tiene los datos en la página. A solo necesita un texto breve que remita a la tabla" }];
+  { id: "r3", item: "Ronda 3 · Descripción extendida", ok: "B", explica: "B · los datos solo están en la imagen. A ya tiene la tabla" }];
 
 /* ---- Contraste 3 (torta) ---- */
 const TORTA = [
@@ -836,7 +840,7 @@ function tortaSVG(st) {
     const a1 = a0 + d.v / total * Math.PI * 2, large = (a1 - a0) > Math.PI ? 1 : 0;
     const path = `M0 0 L${(Math.cos(a0) * R).toFixed(2)} ${(Math.sin(a0) * R).toFixed(2)} A${R} ${R} 0 ${large} 1 ${(Math.cos(a1) * R).toFixed(2)} ${(Math.sin(a1) * R).toFixed(2)} Z`;
     if (z.degradados.pie) defs += `<radialGradient id="pg-${i}" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="${R}"><stop offset="0" stop-color="${lighten(d.color, .75)}"/><stop offset="1" stop-color="${d.color}"/></radialGradient>`;
-    sl += `<path d="${path}" fill="${z.degradados.pie ? `url(#pg-${i})` : d.color}"${z.lineas.pie ? ' stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"' : ""}/>`;
+    sl += `<path d="${path}" fill="${z.degradados.pie ? `url(#pg-${i})` : d.color}"${z.lineas.pie ? ' stroke="#16202B" stroke-width="3" stroke-linejoin="round"' : ""}/>`;
     if (z.tramas.pie) ov += `<path d="${path}" fill="url(#pat-${i})"/>`;
     const mid = (a0 + a1) / 2, cx = Math.cos(mid) * R * .62, cy = Math.sin(mid) * R * .62, both = z.iconos.pie && z.numeros.pie;
     if (z.iconos.pie) mk += tIcon(d.icon, cx, cy - (both ? 12 : 0), 26, "#FFFFFF");
@@ -869,28 +873,24 @@ const c3Aplicado = (st, id) => st.z[id].pie || st.z[id].legend;
 const C3_CODIGOS = ["tramas", "iconos", "numeros"];
 function c3Eval(st) {
   const z = st.z, filas = [];
-  const usado = id => c3Aplicado(st, id);
+  const usado = id => c3Aplicado(st, id), ambos = id => z[id].pie && z[id].legend;
   const donde = id => z[id].pie && z[id].legend ? "Torta y leyenda" : z[id].pie ? "Torta" : z[id].legend ? "Leyenda" : "No lo usaste";
-  const codigos = C3_CODIGOS.filter(usado), satura = codigos.length >= 2;
-  let pts = (z.texto.pie ? 1 : 0) + (z.lineas.pie ? 1 : 0);
-  if (codigos.length === 1) pts += z[codigos[0]].pie && z[codigos[0]].legend ? 2 : 1;
-  if (satura) pts -= 1;
-  if (usado("sombras")) pts -= 1;
-  if (usado("degradados")) pts -= 1;
-  const row = (id, item, ok, txt) => filas.push({ item, tu: donde(id), correcta: txt, ok });
-  row("texto", "Texto", z.texto.pie, "Fijo: en la torta, el nombre y el porcentaje se leen sin color (+1). En la leyenda es opcional");
-  row("lineas", "Líneas", z.lineas.pie, "Fijo: en la torta, separan las porciones vecinas (+1)");
+  let pts = 0;
+  const row = (id, item, ok, p) => { if (p > 0) pts += p; filas.push({ item, tu: donde(id), correcta: p > 0 ? `+${p}` : p === 0 ? "0" : "—", ok }); };
+  row("texto", "Texto (torta y leyenda)", ambos("texto"), ambos("texto") ? 1 : 0);
+  const lin = z.lineas.pie && !z.lineas.legend;
+  row("lineas", "Líneas (solo en la torta)", lin, lin ? 1 : 0);
+  let codigo = false;
   const nombres = { tramas: "Tramas", iconos: "Íconos", numeros: "Números" };
   C3_CODIGOS.forEach(id => {
-    const txt = !usado(id) ? "Opcional: puede ser el tercer elemento, si no usas otro de tramas, íconos o números"
-      : satura ? "Sobresatura: usa solo uno de tramas, íconos o números (−1 por mezclarlos)"
-      : "Buen tercer elemento: uno solo de tramas, íconos o números, en la torta y en la leyenda (+2; +1 si está solo en una)";
-    row(id, nombres[id], !usado(id) ? null : !satura && z[id].pie && z[id].legend, txt);
+    const n = `${nombres[id]} (torta y leyenda)`;
+    if (!usado(id)) { filas.push({ item: n, tu: "No lo usaste", correcta: "—", ok: null }); return; }
+    if (!ambos(id)) { row(id, n, false, 0); return; }
+    if (codigo) { filas.push({ item: n, tu: donde(id), correcta: "0 · ya sumó otro código", ok: null }); return; }
+    codigo = true; row(id, n, true, 1);
   });
-  row("sombras", "Sombras", usado("sombras") ? false : true, "No recomendable: no aporta información (−1 si se usa)");
-  row("degradados", "Degradados", usado("degradados") ? false : true, "No: dificulta distinguir los tonos (−1 si se usa)");
-  const p = Math.max(0, Math.min(4, pts));
-  return { puntos: Math.round(p / 4 * 100), fraccion: p / 4, aciertos: `${p} de 4 puntos`, filas };
+  ["sombras", "degradados"].forEach(id => filas.push({ item: id === "sombras" ? "Sombras" : "Degradados", tu: donde(id), correcta: usado(id) ? "0 · no da información" : "—", ok: null }));
+  return { puntos: Math.round(pts / 3 * 100), fraccion: pts / 3, aciertos: `${pts} de 3 puntos`, filas, colCorrecta: "Puntos" };
 }
 
 /* ---- Textos alternativos 2 ---- */
@@ -959,16 +959,22 @@ function s1Eval(st) {
   const hx = (esc, v) => v == null ? null : esc[+v][1];
   const g = e => ({ t: hx(NEUTRO, st.s[e].t), f: hx(VERDE, st.s[e].f), b: st.s[e].b == null ? undefined : st.s[e].b === "none" ? null : VERDE[+st.s[e].b][1], i: hx(NEUTRO, st.s[e].i) });
   const filas = [];
-  S1_EST.forEach(([e, n]) => { const c = g(e); if (!c.t || !c.f) { filas.push({ item: `Texto vs. fondo en ${n}`, tu: `Sin elegir ${!c.t && !c.f ? "texto ni fondo" : !c.t ? "texto" : "fondo"}`, correcta: "Mínimo 4.5:1 (1.4.3)", ok: false }); return; } const r = ratio(c.t, c.f); filas.push({ item: `Texto vs. fondo en ${n}`, tu: `${c.t} sobre ${c.f} = ${fmt(r)}`, correcta: "Mínimo 4.5:1 (1.4.3)", ok: r >= 4.5 }); });
-  const fo = g("focus"); const rr = fo.b ? ratio(fo.b, S1_PAGINA) : 0;
-  filas.push({ item: "Borde de foco vs. fondo de la página", tu: fo.b === undefined ? "Sin elegir" : fo.b ? `${fo.b} sobre ${S1_PAGINA} = ${fmt(rr)}` : "Sin borde de foco", correcta: `Mínimo 3:1 contra el fondo de la página (${S1_PAGINA}), desde Verde 700. Verde 600 cumplía en blanco, pero no en gris (1.4.11 y 2.4.7)`, ok: !!fo.b && rr >= 3 });
-  const d = st.s.default, h = st.s.hover, completo = x => x.t != null && x.f != null && x.b != null;
-  const dif = completo(d) && completo(h) && (d.t !== h.t || d.f !== h.f || d.b !== h.b);
-  filas.push({ item: "Hover distinto de default", tu: !completo(d) || !completo(h) ? "Falta elegir colores" : dif ? "Sí cambia" : "Es igual a default", correcta: "Que se note el cambio (buena práctica)", ok: dif });
+  S1_EST.forEach(([e, n]) => {
+    const c = g(e);
+    if (!c.t || !c.f) filas.push({ item: `${n} · texto`, tu: "Sin elegir", correcta: "4.5:1 o más contra el fondo del botón", ok: false });
+    else { const r = ratio(c.t, c.f); filas.push({ item: `${n} · texto`, tu: `${c.t} sobre ${c.f} (${fmt(r)})`, correcta: "4.5:1 o más contra el fondo del botón", ok: r >= 4.5 }); }
+    if (!c.i || !c.f) filas.push({ item: `${n} · ícono`, tu: "Sin elegir", correcta: "3:1 o más contra el fondo del botón", ok: false });
+    else { const r = ratio(c.i, c.f); filas.push({ item: `${n} · ícono`, tu: `${c.i} sobre ${c.f} (${fmt(r)})`, correcta: "3:1 o más contra el fondo del botón", ok: r >= 3 }); }
+    const foco = e === "focus", corr = foco ? `Obligatorio: 3:1 o más contra la página (${S1_PAGINA})` : `Sin borde, o 3:1 o más contra la página (${S1_PAGINA})`;
+    if (c.b === undefined) filas.push({ item: `${n} · ${foco ? "borde de foco" : "borde"}`, tu: "Sin elegir", correcta: corr, ok: false });
+    else if (!c.b) filas.push({ item: `${n} · ${foco ? "borde de foco" : "borde"}`, tu: "Sin borde", correcta: corr, ok: !foco });
+    else { const r = ratio(c.b, S1_PAGINA); filas.push({ item: `${n} · ${foco ? "borde de foco" : "borde"}`, tu: `${c.b} sobre ${S1_PAGINA} (${fmt(r)})`, correcta: corr, ok: r >= 3 }); }
+  });
   const a = filas.filter(x => x.ok).length;
-  const di = g("default");
-  filas.push({ item: "Ícono vs. fondo (no suma puntos)", tu: di.i && di.f ? `${fmt(ratio(di.i, di.f))}` : "Sin elegir", correcta: "Buena práctica 3:1; es decorativo porque el botón tiene texto", ok: null });
-  return { puntos: Math.round(a / 5 * 100), fraccion: a / 5, aciertos: `${a} de 5 correctas`, filas };
+  const d = st.s.default, h = st.s.hover, completo = x => x.t != null && x.f != null && x.b != null && x.i != null;
+  const dif = completo(d) && completo(h) && (d.t !== h.t || d.f !== h.f || d.b !== h.b || d.i !== h.i);
+  filas.push({ item: "Hover distinto de Default (no suma puntos)", tu: !completo(d) || !completo(h) ? "Falta elegir colores" : dif ? "Sí cambia" : "Es igual a Default", correcta: "Buena práctica: que se note el cambio", ok: null });
+  return { puntos: Math.round(a / 9 * 100), fraccion: a / 9, aciertos: `${a} de 9 correctas`, filas };
 }
 
 /* ---- Estados 2 ---- */
@@ -1154,16 +1160,19 @@ function lzC3(st) {
 function lzT1(st) {
   const k = st.paso || 0, r = T1[k];
   const pintura = `<svg viewBox="0 0 160 110" style="width:100%;height:auto;display:block;background:#F2C14E;border-radius:8px" aria-hidden="true"><circle cx="122" cy="26" r="14" fill="#FFF3C4"/><path d="M58 98 Q52 70 66 56 L62 38 L72 50 Q80 46 88 50 L98 38 L94 56 Q108 70 102 98 Z" fill="#16202B"/><path d="M100 92 Q124 88 118 70" stroke="#16202B" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`;
-  const meses = [["Ago", 40], ["Set", 55], ["Oct", 30], ["Nov", 65]];
-  const barras = `<svg viewBox="0 0 200 130" style="width:100%;height:auto;display:block" aria-hidden="true"><line x1="16" y1="104" x2="192" y2="104" stroke="#767676" stroke-width="1.5"/>${meses.map(([m, v], i) => `<rect x="${26 + i * 42}" y="${104 - v * 1.3}" width="28" height="${v * 1.3}" rx="3" fill="#2F6FD0"/><text x="${40 + i * 42}" y="122" text-anchor="middle" font-size="11" fill="#55606E">${m}</text>`).join("")}</svg>`;
-  const tabla = `<table style="font-size:13px;width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:4px 6px;color:#55606E;border-bottom:1px solid #CDD5DF">Mes</th>${meses.map(([m]) => `<th style="padding:4px 6px;color:#55606E;border-bottom:1px solid #CDD5DF">${m}</th>`).join("")}</tr></thead><tbody><tr><td style="padding:4px 6px">Inscritos</td>${meses.map(([, v]) => `<td style="padding:4px 6px;text-align:center">${v}</td>`).join("")}</tr></tbody></table>`;
+  const MES = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"], MES_L = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  const SERIES = [["2025", [42, 38, 55, 61, 48, 35, 30, 52, 58, 63, 45, 28], "#55606E", "5 4"], ["2026", [50, 47, 66, 72, 59, 41, 37, 64, 70, 78, 57, 33], "#2F6FD0", ""]];
+  const px = i => 30 + i * 15, py = v => 112 - v * 1.2;
+  const lineas = SERIES.map(([a, d, c, dash]) => `<polyline points="${d.map((v, i) => `${px(i)},${py(v)}`).join(" ")}" fill="none" stroke="${c}" stroke-width="2.5"${dash ? ` stroke-dasharray="${dash}"` : ""}/>${d.map((v, i) => `<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="${c}"/>`).join("")}`).join("");
+  const grafico = `<svg viewBox="0 0 210 150" style="width:100%;height:auto;display:block" aria-hidden="true">${[0, 30, 60, 90].map(v => `<line x1="24" y1="${py(v)}" x2="200" y2="${py(v)}" stroke="#E4E7EB" stroke-width="1"/><text x="20" y="${py(v) + 3}" text-anchor="end" font-size="8" fill="#55606E">${v}</text>`).join("")}<line x1="24" y1="112" x2="200" y2="112" stroke="#767676" stroke-width="1.2"/>${lineas}${MES.map((m, i) => `<text x="${px(i)}" y="124" text-anchor="middle" font-size="8" fill="#55606E">${m}</text>`).join("")}${SERIES.map(([a, , c, dash], k) => `<line x1="${60 + k * 70}" y1="140" x2="${78 + k * 70}" y2="140" stroke="${c}" stroke-width="2.5"${dash ? ` stroke-dasharray="${dash}"` : ""}/><text x="${82 + k * 70}" y="143" font-size="9" fill="#16202B">${a}</text>`).join("")}</svg>`;
+  const tabla = `<table style="font-size:12px;width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;color:#16202B"><thead><tr><th scope="col" style="text-align:left;padding:3px 6px;color:#55606E;border-bottom:1px solid #CDD5DF">Mes</th>${SERIES.map(([a]) => `<th scope="col" style="text-align:right;padding:3px 6px;color:#55606E;border-bottom:1px solid #CDD5DF">${a}</th>`).join("")}</tr></thead><tbody>${MES_L.map((m, i) => `<tr><th scope="row" style="text-align:left;padding:2px 6px;font-weight:500;color:#16202B;border-bottom:1px solid #E4E7EB">${m}</th>${SERIES.map(([, d]) => `<td style="text-align:right;padding:2px 6px;border-bottom:1px solid #E4E7EB">${d[i]}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   const v = [
     [`<button type="button" class="mat-btn mat-btn--icono" aria-label="Buscar">${icon("lupa", "currentColor", 20)}</button>`,
      `<button type="button" class="mat-btn mat-btn--secundario">${icon("lupa", "currentColor", 20)}Buscar</button>`],
     [`<div class="mat-alerta mat-alerta--advertencia" role="status" style="width:100%">${icon("aviso", "currentColor", 20)}<span class="texto">Tu sesión expirará en 5 minutos</span></div>`,
      `<figure class="mat-card" style="margin:0;width:100%;gap:8px"><b>Exposición de arte en el campus</b>${pintura}<figcaption style="color:var(--material-texto-secundario)">Pintura de Elena Ríos</figcaption></figure>`],
-    [`<div class="mat-card" style="width:100%;gap:8px"><b>Inscritos por mes</b>${barras}${tabla}</div>`,
-     `<div class="mat-card" style="width:100%;gap:8px"><b>Inscritos por mes</b>${barras}</div>`]
+    [`<div class="mat-card" style="width:100%;gap:8px"><b>Inscritos por mes, 2025 y 2026</b>${grafico}${tabla}</div>`,
+     `<div class="mat-card" style="width:100%;gap:8px"><b>Inscritos por mes, 2025 y 2026</b>${grafico}</div>`]
   ][k];
   const lado = (l, html) => `<div class="c2-version"><span class="c2-letra">${l}</span><div class="c2-comp">${html}</div></div>`;
   return `<div class="c1-escena"><div class="c1-cab"><b class="c1-nombre">${r.comp}</b></div><div class="c2-par">${lado("A", v[0])}${lado("B", v[1])}</div></div>`;
@@ -1331,7 +1340,7 @@ const EJ = [
     onClick: irPaso(5),
     lienzo: lzC2, evaluar: st => evalPreguntas(C2_PREG, st) },
   { id: "c3", etapa: 1, titulo: "El color desaparece", criterio: "WCAG 1.4.1 Uso del color",
-    llevar: "El color nunca va solo: texto y líneas siempre, más un solo código extra (trama, ícono o número). Más información no ayuda si sobresatura.",
+    llevar: "El color nunca va solo: texto y un código (trama, ícono o número) en la torta y en la leyenda, y líneas oscuras solo en la torta para separar las porciones. Sombras y degradados no suman: no dan información.",
     pregunta: "Cambia la vista a escala de grises o a un tipo de daltonismo. Luego aplica hasta 3 elementos a la torta, a la leyenda o a las dos para que el gráfico se entienda sin depender del color.",
     init: () => ({ sim: "color", z: Object.fromEntries(ELEM.map(([k]) => [k, { pie: false, legend: false }])) }),
     opciones: st => `${radio("sim", "Ver como", [{ v: "color", t: "Color" }, { v: "gris", t: "Escala de grises" }, { v: "deuter", t: "Deuteranopia" }, { v: "protan", t: "Protanopia" }, { v: "tritan", t: "Tritanopia" }], st.sim)}
@@ -1390,7 +1399,7 @@ const EJ = [
     lienzo: lzT3, evaluar: st => evalPreguntas(T3_PREG, st) },
   { id: "s1", etapa: 3, titulo: "Construye los estados del botón", criterio: "WCAG 1.4.3, 1.4.11 y 2.4.7",
     verificador: true,
-    llevar: "Cada estado necesita su propio contraste: texto 4.5:1 contra el fondo del botón y anillo de foco 3:1 contra la página. El foco siempre tiene que verse.",
+    llevar: "Cada estado necesita su propio contraste: texto 4.5:1 e ícono 3:1 contra el fondo del botón, y el borde 3:1 contra la página. El borde de foco es obligatorio: el foco siempre tiene que verse.",
     pregunta: "Construye los estados default, hover y focus del botón eligiendo colores de las escalas. La plataforma no muestra el contraste: mídelo con una herramienta usando los códigos hex.",
     init: () => ({ tab: "default", s: { default: { t: null, f: null, b: null, i: null }, hover: { t: null, f: null, b: null, i: null }, focus: { t: null, f: null, b: null, i: null } } }), ancho: true,
     opciones: st => `<div class="tabs" role="group" aria-label="Estado que estás editando">${S1_EST.map(([e, n]) => `<button type="button" class="tog" data-accion="tab" data-tab="${e}" aria-pressed="${st.tab === e}">${n}</button>`).join("")}</div>
@@ -1606,8 +1615,8 @@ async function enviar(auto) {
   actualizar(true);
 }
 
-function tablaFilas(filas) {
-  return `<div class="tabla-wrap"><table><thead><tr><th scope="col">Pregunta</th><th scope="col">Tu respuesta</th><th scope="col">Respuesta correcta</th><th scope="col">Resultado</th></tr></thead><tbody>${filas.map(f => `<tr><td>${esc(f.item)}</td><td>${esc(f.tu)}</td><td>${esc(f.correcta)}</td><td>${f.ok === true ? `<span class="res si">${icon("check", "currentColor", 18)}Acertaste</span>` : f.ok === false ? `<span class="res no">${icon("error", "currentColor", 18)}No acertaste</span>` : `<span class="res neutro">Sin efecto</span>`}</td></tr>`).join("")}</tbody></table></div>`;
+function tablaFilas(filas, col = "Respuesta correcta") {
+  return `<div class="tabla-wrap"><table><thead><tr><th scope="col">Pregunta</th><th scope="col">Tu respuesta</th><th scope="col">${col}</th><th scope="col">Resultado</th></tr></thead><tbody>${filas.map(f => `<tr><td>${esc(f.item)}</td><td>${esc(f.tu)}</td><td>${esc(f.correcta)}</td><td>${f.ok === true ? `<span class="res si">${icon("check", "currentColor", 18)}Acertaste</span>` : f.ok === false ? `<span class="res no">${icon("error", "currentColor", 18)}No acertaste</span>` : `<span class="res neutro">Sin efecto</span>`}</td></tr>`).join("")}</tbody></table></div>`;
 }
 function vistaResultado() {
   const { def, r, dato, auto } = resultado;
@@ -1616,7 +1625,7 @@ function vistaResultado() {
     <div style="display:grid;gap:8px;justify-items:start"><span class="etq">${ETAPAS.find(e => e.n === def.etapa).nombre} · Resultado</span><h1>${def.titulo}</h1>${auto ? '<p class="lede">Se acabó el tiempo. Enviamos lo que habías respondido.</p>' : ""}</div>
     <div class="franja ${ok ? "acierto" : "error"}"><div class="franja-texto"><span class="franja-icono" aria-hidden="true">${icon(ok ? "check" : "x", "currentColor", 24)}</span><div style="display:grid;gap:4px"><p class="franja-titulo">${tramo} ${def.id === "a1" ? "Errores encontrados" : "Aciertos"}: ${esc(r.aciertos)}</p><p class="franja-detalle">Sumaste ${dato.pts} ${dato.pts === 1 ? "punto" : "puntos"}${dato.bono ? `, incluidos ${dato.bono} de bono por rapidez` : ""}.</p></div></div><button class="btn btn-primary" type="button" id="b-siguiente">Siguiente${icon("flecha", "currentColor", 20)}</button></div>
     ${def.llevar ? `<div class="llevar"><span class="llevar-icono" aria-hidden="true">${icon("idea", "currentColor", 22)}</span><div style="display:grid;gap:4px"><h2 class="llevar-titulo">Para llevar</h2><p>${def.llevar}</p></div></div>` : ""}
-    <div class="panel"><h2>${def.id === "a1" ? "Errores escondidos en la pantalla" : "Tus respuestas y las correctas"}</h2>${tablaFilas(r.filas)}</div></section>`;
+    <div class="panel"><h2>${def.id === "a1" ? "Errores escondidos en la pantalla" : r.colCorrecta ? "Tus respuestas y sus puntos" : "Tus respuestas y las correctas"}</h2>${tablaFilas(r.filas, r.colCorrecta)}</div></section>`;
   $("#b-siguiente").addEventListener("click", () => { const id = def.id; resultado = null; if (PROTO) { const i = PROTO_P.findIndex(x => x[0] === "ej:" + id); protoIr(PROTO_P[Math.min(PROTO_P.length - 1, i + 1)][0]); return; } actualizar(true); });
 }
 function vistaFinal() {
