@@ -114,7 +114,9 @@ textarea.input { min-height: 120px; padding: var(--e12) var(--e16); resize: vert
 .gente li.es-yo { border-color: var(--acento); }
 
 /* Ejercicio */
-.ej-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--e12); }
+.ej-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: var(--e12); }
+.ej-top > div:first-child { flex: 1 1 480px; }
+.nav-pasos { justify-content: space-between; border-top: 1px solid var(--borde-suave); padding-top: var(--e16); margin-top: var(--e8); }
 .timer { display: inline-flex; align-items: center; gap: var(--e8); font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; border: 2px solid var(--borde-control); background: var(--bloque); color: var(--texto); border-radius: var(--r-pildora); padding: var(--e4) var(--e16); }
 .timer svg { width: 18px; height: 18px; }
 .timer.poco { border-color: var(--err-borde); background: var(--err-fondo); color: var(--err-titulo); }
@@ -124,7 +126,7 @@ textarea.input { min-height: 120px; padding: var(--e12) var(--e16); resize: vert
 .progreso .lleno { height: 100%; border-radius: var(--r-pildora); background: var(--acento); }
 .enlace-ext { display: inline-flex; align-items: center; gap: 4px; color: var(--acento-claro); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 600; white-space: nowrap; }
 .enlace-ext svg { width: 16px; height: 16px; }
-.pregunta { background: var(--bloque); border: 1px solid var(--borde-suave); border-radius: var(--r-contenedor); padding: var(--e16) var(--e24); font-size: 16px; }
+.pregunta { margin: 0; max-width: 960px; font-size: 16px; line-height: 1.5; }
 @media (min-width: 1024px) { .ej-grid.op-fijas > .panel:first-child { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; } }
 .hallazgos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e12); }
 .hallazgo { border: 1px solid var(--borde-suave); border-radius: var(--r-contenedor); padding: var(--e12) var(--e16) var(--e16); margin: 0; display: grid; gap: var(--e12); min-width: 0; }
@@ -528,6 +530,36 @@ body.arrastrando .mat-zona-soltar { border-color: #B8C3CF; }
 .paso[aria-current="step"] { border: 2px solid var(--acento); background: var(--acento-oscuro); color: var(--acento-claro); }
 .paso[aria-current="step"] .num { background: var(--acento); color: var(--fondo); }
 
+
+/* Jerarquía de la pantalla de ejercicio: un solo contenedor (el ejercicio), una sola acción con peso (Enviar) y el verde solo para lo elegido */
+.ej-grid > .panel { background: transparent; border: 0; padding: 0; }
+.ej-top h1 { font-size: 26px; }
+.criterio { font-size: 13px; font-weight: 500; color: var(--texto-secundario); }
+.timer { border: 0; background: transparent; padding: 0; font-size: 15px; font-weight: 600; color: var(--texto-secundario); }
+.timer.poco { border: 1px solid var(--err-borde); padding: var(--e4) var(--e12); }
+.progreso { gap: 6px; }
+.progreso .rotulo { font-size: 13px; font-weight: 500; color: var(--texto-secundario); }
+.progreso .riel { height: 4px; }
+.progreso .lleno { background: var(--neutra-marcada); }
+.enlace-ext { color: var(--texto); font-weight: 500; }
+.q legend { font-size: 16px; font-weight: 600; }
+.paso { font-weight: 500; color: var(--texto-secundario); }
+.paso[aria-current="step"] { border: 1px solid var(--texto); background: transparent; color: var(--texto); font-weight: 600; }
+.paso[aria-current="step"] .num { background: var(--texto); color: var(--fondo); }
+.paso .hecho, .paso[aria-current="step"] .hecho { color: var(--texto-secundario); }
+.opcion > span, .chip > span { font-weight: 500; box-shadow: none; }
+.opcion input:checked + span, .chip input:checked + span { box-shadow: none; }
+.opcion:active > span, .chip:active > span { transform: none; }
+.ej-grid .btn, .ej-pie #b-reiniciar { box-shadow: none; font-weight: 500; }
+.ej-grid .btn:active, .ej-pie #b-reiniciar:active { transform: none; }
+.ej-pie #b-reiniciar { width: auto; justify-self: start; border-color: transparent; color: var(--texto-secundario); padding: 0 var(--e12); }
+.ej-pie #b-reiniciar:hover { color: var(--texto); background: var(--tarjeta); }
+.lz-label, .c2-letra, .lz-op b.letra { font-family: var(--font); font-size: 13px; }
+.c2-letra { font-weight: 700; }
+.tabs .tog[aria-pressed="true"] { border-bottom-color: var(--texto); }
+.pieza { box-shadow: none; font-weight: 500; }
+.pieza[aria-pressed="true"] { box-shadow: none; }
+.pieza:active { transform: none; }
 </style>
 </head>
 <body>
@@ -548,7 +580,7 @@ body.arrastrando .mat-zona-soltar { border-color: #B8C3CF; }
 </svg>
 <div class="barra" aria-hidden="true"></div>
 <header class="topbar"><div class="topbar-in">
-  <div class="brand"><span class="brand-name">Laboratorio A11Y</span><span class="brand-sub" id="brand-sub">Sesión 1 · Contraste, textos alternativos y estados</span></div>
+  <div class="brand"><span class="brand-name">Laboratorio A11Y</span><span class="brand-sub" id="brand-sub">Sesión 1</span></div>
   <div class="yo" id="yo-box" aria-live="polite"></div>
 </div></header>
 <main id="main" tabindex="-1">
@@ -760,12 +792,12 @@ const C2 = [
   { nombre: "Card seleccionable", mide: "Borde contra el fondo #FFFFFF", a: "Borde completo #767676, 2 px", b: "Solo borde superior #767676, 3 px" }
 ];
 const C2_OPC = [["A", "A"], ["B", "B"], ["Ambos", "A+B"], ["Ninguno", "–"]];
-const opcionCard = (name, valor, texto, tecla, marcado) => `<label class="opcion"><input type="radio" name="${name}" value="${valor}"${marcado ? " checked" : ""}><span><span class="tecla" aria-hidden="true">${tecla}</span>${texto}</span></label>`;
+const opcionCard = (name, valor, texto, tecla, marcado) => `<label class="opcion"><input type="radio" name="${name}" value="${valor}"${marcado ? " checked" : ""}><span><span class="tecla${texto === tecla ? " vh" : ""}" aria-hidden="true">${tecla}</span>${texto}</span></label>`;
 function pasosHTML(lista, k, etiqueta, hecho = () => false) {
   return `<div class="pasos" role="group" aria-label="${etiqueta}">${lista.map((x, i) => { const h = hecho(i); return `<button type="button" class="paso${h ? " respondido" : ""}" data-accion="paso" data-i="${i}"${i === k ? ' aria-current="step"' : ""}><span class="num">${i + 1}</span>${x.nombre}<span class="hecho">${h ? icon("check", "currentColor", 16) + '<span class="vh">(respondida)</span>' : ""}</span></button>`; }).join("")}</div>`;
 }
 function navPasos(lista, k) {
-  return `<div class="fila" style="justify-content:space-between">${k > 0 ? `<button type="button" class="btn" data-accion="ant">${icon("flecha", "currentColor", 20).replace("<svg", '<svg style="transform:scaleX(-1)"')}${lista[k - 1].nombre}</button>` : "<span></span>"}${k < lista.length - 1 ? `<button type="button" class="btn" data-accion="sig">${lista[k + 1].nombre}${icon("flecha", "currentColor", 20)}</button>` : ""}</div>`;
+  return `<div class="fila nav-pasos">${k > 0 ? `<button type="button" class="btn" data-accion="ant">${icon("flecha", "currentColor", 20).replace("<svg", '<svg style="transform:scaleX(-1)"')}Anterior<span class="vh">: ${lista[k - 1].nombre}</span></button>` : "<span></span>"}${k < lista.length - 1 ? `<button type="button" class="btn" data-accion="sig">Siguiente<span class="vh">: ${lista[k + 1].nombre}</span>${icon("flecha", "currentColor", 20)}</button>` : ""}</div>`;
 }
 const irPaso = n => (st, b) => { const a = b.dataset.accion, k = st.paso || 0; st.paso = a === "paso" ? +b.dataset.i : a === "ant" ? Math.max(0, k - 1) : Math.min(n - 1, k + 1); st.tab = st.paso; return "reopciones"; };
 
@@ -1098,7 +1130,7 @@ function lzC1(st) {
   else if (x.id === "quote") comp = `<figure class="mat-cita${W}" style="${sin ? "" : `color:${col};`}width:100%"><blockquote>La accesibilidad es responsabilidad de todo el equipo, no solo de quien programa.</blockquote><figcaption>— Carmen Salas, docente del curso</figcaption></figure>`;
   else comp = `<div class="mat-card mat-card--deshabilitada${W}" aria-disabled="true" style="${sin ? "" : `color:${col};`}width:min(100%,300px)"><b style="font-size:16px">Taller de UX Writing</b><span>Sábados de 9:00 a 12:00 · Cupos agotados</span><span><button type="button" class="mat-btn" disabled>No disponible</button></span></div>`;
   const editable = sin ? '<span class="sin-elegir-txt">sin elegir</span>' : st[x.id] === "exento" ? "no requiere ajuste" : hexBtn(col);
-  return `<div class="c1-escena"><div class="c1-cab"><span class="lz-label">Componente ${k + 1} de ${C1.length}</span><b class="c1-nombre">${x.nombre}</b><span class="lz-label">${conCopiar(x.fijoTxt)} · ${x.edit} editable: ${editable}</span></div><div class="c1-zona">${comp}</div><div class="c1-medir"><span class="lz-label">Tonos para medir (el primero es el del diseño original)</span><div class="fila" style="gap:8px">${x.tonos.map(hexBtn).join("")}</div></div></div>`;
+  return `<div class="c1-escena"><div class="c1-cab"><b class="c1-nombre">${x.nombre}</b><span class="lz-label">${conCopiar(x.fijoTxt)} · ${x.edit} editable: ${editable}</span></div><div class="c1-zona">${comp}</div></div>`;
 }
 function lzC2(st) {
   const k = st.paso || 0, r = C2[k];
@@ -1111,7 +1143,7 @@ function lzC2(st) {
   ][k];
   const val = [["#949494", "#959595"], ["#999999", "#949494"], ["linear-gradient(90deg,#0066CC,#66A3E0)", "#0066CC"], ["0 1px 3px rgba(0,0,0,.12)", "0 6px 16px rgba(0,0,0,.35)"], ["border:2px solid #767676", "border:0;border-top:3px solid #767676"]][k];
   const lado = (l, v, txt) => `<div class="c2-version"><span class="c2-letra">${l}</span><div class="c2-comp">${comp({ l, v })}</div><span class="lz-label">${conCopiar(txt)}</span></div>`;
-  return `<div class="c1-escena"><div class="c1-cab"><span class="lz-label">Ronda ${k + 1} de ${C2.length}</span><b class="c1-nombre">${r.nombre}</b><span class="lz-label">Se mide: ${conCopiar(r.mide)}</span></div><div class="c2-par">${lado("A", val[0], r.a)}${lado("B", val[1], r.b)}</div></div>`;
+  return `<div class="c1-escena"><div class="c1-cab"><b class="c1-nombre">${r.nombre}</b><span class="lz-label">Se mide: ${conCopiar(r.mide)}</span></div><div class="c2-par">${lado("A", val[0], r.a)}${lado("B", val[1], r.b)}</div></div>`;
 }
 function lzC3(st) {
   return `<div style="display:grid;gap:16px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline"><b style="font-size:18px">Matrícula 2026 por facultad</b><span class="lz-label">Datos de ejemplo</span></div>
@@ -1132,7 +1164,7 @@ function lzT1(st) {
      `<div class="mat-card" style="width:100%;gap:8px"><b>Inscritos por mes</b>${barras}</div>`]
   ][k];
   const lado = (l, html) => `<div class="c2-version"><span class="c2-letra">${l}</span><div class="c2-comp">${html}</div></div>`;
-  return `<div class="c1-escena"><div class="c1-cab"><span class="lz-label">Ronda ${k + 1} de ${T1.length} · Componente: ${r.comp}</span><b class="c1-nombre">${r.pregunta}</b></div><div class="c2-par">${lado("A", v[0])}${lado("B", v[1])}</div></div>`;
+  return `<div class="c1-escena"><div class="c1-cab"><b class="c1-nombre">${r.comp}</b></div><div class="c2-par">${lado("A", v[0])}${lado("B", v[1])}</div></div>`;
 }
 function lzT2(st) {
   const k = st.paso || 0;
@@ -1213,7 +1245,7 @@ function lzS2(st) {
     `<div class="mat-demo mat-demo--bloqueo"><div class="mat-card mat-card--deshabilitada mat-card--imagen" aria-disabled="true">${img}<b>Taller de UX Writing</b><span>Aprende a escribir textos claros para interfaces.</span><span class="mat-card-datos"><span class="mat-dato">${icon("puerta", "currentColor", 16)}Aula 204</span><span class="mat-dato">${icon("personas", "currentColor", 16)}25 personas</span><span class="mat-dato">${icon("nota", "currentColor", 16)}4 notas</span></span></div>${cur}${bloq}</div>`,
     `<div class="mat-barra-herramientas" role="toolbar" aria-label="Formato de texto"><button type="button" class="mat-btn mat-btn--icono" aria-pressed="true" aria-label="Negrita"><b style="font-size:18px">N</b></button><button type="button" class="mat-btn mat-btn--icono" aria-pressed="false" aria-label="Cursiva"><i style="font-size:18px;font-family:Georgia,serif">K</i></button><button type="button" class="mat-btn mat-btn--icono" aria-pressed="false" aria-label="Subrayado"><u style="font-size:18px">S</u></button></div>`
   ][k];
-  return `<div class="c1-escena s2-escena${s2Pausa ? " pausado" : ""}"><div class="c1-cab"><span class="lz-label">Componente ${k + 1} de ${S2.length}</span><b class="c1-nombre">${x[0]}</b></div><div class="c1-zona">${comp}</div>${pausa}</div>`;
+  return `<div class="c1-escena s2-escena${s2Pausa ? " pausado" : ""}"><div class="c1-cab"><b class="c1-nombre">${x[0]}</b></div><div class="c1-zona">${comp}</div>${pausa}</div>`;
 }
 function lzS3(st) {
   const s = new Set(st.el || []), txt = s.has("txtsug") ? S3_TXT.txtsug : s.has("txtinv") ? S3_TXT.txtinv : "";
@@ -1280,19 +1312,19 @@ const EJ = [
       const pasos = pasosHTML(C1, k, "Componentes del ejercicio", i => !vacio(st[C1[i].id]));
       const tonos = [...c.tonos.map((h, i) => ({ v: h, t: `<span class="sw" style="background:${h}"></span>${h}${i === 0 ? " (inicial)" : ""}` })), ...(c.id === "card" ? [{ v: "exento", t: "No requiere ajuste" }] : [])];
       const nav = navPasos(C1, k);
-      return `<div class="grupo">${pasos}</div><div class="grupo"><div style="display:grid;gap:4px"><span class="eyebrow">Componente ${k + 1} de ${C1.length}</span><h3 tabindex="-1" data-tab="${k}">${c.item}</h3><span class="nota">${conCopiar(c.fijoTxt)} · ${c.edit} editable</span></div><fieldset class="q"><legend>${c.editTxt}</legend><div class="chips">${tonos.map(o => `<label class="chip chip-sw"><input type="radio" name="${c.id}" value="${o.v}"${st[c.id] === o.v ? " checked" : ""}><span>${o.t}</span></label>`).join("")}</div></fieldset>${nav}</div>`;
+      return `<div class="grupo">${pasos}</div><div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Componente ${k + 1} de ${C1.length}: ${c.item}</h3><fieldset class="q"><legend>${c.editTxt}</legend><div class="chips">${tonos.map(o => `<label class="chip chip-sw"><input type="radio" name="${c.id}" value="${o.v}"${st[c.id] === o.v ? " checked" : ""}><span>${o.t}</span></label>`).join("")}</div></fieldset>${nav}</div>`;
     },
     onClick: irPaso(5),
     lienzo: lzC1, evaluar: st => evalPreguntas(C1_PREG, st) },
   { id: "c2", etapa: 1, titulo: "¿Se ve o no se ve?", criterio: "WCAG 1.4.11 Contraste no textual",
     verificador: true,
     llevar: "Bordes, íconos y controles: al menos 3:1 contra lo que los rodea. 2.99:1 no se redondea a 3, y en un degradado se mide el punto más claro.",
-    pregunta: "En cada ronda hay dos versiones del mismo componente sobre fondo blanco. ¿Cuál cumple el contraste no textual de 3:1? Responde A, B, Ambos o Ninguno. Mide los colores: a simple vista casi no se distinguen.",
+    pregunta: "En cada ronda hay dos versiones del mismo componente sobre fondo blanco. ¿Cuál cumple el contraste no textual de 3:1? Mide los colores: a simple vista casi no se distinguen.",
     init: () => ({ paso: 0, tab: 0 }),
     pendientes: pendientes(C2_PREG), unidad: ["ronda", "rondas"], pasoHecho: (st, i) => !vacio(st[C2_PREG[i].id]), primerPendiente: st => C2_PREG.findIndex(p => vacio(st[p.id])),
     opciones: st => {
       const k = st.paso || 0, p = C2_PREG[k], r = C2[k];
-      return `<div class="grupo">${pasosHTML(C2, k, "Rondas del ejercicio", i => !vacio(st[C2_PREG[i].id]))}</div><div class="grupo"><div style="display:grid;gap:4px"><span class="eyebrow">Ronda ${k + 1} de ${C2.length}</span><h3 tabindex="-1" data-tab="${k}">${r.nombre}</h3><span class="nota">A: ${conCopiar(r.a)} · B: ${conCopiar(r.b)}</span></div><fieldset class="q"><legend>¿Cuál cumple 3:1?</legend><div class="opciones">${C2_OPC.map(([v, t]) => opcionCard(p.id, v, v, t, st[p.id] === v)).join("")}</div></fieldset>${navPasos(C2, k)}</div>`;
+      return `<div class="grupo">${pasosHTML(C2, k, "Rondas del ejercicio", i => !vacio(st[C2_PREG[i].id]))}</div><div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Ronda ${k + 1} de ${C2.length}: ${r.nombre}</h3><fieldset class="q"><legend>¿Cuál cumple 3:1?</legend><div class="opciones">${C2_OPC.map(([v, t]) => opcionCard(p.id, v, v, t, st[p.id] === v)).join("")}</div></fieldset>${navPasos(C2, k)}</div>`;
     },
     onClick: irPaso(5),
     lienzo: lzC2, evaluar: st => evalPreguntas(C2_PREG, st) },
@@ -1316,24 +1348,24 @@ const EJ = [
     lienzo: lzC3, evaluar: c3Eval },
   { id: "t1", etapa: 2, titulo: "¿Qué tipo de imagen es?", criterio: "WCAG 1.1.1 Contenido no textual",
     llevar: "Si la imagen hace algo, su texto alternativo dice la acción. Si informa, dice lo que muestra. Si tiene datos, además necesita una descripción extendida o una tabla.",
-    pregunta: "En cada ronda hay dos componentes en su contexto. Responde la pregunta de la ronda eligiendo A o B.",
+    pregunta: "En cada ronda hay dos componentes en su contexto. Mira para qué está cada imagen ahí antes de responder.",
     init: () => ({ paso: 0, tab: 0 }), pendientes: pendientes(T1_PREG), unidad: ["ronda", "rondas"],
     pasoHecho: (st, i) => !vacio(st[T1_PREG[i].id]), primerPendiente: st => T1_PREG.findIndex(p => vacio(st[p.id])),
     opciones: st => {
       const k = st.paso || 0, p = T1_PREG[k], r = T1[k];
-      return `<div class="grupo">${pasosHTML(T1, k, "Rondas del ejercicio", i => !vacio(st[T1_PREG[i].id]))}</div><div class="grupo"><div style="display:grid;gap:4px"><span class="eyebrow">Ronda ${k + 1} de ${T1.length} · Componente: ${r.comp}</span><h3 tabindex="-1" data-tab="${k}">${r.pregunta}</h3></div><fieldset class="q"><legend>Elige A o B</legend><div class="opciones">${[["A", "A"], ["B", "B"]].map(([v, t]) => opcionCard(p.id, v, v, t, st[p.id] === v)).join("")}</div></fieldset>${navPasos(T1, k)}</div>`;
+      return `<div class="grupo">${pasosHTML(T1, k, "Rondas del ejercicio", i => !vacio(st[T1_PREG[i].id]))}</div><div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Ronda ${k + 1} de ${T1.length}: ${r.comp}</h3><fieldset class="q"><legend>${r.pregunta}</legend><div class="opciones">${[["A", "A"], ["B", "B"]].map(([v, t]) => opcionCard(p.id, v, v, t, st[p.id] === v)).join("")}</div></fieldset>${navPasos(T1, k)}</div>`;
     },
     onClick: irPaso(3),
     lienzo: lzT1, evaluar: st => evalPreguntas(T1_PREG, st) },
   { id: "t2", etapa: 2, titulo: "¿Cómo se nombra cada componente?", criterio: "WCAG 1.1.1 y 4.1.2",
     llevar: "Decorativo: alt=\"\". Informativo: alt con lo que significa, no con lo que dibuja. Funcional: el botón lleva aria-label con la acción. El tooltip se conecta con aria-describedby; no es el nombre.",
-    pregunta: "La tarjeta de curso tiene 5 elementos numerados. En cada paso, elige qué tipo es y qué código necesita para que el lector de pantalla lo entienda.",
+    pregunta: "La tarjeta de curso tiene 5 elementos numerados. Decide qué necesita cada uno para que el lector de pantalla lo entienda.",
     init: () => ({ paso: 0, tab: 0 }), pendientes: pendientes(T2_PREG), unidad: ["pregunta", "preguntas"],
     pasoHecho: (st, i) => !vacio(st["tipo" + i]) && !vacio(st["alt" + i]), primerPendiente: st => T2.findIndex((x, i) => vacio(st["tipo" + i]) || vacio(st["alt" + i])),
     opciones: st => {
       const k = st.paso || 0, x = T2[k];
       return `<div class="grupo">${pasosHTML(T2, k, "Elementos de la tarjeta", i => !vacio(st["tipo" + i]) && !vacio(st["alt" + i]))}</div>
-        <div class="grupo"><div style="display:grid;gap:4px"><span class="eyebrow">Elemento ${k + 1} de ${T2.length}</span><h3 tabindex="-1" data-tab="${k}">${x.elemento}</h3></div>
+        <div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Elemento ${k + 1} de ${T2.length}: ${x.elemento}</h3>
         <fieldset class="q"><legend>¿Qué tipo es?</legend><div class="opciones opciones-3">${T2_TIPOS.map(([v, t]) => opcionCard("tipo" + k, v, v, t, st["tipo" + k] === v)).join("")}</div></fieldset>
         <fieldset class="q"><legend>¿Qué código necesita?</legend><div class="opciones opciones-1">${x.codigos.map((c, j) => opcionCard("alt" + k, String(j), `<code class="codigo">${c.replace(/</g, "&lt;")}</code>`, "ABC"[j], st["alt" + k] === String(j))).join("")}</div></fieldset>
         ${navPasos(T2, k)}</div>`;
@@ -1348,7 +1380,7 @@ const EJ = [
     opciones: st => {
       const k = st.paso || 0, x = T3[k];
       return `<div class="grupo">${pasosHTML(T3, k, "Notas del handoff", i => !vacio(st["n" + i]))}</div>
-        <div class="grupo"><div style="display:grid;gap:8px"><span class="eyebrow">Nota ${k + 1} de ${T3.length}</span><h3 tabindex="-1" data-tab="${k}">${x.elemento}</h3><span class="nota">Nota actual: <code class="codigo-nota">${x.nota.replace(/</g, "&lt;")}</code></span></div>
+        <div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Nota ${k + 1} de ${T3.length}: ${x.elemento}. Nota actual: ${x.nota.replace(/</g, "&lt;")}</h3>
         <fieldset class="q"><legend>¿Qué haces con esta nota?</legend><div class="opciones opciones-1">${x.opciones.map((o, j) => opcionCard("n" + k, String(j), j === 0 ? o : `<code class="codigo">${o.replace(/</g, "&lt;")}</code>`, "ABCD"[j], st["n" + k] === String(j))).join("")}</div></fieldset>
         ${navPasos(T3, k)}</div>`;
     },
@@ -1357,10 +1389,10 @@ const EJ = [
   { id: "s1", etapa: 3, titulo: "Construye los estados del botón", criterio: "WCAG 1.4.3, 1.4.11 y 2.4.7",
     verificador: true,
     llevar: "Cada estado necesita su propio contraste: texto 4.5:1 contra el fondo del botón y anillo de foco 3:1 contra la página. El foco siempre tiene que verse.",
-    pregunta: "Construye los estados default, hover y focus del botón eligiendo colores de las escalas. La plataforma no muestra el contraste: mídelo con una herramienta usando los códigos hex. El fondo de la página es gris: Neutro 100 #E4E7EB.",
+    pregunta: "Construye los estados default, hover y focus del botón eligiendo colores de las escalas. La plataforma no muestra el contraste: mídelo con una herramienta usando los códigos hex.",
     init: () => ({ tab: "default", s: { default: { t: null, f: null, b: null, i: null }, hover: { t: null, f: null, b: null, i: null }, focus: { t: null, f: null, b: null, i: null } } }), ancho: true,
     opciones: st => `<div class="tabs" role="group" aria-label="Estado que estás editando">${S1_EST.map(([e, n]) => `<button type="button" class="tog" data-accion="tab" data-tab="${e}" aria-pressed="${st.tab === e}">${n}</button>`).join("")}</div>
-      ${S1_ESC.map(sc => { const v = st.s[st.tab][sc.k]; return `<fieldset class="q"><legend>${st.tab === "focus" && sc.nombreFocus ? sc.nombreFocus : sc.nombre} · ${S1_EST.find(x => x[0] === st.tab)[1]}</legend><div class="swgrid">${sc.none ? `<label class="swop" title="Sin borde"><input type="radio" name="${sc.k}" value="none"${v === "none" ? " checked" : ""}><span class="none"></span><span class="vh">Sin borde</span></label>` : ""}${sc.esc.map(([tk, hx], i) => `<label class="swop" title="${sc.pref} ${tk} ${hx}"><input type="radio" name="${sc.k}" value="${i}"${String(v) === String(i) ? " checked" : ""}><span style="background:${hx}"></span><span class="vh">${sc.pref} ${tk} ${hx}</span></label>`).join("")}</div><span class="elegido" data-elegido="${sc.k}">Elegido: ${conCopiar(s1nom(sc, v))}</span></fieldset>`; }).join("")}`,
+      ${S1_ESC.map(sc => { const v = st.s[st.tab][sc.k]; return `<fieldset class="q"><legend>${st.tab === "focus" && sc.nombreFocus ? sc.nombreFocus : sc.nombre}<span class="vh"> · ${S1_EST.find(x => x[0] === st.tab)[1]}</span></legend><div class="swgrid">${sc.none ? `<label class="swop" title="Sin borde"><input type="radio" name="${sc.k}" value="none"${v === "none" ? " checked" : ""}><span class="none"></span><span class="vh">Sin borde</span></label>` : ""}${sc.esc.map(([tk, hx], i) => `<label class="swop" title="${sc.pref} ${tk} ${hx}"><input type="radio" name="${sc.k}" value="${i}"${String(v) === String(i) ? " checked" : ""}><span style="background:${hx}"></span><span class="vh">${sc.pref} ${tk} ${hx}</span></label>`).join("")}</div><span class="elegido" data-elegido="${sc.k}">Elegido: ${conCopiar(s1nom(sc, v))}</span></fieldset>`; }).join("")}`,
     onChange(st, el, root) { st.s[st.tab][el.name] = el.value; const sc = S1_ESC.find(x => x.k === el.name); const t = $(`[data-elegido="${el.name}"]`, root); if (t) t.innerHTML = "Elegido: " + conCopiar(s1nom(sc, el.value)); },
     onClick(st, btn) { if (btn.dataset.accion === "tab") { st.tab = btn.dataset.tab; return "reopciones"; } },
     pendientes: st => S1_EST.flatMap(([e, n]) => S1_ESC.filter(sc => st.s[e][sc.k] == null || st.s[e][sc.k] === "").map(sc => `${n} · ${e === "focus" && sc.nombreFocus ? sc.nombreFocus : sc.nombre}`)), unidad: ["color", "colores"],
@@ -1374,8 +1406,8 @@ const EJ = [
     opciones: st => {
       const k = st.paso || 0, v = st["c" + k] || [];
       return `<div class="grupo">${pasosHTML(S2_PASOS, k, "Componentes del ejercicio", i => !vacio(st["c" + i]))}</div>
-        <div class="grupo"><div style="display:grid;gap:4px"><span class="eyebrow">Componente ${k + 1} de ${S2.length}</span><h3 tabindex="-1" data-tab="${k}">${S2[k][0]}</h3></div>
-        <fieldset class="q"><legend>¿Cómo se comunica su estado? Puedes marcar los dos</legend><div class="opciones">${[["V", "Visual", "V"], ["P", "Programático", "P"]].map(([val, t, tk]) => opcionCheck("c" + k, val, t, tk, v.includes(val))).join("")}</div></fieldset>
+        <div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Componente ${k + 1} de ${S2.length}: ${S2[k][0]}</h3>
+        <fieldset class="q"><legend>¿Cómo se comunica su estado?</legend><div class="opciones">${[["V", "Visual", "V"], ["P", "Programático", "P"]].map(([val, t, tk]) => opcionCheck("c" + k, val, t, tk, v.includes(val))).join("")}</div></fieldset>
         ${navPasos(S2_PASOS, k)}</div>`;
     },
     onClick: irPaso(9),
@@ -1386,7 +1418,7 @@ const EJ = [
     init: () => ({ el: [] }),
     opciones: st => {
       const s = new Set(st.el || []);
-      return `<div class="grupo s3-panel" data-soltar="panel"><p class="s3-ayuda">Arrastra o haz clic en cada pieza; para quitarla, otro clic o ✕. Solo cabe un texto de error.</p>
+      return `<div class="grupo s3-panel" data-soltar="panel"><p class="s3-ayuda">Solo cabe un texto de error. Para quitar una pieza, otro clic o ✕.</p>
         ${S3_GRUPOS.map(([g, ks], gi) => `<div class="s3-grupo" role="group" aria-labelledby="s3-g${gi}"><h3 id="s3-g${gi}">${g}</h3><div class="piezas">${ks.map(k => `<button type="button" class="pieza${k in S3_TXT ? " pieza--ancha" : ""}" data-accion="pieza" data-pieza="${k}" data-arrastrar="${k}" data-desde="panel" draggable="true" aria-pressed="${s.has(k)}" aria-label="${esc(S3_EL[k])}" title="${esc(S3_EL[k])}"><span class="pieza-vista" aria-hidden="true">${s3Vista(k)}</span><span class="pieza-nombre" aria-hidden="true">${esc(S3_CORTO[k])}</span><span class="pieza-estado" aria-hidden="true">${s.has(k) ? icon("check", "currentColor", 16) : ""}</span></button>`).join("")}</div></div>`).join("")}</div>`;
     },
     onClick: (st, b) => { const k = b.dataset.pieza; setTimeout(() => s3Accion(k, !(st.el || []).includes(k)), 0); },
@@ -1394,7 +1426,7 @@ const EJ = [
     lienzo: lzS3, evaluar: s3Eval },
   { id: "a1", etapa: 4, titulo: "Auditoría express", criterio: "Repaso de la sesión", tiempo: 1200,
     llevar: "Los mismos errores se repiten en casi todas las pantallas: poco contraste, información solo con color, imágenes e íconos sin texto alternativo, errores y obligatorios mal indicados, y foco invisible.",
-    pregunta: "Esta noticia de un diario digital tiene errores escondidos de los tres temas del día, y también elementos que están bien. Revisa solo el contenido del artículo: el encabezado y el pie en gris son de referencia. Los números marcan los 16 elementos a revisar, y no todos tienen errores. Pruébala también con el mouse y con el teclado (Tab), como lo haría una persona. Anota cada error como un hallazgo: número del elemento, criterio que no cumple y corrección.",
+    pregunta: "Esta noticia de un diario digital tiene errores escondidos de los tres temas del día, y también elementos que están bien. Revisa solo el contenido del artículo: el encabezado y el pie en gris son de referencia. Los números marcan los 16 elementos a revisar, y no todos tienen errores. Pruébala también con el mouse y con el teclado (Tab), como lo haría una persona.",
     init: () => ({ h: [{ el: "", cr: "", txt: "" }] }), ancho: true, fijarOpciones: true, verificador: true,
     pendientes: st => a1Hallazgos(st).length ? [] : ["Hallazgos: todavía no anotaste ninguno"], unidad: ["parte", "partes"],
     opciones: a1Opciones,
@@ -1476,12 +1508,11 @@ function iniciarEjercicio(def) {
   ej = { def, st: def.init(), avisado: false };
   const etapa = ETAPAS.find(e => e.n === def.etapa), lista = ejDeEtapa(def.etapa), idx = lista.indexOf(def) + 1;
   V().innerHTML = `<section style="display:grid;gap:16px" aria-labelledby="ej-titulo">
-    <div class="progreso"><div class="rotulo"><span>${etapa.nombre}</span><span>Ejercicio ${idx} de ${lista.length}</span></div><div class="riel" role="progressbar" aria-label="Avance de la etapa ${etapa.nombre}" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${idx}" aria-valuetext="Ejercicio ${idx} de ${lista.length}"><div class="lleno" style="width:${Math.round(idx / lista.length * 100)}%"></div></div></div>
-    <div class="ej-top"><div style="display:grid;gap:8px;justify-items:start"><span class="etq">${def.criterio}</span><h1 id="ej-titulo">${def.titulo}</h1></div><span class="timer" id="timer" role="timer" aria-label="Tiempo restante">${icon("reloj", "currentColor", 18)}<span id="timer-txt">Tiempo ${mmss(limiteDe(def))}</span></span></div>
-    <p class="pregunta">${conCopiar(def.pregunta)}${def.verificador ? ` <a class="enlace-ext" href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">Abrir el verificador de contraste de WebAIM${icon("externo", "currentColor", 16)}<span class="vh"> (se abre en una pestaña nueva)</span></a>` : ""}</p>
+    ${lista.length > 1 ? `<div class="progreso"><div class="rotulo"><span>${etapa.nombre}</span><span>Ejercicio ${idx} de ${lista.length}</span></div><div class="riel" role="progressbar" aria-label="Avance de la etapa ${etapa.nombre}" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${idx}" aria-valuetext="Ejercicio ${idx} de ${lista.length}"><div class="lleno" style="width:${Math.round(idx / lista.length * 100)}%"></div></div></div>` : ""}
+    <div class="ej-top"><div style="display:grid;gap:8px;justify-items:start"><span class="criterio">${def.criterio}</span><h1 id="ej-titulo">${def.titulo}</h1><p class="pregunta">${conCopiar(def.pregunta)}${def.verificador ? ` <a class="enlace-ext" href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">Abrir el verificador de contraste de WebAIM${icon("externo", "currentColor", 16)}<span class="vh"> (se abre en una pestaña nueva)</span></a>` : ""}</p></div><span class="timer" id="timer" role="timer" aria-label="Tiempo restante">${icon("reloj", "currentColor", 18)}<span id="timer-txt">Tiempo ${mmss(limiteDe(def))}</span></span></div>
     <div class="grilla ej-grid${def.fijarOpciones ? " op-fijas" : ""}">
-      <section class="panel ${def.ancho ? "d-6" : "d-5"}" aria-labelledby="h-op"><h2 id="h-op">Opciones para responder</h2><p class="nota" id="atajos" hidden>Atajo: con el foco en las opciones, pulsa la letra de cada una para elegirla.</p><form id="opc" onsubmit="return false">${def.opciones(ej.st)}</form></section>
-      <section class="panel ${def.ancho ? "d-6" : "d-7"}" aria-labelledby="h-lz"><h2 id="h-lz">Ejercicio</h2><div class="lienzo" id="lienzo">${def.lienzo(ej.st)}</div></section>
+      <section class="panel ${def.ancho ? "d-6" : "d-5"}" aria-labelledby="h-op"><h2 id="h-op" class="vh">Opciones para responder</h2><p class="vh" id="atajos" hidden>Atajo: con el foco en las opciones, pulsa la letra de cada una para elegirla.</p><form id="opc" onsubmit="return false">${def.opciones(ej.st)}</form></section>
+      <section class="panel ${def.ancho ? "d-6" : "d-7"}" aria-labelledby="h-lz"><h2 id="h-lz" class="vh">Ejercicio</h2><div class="lienzo" id="lienzo">${def.lienzo(ej.st)}</div></section>
     </div>
     <div class="confirmacion" id="conf-reiniciar" role="alertdialog" aria-labelledby="conf-rei-tit" aria-describedby="conf-rei-det" hidden><p class="titulo" id="conf-rei-tit">¿Reiniciar tus respuestas?</p><p id="conf-rei-det">Se borran todas las respuestas de este ejercicio. El tiempo sigue corriendo.</p><div class="acciones"><button class="btn" type="button" id="rei-cancelar">Cancelar</button><button class="btn btn-danger" type="button" id="rei-si">${icon("reiniciar", "currentColor", 20)}Sí, reiniciar</button></div></div>
     <div class="confirmacion" id="conf-enviar" hidden><p class="titulo" id="conf-tit"></p><p id="conf-det"></p><div class="acciones"><button class="btn btn-primary" type="button" id="conf-seguir">Seguir respondiendo</button><button class="btn" type="button" id="conf-igual">Enviar igual</button></div></div>
