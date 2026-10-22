@@ -560,6 +560,7 @@ body.arrastrando .mat-zona-soltar { border-color: #B8C3CF; }
 .pieza { box-shadow: none; font-weight: 500; }
 .pieza[aria-pressed="true"] { box-shadow: none; }
 .pieza:active { transform: none; }
+.chip-sw .codigo { font-family: var(--font-mono); font-size: 14px; }
 </style>
 </head>
 <body>
@@ -762,17 +763,18 @@ function evalPreguntas(pregs, st) {
 
 /* ---- Contraste 1 ---- */
 const C1 = [
-  { id: "btn", nombre: "Botón", item: 'Botón "Inscribirme"', ds: "MatBoton", fijo: "#FFFFFF", fijoTxt: "Texto fijo #FFFFFF", edit: "fondo", editTxt: "Color de fondo", tonos: ["#FF7A00", "#DE6A00", "#C35D00", "#BD5A00", "#964800"], ok: "#BD5A00" },
-  { id: "tag", nombre: "Tag", item: 'Tag "Nuevo"', ds: "MatTag", fijo: "#DDF2E5", fijoTxt: "Fondo fijo #DDF2E5", edit: "texto", editTxt: "Color del texto", tonos: ["#66BB6A", "#419345", "#367A3A", "#367939", "#2A5E2C"], ok: "#367939" },
-  { id: "tip", nombre: "Tooltip", item: "Tooltip del ícono de información", ds: "MatTooltip", fijo: "#FFFFFF", fijoTxt: "Texto fijo #FFFFFF", edit: "fondo", editTxt: "Color de fondo de la burbuja", tonos: ["#9E9E9E", "#8B8B8B", "#7A7A7A", "#767676", "#5D5D5D"], ok: "#767676" },
-  { id: "quote", nombre: "Cita", item: "Cita (quote)", ds: "MatCita", fijo: "#F3F4F6", fijoTxt: "Fondo fijo #F3F4F6", edit: "texto", editTxt: "Color del texto", tonos: ["#9CA3AF", "#7B8494", "#6B7484", "#666F7F", "#515865"], ok: "#666F7F" },
-  { id: "card", nombre: "Card deshabilitada", item: "Card deshabilitada", ds: "MatCard", fijo: "#F5F5F5", fijoTxt: "Fondo fijo #F5F5F5", edit: "texto", editTxt: "Color del texto", tonos: ["#A3A3A3", "#848484", "#747474", "#707070", "#585858"], ok: "exento" }
+  { id: "btn", nombre: "Botón", item: 'Botón "Inscribirme"', ds: "MatBoton", fijo: "#FFFFFF", fijoTxt: "Texto fijo #FFFFFF", edit: "fondo", editTxt: "Color de fondo", tonos: ["#BF5908", "#BD5E08", "#BE580A", "#C55502", "#BB5E01"], ok: null },
+  { id: "tag", nombre: "Tag", item: 'Tag "Nuevo"', ds: "MatTag", fijo: "#DDF2E5", fijoTxt: "Fondo fijo #DDF2E5", edit: "texto", editTxt: "Color del texto", tonos: ["#2D7B40", "#3B7842", "#2E7C3A", "#367A36", "#3B7833"], ok: null },
+  { id: "tip", nombre: "Tooltip", item: "Tooltip del ícono de información", ds: "MatTooltip", fijo: "#FFFFFF", fijoTxt: "Texto fijo #FFFFFF", edit: "fondo", editTxt: "Color de fondo de la burbuja", tonos: ["#6B7982", "#757972", "#6F7684", "#6A7B76", "#6C7881"], ok: null },
+  { id: "quote", nombre: "Cita", item: "Cita (quote)", ds: "MatCita", fijo: "#F3F4F6", fijoTxt: "Fondo fijo #F3F4F6", edit: "texto", editTxt: "Color del texto", tonos: ["#66707E", "#65727E", "#5D757F", "#617375", "#5E7481"], ok: null },
+  { id: "card", nombre: "Card deshabilitada", item: "Card deshabilitada", ds: "MatCard", fijo: "#F5F5F5", fijoTxt: "Fondo fijo #F5F5F5", edit: "texto", editTxt: "Color del texto", tonos: ["#747273", "#727078", "#69757F", "#786E76", "#6A7473"], ok: "exento" }
 ];
 const c1color = (st, c) => (st[c.id] && st[c.id] !== "exento") ? st[c.id] : st[c.id] === "exento" ? c.tonos[0] : null;
 const C1_PREG = C1.map(c => ({
   id: c.id, item: c.item, ok: c.ok,
+  esOk: v => c.ok === "exento" ? v === "exento" : v !== "exento" && ratio(v, c.fijo) >= 4.5,
   ver: v => v === "exento" ? "No requiere ajuste" : `${v} (${fmt(ratio(v, c.fijo))})`,
-  explica: c.ok === "exento" ? "No requiere ajuste: los componentes deshabilitados están exentos del contraste mínimo" : `${c.ok} (${fmt(ratio(c.ok, c.fijo))}): el tono más claro que cumple`
+  explica: c.ok === "exento" ? "No requiere ajuste: los componentes deshabilitados están exentos del contraste mínimo, y ninguno de sus tonos llega a 4.5:1" : `Cumple cualquier tono con 4.5:1 o más: ${c.tonos.filter(h => ratio(h, c.fijo) >= 4.5).map(h => `${h} (${fmt(ratio(h, c.fijo))})`).join(" o ")}`
 }));
 
 /* ---- Contraste 2 ---- */
@@ -1303,14 +1305,14 @@ function lzA1(st = {}) {
 const EJ = [
   { id: "c1", etapa: 1, titulo: "Cazadores de contraste", criterio: "WCAG 1.4.3 Contraste mínimo",
     verificador: true,
-    llevar: "Texto normal: al menos 4.5:1 contra su fondo. Ajusta hasta el tono más cercano que cumpla, no hasta el más oscuro. Los componentes deshabilitados están exentos.",
-    pregunta: "Cada componente tiene un color fijo y uno editable. Elige el tono del color editable que cumpla el contraste mínimo de texto (4.5:1) cambiando lo menos posible. Mide los colores con una herramienta de contraste. Ojo: puede que algún componente no necesite ajuste.",
+    llevar: "Cumple todo tono con 4.5:1 o más, sin redondear: 4.49 no llega. A simple vista no se puede saber; hay que medir. Los componentes deshabilitados están exentos.",
+    pregunta: "Cada componente tiene un color fijo y uno editable. Elige un tono del color editable que cumpla el contraste mínimo de texto (4.5:1). Los tonos se parecen mucho: mídelos con una herramienta de contraste. Ojo: puede que algún componente no necesite ajuste.",
     init: () => ({ paso: 0, tab: 0 }),
     pendientes: pendientes(C1_PREG), unidad: ["componente", "componentes"], pasoHecho: (st, i) => !vacio(st[C1[i].id]), primerPendiente: st => C1.findIndex(c => vacio(st[c.id])),
     opciones: st => {
       const k = st.paso || 0, c = C1[k];
       const pasos = pasosHTML(C1, k, "Componentes del ejercicio", i => !vacio(st[C1[i].id]));
-      const tonos = [...c.tonos.map((h, i) => ({ v: h, t: `<span class="sw" style="background:${h}"></span>${h}${i === 0 ? " (inicial)" : ""}` })), ...(c.id === "card" ? [{ v: "exento", t: "No requiere ajuste" }] : [])];
+      const tonos = [...c.tonos.map(h => ({ v: h, t: `<span class="codigo">${h}</span>` })), { v: "exento", t: "No requiere ajuste" }];
       const nav = navPasos(C1, k);
       return `<div class="grupo">${pasos}</div><div class="grupo"><h3 class="vh" tabindex="-1" data-tab="${k}">Componente ${k + 1} de ${C1.length}: ${c.item}</h3><fieldset class="q"><legend>${c.editTxt}</legend><div class="chips">${tonos.map(o => `<label class="chip chip-sw"><input type="radio" name="${c.id}" value="${o.v}"${st[c.id] === o.v ? " checked" : ""}><span>${o.t}</span></label>`).join("")}</div></fieldset>${nav}</div>`;
     },
@@ -1752,7 +1754,7 @@ function protoIr(k) {
   if (k === "inicio") vistaInicio();
   else if (k === "espera") vistaEspera("Esperando el inicio", "El facilitador iniciará la sesión en unos momentos. Mientras tanto, mira quiénes ya entraron.");
   else if (k.startsWith("ej:")) { const id = k.slice(3); delete yo.deadlines[id]; delete local.hechos[id]; iniciarEjercicio(EJ.find(e => e.id === id)); return; }
-  else if (k === "resultado") { const def = EJ[0], r = def.evaluar({ ...def.init(), btn: "#BD5A00", card: "exento" }); resultado = { def, r, dato: { pts: r.puntos + 12, bono: 12 }, auto: false }; vistaResultado(); }
+  else if (k === "resultado") { const def = EJ[0], r = def.evaluar({ ...def.init(), btn: "#BF5908", card: "exento" }); resultado = { def, r, dato: { pts: r.puntos + 12, bono: 12 }, auto: false }; vistaResultado(); }
   else if (k === "final") { sala = { ...(sala || {}), ranking: true }; vistaFinal(); }
   else if (k === "facilitador") { fac.ok = true; fac.proyeccion = false; vistaFacilitador(); }
   else if (k === "ranking") { fac.proyeccion = true; vistaProyeccion(ranking()); }
