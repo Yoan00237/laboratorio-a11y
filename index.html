@@ -257,7 +257,7 @@
    Mismos patrones que la plataforma (Inter, alto de 44 px, radio 8 y 12, profundidad de 4 px, borde punteado al desactivar), en versión clara
    porque el lienzo es blanco: los contrastes de los ejercicios se miden contra #FFFFFF. */
 .mat { font-family: var(--font-sans, Inter, "Helvetica Neue", Helvetica, sans-serif); color: var(--lienzo-texto); font-size: 14px; line-height: 1.5; }
-.mat :focus-visible, .mat .is-focus { outline: 2px solid var(--material-accion); outline-offset: 2px; }
+.mat :focus-visible, .mat :focus:not([tabindex="-1"]), .mat .is-focus { outline: 3px solid var(--material-accion); outline-offset: 2px; }
 .mat-rotulo { font-size: 13px; font-weight: 500; color: var(--material-texto-secundario); }
 /* Botón (igual que Boton) */
 .mat-btn { font-family: inherit; font-size: 16px; font-weight: 600; line-height: 1.25; min-height: 44px; padding: 0 24px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; border: 1px solid transparent; background: var(--material-accion); color: #FFFFFF; box-shadow: var(--material-profundidad-principal); cursor: pointer; transition: transform .08s ease, box-shadow .08s ease; }
@@ -510,6 +510,7 @@ select.input { background: var(--fondo); }
   .lab-editor .vista-col { grid-template-columns: 120px minmax(0, 1fr); align-items: center; }
   .lab-editor .vista img { width: 104px; height: 104px; }
 }
+.lab-editor .grilla > * { grid-column: auto; }
 @media (max-width: 460px) { .lab-editor .grilla, .lab-editor .estilos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .lab-alerta .acciones-alerta { grid-column: 2; display: flex; flex-wrap: wrap; gap: var(--espacio-8); margin-top: var(--espacio-8); }
 
@@ -550,7 +551,8 @@ select.input { background: var(--fondo); }
 .pregunta-caja { border: 1px solid var(--borde-suave); border-radius: var(--radio-contenedor); background: var(--bloque); padding: var(--espacio-16); display: flex; flex-direction: column; gap: 14px; }
 .pregunta-caja .rotulo-preg { font-size: 13px; color: var(--texto-secundario); font-weight: 600; }
 .pregunta-caja .texto-preg { font-size: 18px; font-weight: 700; line-height: 1.35; }
-.aviso:empty { display: none; }
+/* La región de aviso existe desde el inicio, vacía y sin caja: así VoiceOver lee lo que aparece */
+.ej-izq > .aviso:empty { margin-top: -20px; }
 .aviso .alerta { display: flex; gap: 12px; align-items: flex-start; border-radius: var(--radio-contenedor); padding: 14px 16px; border: 1px solid; }
 .aviso .alerta > svg { flex: none; width: 20px; height: 20px; margin-top: 2px; }
 .aviso .alerta b { display: block; }
@@ -585,7 +587,7 @@ select.input { background: var(--fondo); }
 .lz > h2 { margin: 0; font-size: 17px; font-weight: 700; padding-bottom: 12px; border-bottom: 1px solid #CDD5DF; }
 .lz--plano { padding: 0; overflow: hidden; gap: 0; }
 .lz a { color: #0057B8; }
-.lz :focus-visible { outline: 3px solid #0E6A6A; outline-offset: 2px; }
+.lz :focus, .lz :focus-visible { outline: 3px solid #0E6A6A; outline-offset: 2px; }
 .lz .sin-foco:focus, .lz .sin-foco:focus-visible { outline: none; }
 .lz [role="menuitem"]:focus-visible, .lz [role="menuitem"]:focus { outline: 3px solid #0E6A6A; outline-offset: -3px; background: #E6F2F2; }
 .lz button { cursor: pointer; }
@@ -612,21 +614,12 @@ select.input { background: var(--fondo); }
 .lz .error-v3 { color: #B3261E; font-weight: 600; }
 .lz .error-v3:empty { display: none; }
 .lz .confirmado { border: 1px solid #1A7340; background: #DDF2E5; color: #16202B; border-radius: 8px; padding: 10px 12px; font-weight: 600; }
-.lz .confirmado:empty { display: none; }
+.lz .confirmado:empty { padding: 0; border: 0; } /* la región existe desde el inicio, sin caja */
 
 /* Catálogo (¿Dónde está el foco?) */
-.lz .cat-filtros { order: 0; }
-.lz .cat-mod { display: flex; flex-direction: column; gap: 4px; }
-.lz .cat-tarjetas > div:nth-child(1) { order: 1; } .lz .cat-tarjetas > div:nth-child(2) { order: 3; } .lz .cat-tarjetas > div:nth-child(3) { order: 2; }
-.lz .cat-mod label:nth-of-type(1) { order: 1; } .lz .cat-mod label:nth-of-type(2) { order: 3; } .lz .cat-mod label:nth-of-type(3) { order: 2; }
 .lz .banner { transition: opacity .2s ease; }
 .lz .banner.transparente { opacity: 0.2; }
 @media (prefers-reduced-motion: reduce) { .lz .banner { transition: none; } }
-.rastro { position: relative; }
-.rastro svg.linea { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 6; }
-.rastro .parada { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 999px; background: #6B35A0; color: #FFFFFF; font: 700 11px/22px var(--font-sans); text-align: center; z-index: 7; box-shadow: 0 0 0 2px #FFFFFF; }
-.rastro .banner { opacity: 0.2; }
-
 /* Mapa de la página: el formulario dentro de main y la barra lateral fuera */
 .lz .mapa { display: grid; grid-template-columns: minmax(0, 1fr) 200px; }
 .lz .mapa > main { grid-column: 1 / 3; grid-row: 1 / 4; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
@@ -684,13 +677,32 @@ select.input { background: var(--fondo); }
 .lab-mouse svg { width: 16px; height: 16px; }
 .confirmar-reset { border-color: var(--error-borde); }
 
+/* Respuestas de un ejercicio */
+.vista--ej { gap: var(--espacio-16); }
+.res-cab { display: flex; flex-direction: column; gap: var(--espacio-24); margin-top: 8px; }
+.res-tit { display: flex; flex-direction: column; gap: 10px; }
+.res-tit h1 { font-size: 26px; }
+.res-tit .lab-etiqueta { width: max-content; font-size: 12px; gap: 6px; margin: 0; }
+.tabla-resp { background: var(--tarjeta); border: 1px solid var(--borde-suave); border-radius: var(--radio-contenedor); overflow: hidden; margin-top: 8px; }
+.tabla-resp table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabla-resp thead { background: var(--bloque); }
+.tabla-resp thead th { text-align: left; padding: 12px 14px; font-size: 13px; font-weight: 600; color: var(--texto-secundario); border-bottom: 1px solid var(--borde-suave); }
+.tabla-resp tbody th, .tabla-resp td { text-align: left; vertical-align: top; padding: 14px; border-bottom: 1px solid var(--borde-suave); color: var(--texto); }
+.tabla-resp tbody tr:last-child > * { border-bottom: 0; }
+.tabla-resp tbody th { font-weight: 600; white-space: nowrap; }
+.resp-num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: var(--radio-pildora); background: var(--borde-suave); margin-right: 8px; font-size: 13px; }
+.resp-lista { display: flex; flex-direction: column; gap: 8px; }
+.resp-item { display: flex; gap: 8px; align-items: flex-start; font-weight: 600; }
+.resp-marca { flex: none; width: 22px; height: 22px; border-radius: var(--radio-pildora); background: var(--acento-oscuro); color: var(--acento-claro); display: grid; place-items: center; margin-top: 1px; }
+.res-pie { display: flex; justify-content: flex-end; margin-top: 8px; }
+.res-pie .lab-btn--principal { min-width: 240px; }
+
 </style>
 </head>
 <body>
 <div class="lab-barra" aria-hidden="true"></div>
 <header class="topbar"><div class="topbar-in">
   <div class="brand"><span class="brand-name">Laboratorio A11Y</span><span class="brand-sub">Sesión 2</span></div>
-  <div class="yo" id="yo-box"></div>
 </div></header>
 <div id="app">
   <div class="contenedor avisos-globales">
@@ -1050,9 +1062,10 @@ const V = () => $("#vista");
 function enfocarTitulo() { const h = $("#vista h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); window.scrollTo(0, 0); } }
 
 /* Piezas comunes de la zona de respuesta */
-const opsHTML = (name, ops, val, { multi = false, cols = 2, leyenda = "", ver = false } = {}) => {
+const opsHTML = (name, ops, val, { multi = false, cols = 2, leyenda = "", ver = false, lbl = "" } = {}) => {
   const tipo = multi ? "checkbox" : "radio", vals = multi ? (val || []) : [val];
-  return `<fieldset><legend${ver ? "" : ' class="vh"'}>${leyenda}</legend><div class="ops ops--${cols}">${ops.map(([v, t]) => `<label class="op-card"><input type="${tipo}" name="${name}" value="${esc(v)}"${vals.includes(v) ? " checked" : ""}><span>${t}</span></label>`).join("")}</div></fieldset>`;
+  /* Si la pregunta ya está escrita en pantalla, el grupo toma su nombre de ella (lbl) y no se repite en una leyenda oculta */
+  return `<fieldset${lbl ? ` aria-labelledby="${lbl}"` : ""}>${lbl ? "" : `<legend${ver ? "" : ' class="vh"'}>${leyenda}</legend>`}<div class="ops ops--${cols}">${ops.map(([v, t]) => `<label class="op-card"><input type="${tipo}" name="${name}" value="${esc(v)}"${vals.includes(v) ? " checked" : ""}><span>${t}</span></label>`).join("")}</div></fieldset>`;
 };
 const etiquetaDe = (ops, v) => { if (Array.isArray(v)) return v.length ? v.map(x => etiquetaDe(ops, x)).join(" y ") : "Sin respuesta"; const o = ops.find(x => x[0] === v); return o ? o[1].replace(/<[^>]+>/g, "") : "Sin respuesta"; };
 const teclaHTML = t => `<span class="lab-tecla">${t}</span>`;
@@ -1131,7 +1144,7 @@ function iniciarEjercicio(def) {
   const pct = def.avanceTareas ? Math.round((ej.k + 1) / def.pasos.length * 100) : Math.round(idx / lista.length * 100);
   const rotIzq = def.rotuloEtapa || etapa.nombre, rotDer = def.rotuloAvance || `Ejercicio ${idx} de ${lista.length}`;
   V().innerHTML = `<${conMain ? "main" : "div"} class="contenedor vista" id="contenido" tabindex="-1">
-  <${conMain ? 'section aria-labelledby="ej-titulo"' : "div"} class="ej${def.etapa === 1 ? " sin-cursor" : ""}">
+  <${conMain ? 'section aria-labelledby="ej-titulo"' : "div"} class="ej">
     <div class="lab-progreso"><div class="rotulo"><span>${rotIzq}</span><span>${rotDer}</span></div><div class="riel" role="progressbar" aria-label="Avance: ${esc(rotIzq)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-valuetext="${esc(rotDer)}"><div class="lleno" id="riel-lleno" style="width:${pct}%"></div></div></div>
     <span class="lab-crono" id="timer" role="timer" aria-label="Tiempo restante">${icon("reloj", 18)}<span id="timer-txt">Tiempo ${mmss(def.tiempo)}</span></span>
     ${recuperado ? `<div class="lab-alerta lab-alerta--exito" role="status">${icon("checkc")}<p class="titulo">Recuperamos tus respuestas</p><p class="detalle">Volviste a la tarea donde quedaste, con lo que ya habías marcado. El tiempo siguió corriendo mientras la página se recargaba.</p></div>` : ""}
@@ -1145,7 +1158,7 @@ function iniciarEjercicio(def) {
         <div class="aviso" id="aviso" role="status"></div>
       </div>
       <div class="ej-der">
-        ${def.lzLabel ? `<div class="lz${def.lzPlano ? " lz--plano" : ""}" id="lz-sec" role="group" aria-label="${esc(def.lzLabel)}">` : '<section class="lz" id="lz-sec" aria-labelledby="lz-tit"><h2 id="lz-tit"></h2>'}<div id="lz" style="position:relative;min-width:0"></div></${def.lzLabel ? "div" : "section"}>
+        ${def.lzLabel ? `<div class="lz${def.lzPlano ? " lz--plano" : ""}${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" role="group" aria-label="${esc(def.lzLabel)}">` : `<section class="lz${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" aria-labelledby="lz-tit"><h2 id="lz-tit"></h2>`}<div id="lz" style="position:relative;min-width:0"></div></${def.lzLabel ? "div" : "section"}>
         <div class="nav-pasos"><button class="lab-btn lab-btn--secundario" type="button" id="b-ant">${icon("atras")}Anterior</button><button class="lab-btn lab-btn--secundario" type="button" id="b-sig">Siguiente${icon("flecha")}</button></div>
       </div>
     </div>
@@ -1169,8 +1182,10 @@ function iniciarEjercicio(def) {
     if (el.type === "checkbox") {
       const marcados = $$(`input[name="${el.name}"]:checked`, zona).map(x => x.value);
       const max = def.maxSel && def.maxSel[clave];
-      if (max && marcados.length > max) { el.checked = false; ctx.aviso("info", `Ya elegiste ${max}`, "Quita una opción para cambiarla."); return; }
-      ej.st.resp[clave] = marcados;
+      let lista = (ej.st.resp[clave] || []).filter(v => marcados.includes(v));
+      marcados.forEach(v => { if (!lista.includes(v)) lista.push(v); });
+      if (max && lista.length > max) { const fuera = lista.shift(); const c = $(`input[name="${el.name}"][value="${CSS.escape(fuera)}"]`, zona); if (c) c.checked = false; }
+      ej.st.resp[clave] = lista;
     } else if (el.type === "radio") ej.st.resp[clave] = el.value;
     if (def.alResponder) def.alResponder(ctx, clave);
     pintarPasos(); ctx.guardar();
@@ -1185,7 +1200,6 @@ function iniciarEjercicio(def) {
     $("#lz").innerHTML = ""; def.montar(ctx);
     $("#conf-reiniciar").hidden = true;
     irPaso(0, true);
-    ctx.aviso("info", "Respuestas reiniciadas", "El tiempo sigue corriendo.");
   });
   $("#b-enviar").addEventListener("click", () => {
     $("#conf-reiniciar").hidden = true;
@@ -1193,7 +1207,8 @@ function iniciarEjercicio(def) {
     if (!falta.length) { enviar(false); return; }
     const [uno, varios] = def.unidad, verbo = def.verboPend || "responder";
     $("#conf-tit").textContent = falta.length === 1 ? `Te falta 1 ${uno.toLowerCase()} por ${verbo}` : `Te faltan ${falta.length} ${varios} por ${verbo}`;
-    $("#conf-det").textContent = `${falta.join(", ")}. Lo que dejes sin hacer no suma. El tiempo sigue corriendo.`;
+    const lista = falta.length > 1 ? `${falta.slice(0, -1).join(", ")} y ${falta[falta.length - 1]}` : falta[0];
+    $("#conf-det").textContent = `${lista}${/[?!.]$/.test(lista) ? "" : "."} Lo que dejes sin hacer no suma. El tiempo sigue corriendo.`;
     $("#conf-enviar").hidden = false; $("#conf-seguir").focus();
   });
   $("#conf-enviar").addEventListener("keydown", e => { if (e.key === "Escape") $("#conf-seguir").click(); });
@@ -1209,15 +1224,14 @@ const porTeclado = () => Date.now() - ultimoPuntero > 700;
 document.addEventListener("pointerdown", e => {
   if (e.isTrusted) ultimoPuntero = Date.now();
   if (!ej || ej.def.etapa !== 1 || !e.isTrusted) return;
+  /* Solo cuenta dentro del lienzo: fuera de él, el mouse se usa libremente */
+  if (!(e.target.closest && e.target.closest("#lz-sec"))) return;
   ej.st.mouse = (ej.st.mouse || 0) + 1;
-  const enTarea = e.target.closest && e.target.closest("#zona, #lz");
-  if (enTarea) {
-    ej.st.m = ej.st.m || {};
-    if (!ej.def.estadoPaso(ej.st, ej.k)) ej.st.m[ej.k] = true;
-    if (ej.def.alMouse) ej.def.alMouse(ctx);
-    ctx.aviso("error", "Usaste el mouse", `Esta ${ej.def.unidad[0].toLowerCase()} no suma. Sigue con el teclado.`);
-    pintarPasos();
-  }
+  ej.st.m = ej.st.m || {};
+  if (!ej.def.estadoPaso(ej.st, ej.k)) ej.st.m[ej.k] = true;
+  if (ej.def.alMouse) ej.def.alMouse(ctx);
+  ctx.aviso("error", "Usaste el mouse", `Esta ${ej.def.unidad[0].toLowerCase()} no suma. Sigue con el teclado.`);
+  pintarPasos();
   ctx.guardar();
   if (!PROTO) guardarLuego({ mouse: { [ej.def.id]: ej.st.mouse } }, 800);
 }, true);
@@ -1291,6 +1305,7 @@ async function enviar(auto) {
     },
     montar() {},
     alPaso(c, k) { estacion(c, k); if (c.st.est[k]) cumplida(c, k); },
+    clave: () => EST.map((e, i) => ({ nombre: e.nombre, pregunta: e.instr, correctas: i === 3 ? ["← → hasta “Híbrida”", "↑ ↓ hasta “Prototipado”"] : [e.correcta] })),
     evaluar(st) {
       const pts = st.est.reduce((s, x) => s + (x === "ok" ? 2 : x === "pista" ? 1 : 0), 0);
       const filas = EST.map((e, i) => {
@@ -1310,7 +1325,7 @@ async function enviar(auto) {
   }
   function cumplida(c, i) {
     const st = c.st, x = st.est[i];
-    if (x === "mouse") { c.aviso("error", "Cumplida con mouse", "Esta estación no suma. Puedes seguir con la siguiente."); return; }
+    if (x === "mouse") return;
     let ok = EST[i].ok;
     if (i === 3) { ok = `Elegiste Híbrida con ${st.ejeMod || "← →"} y Prototipado con ${st.ejeCurso || "↑ ↓"}.`; if ((st.ejeMod && st.ejeMod !== "← →") || (st.ejeCurso && st.ejeCurso !== "↑ ↓")) ok += " En una fila, lo esperable es ← →; en una lista, ↑ ↓."; }
     c.aviso("exito", x === "pista" ? "Estación cumplida con pista" : "Estación cumplida", ok);
@@ -1337,7 +1352,7 @@ async function enviar(auto) {
       skip.addEventListener("click", e => { e.preventDefault(); cont.classList.add("llegaste"); cont.focus(); cumplir(c, 1); });
       $$("[data-cab]", lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
     } else if (k === 2) {
-      lz.innerHTML = `<div class="estacion"><label style="display:flex;gap:12px;align-items:flex-start;font-size:15px"><input type="checkbox" id="t1-rec"${st.rec ? " checked" : ""} style="width:22px;height:22px;margin:2px 0 0;accent-color:#16202B"><span><b>Recibir recordatorios</b><span style="display:block;color:#55606E;font-size:14px">Te avisamos un día antes de cada clase.</span></span></label></div>`;
+      lz.innerHTML = `<div class="estacion"><div style="display:flex;gap:12px;align-items:flex-start;font-size:15px"><input type="checkbox" id="t1-rec" aria-describedby="t1-rec-desc"${st.rec ? " checked" : ""} style="width:22px;height:22px;margin:2px 0 0;accent-color:#16202B"><span><label for="t1-rec" style="font-weight:700">Recibir recordatorios</label><span id="t1-rec-desc" style="display:block;color:#55606E;font-size:14px">Te avisamos un día antes de cada clase.</span></span></div></div>`;
       const rec = $("#t1-rec", lz);
       rec.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); darPista(c, 2, "Enter no marca un checkbox. Prueba con Espacio."); } });
       rec.addEventListener("change", () => { st.rec = rec.checked; c.guardar(); if (rec.checked) cumplir(c, 2); });
@@ -1400,87 +1415,93 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
 }
 
 /* ---- 21-t2.js ---- */
-/* ---- Teclado 2 · ¿Dónde está el foco? ---- */
+/* ---- Teclado 2 · ¿Dónde está el foco? ----
+   Cada pregunta tiene su propio lienzo con la página del catálogo y solo el problema de esa pregunta:
+   1. el orden se rompe en Modalidad y en las tarjetas; 2. "Mostrar más filtros" no muestra el foco;
+   3. Modalidad atrapa el foco (sin rescate); 4 y 5. el banner tapa "Siguiente" y, a medias, los números. */
 (function () {
   const P = [
     { nombre: "¿Dónde se rompe?", instr: "¿Dónde se rompe el orden del foco? Elige dos.", multi: true,
       ops: [["modalidad", "En Modalidad"], ["vercurso", "En los botones “Ver curso”"], ["paginacion", "En la paginación"], ["encabezado", "En el encabezado"]], ok: ["modalidad", "vercurso"], correcta: "En Modalidad y en los botones “Ver curso”" },
     { nombre: "¿Dónde desaparece?", instr: "¿En qué elemento desaparece el foco?",
-      ops: [["encabezado", "En “Buscar cursos” e “Iniciar sesión”"], ["vercurso", "En los botones “Ver curso”"], ["filtros", "En los filtros"], ["paginacion", "En la paginación"]], ok: "encabezado", correcta: "En “Buscar cursos” e “Iniciar sesión”" },
+      ops: [["filtros", "En “Mostrar más filtros”"], ["encabezado", "En “Buscar cursos” e “Iniciar sesión”"], ["vercurso", "En los botones “Ver curso”"], ["paginacion", "En la paginación"]], ok: "filtros", correcta: "En “Mostrar más filtros”" },
     { nombre: "¿Dónde queda atrapado?", instr: "¿En qué grupo queda atrapado el foco?",
-      ops: [["modalidad", "En Modalidad"], ["duracion", "En Duración"], ["tarjetas", "En las tarjetas"], ["no", "No queda atrapado"]], ok: "duracion", correcta: "En Duración" },
+      ops: [["modalidad", "En Modalidad"], ["duracion", "En Duración"], ["tarjetas", "En las tarjetas"], ["no", "No queda atrapado"]], ok: "modalidad", correcta: "En Modalidad" },
     { nombre: "¿Qué queda tapado?", instr: "¿Qué elemento queda tapado por completo?",
       ops: [["vercurso", "Los botones “Ver curso”"], ["siguiente", "“Siguiente”"], ["numeros", "Los números de página"], ["ninguno", "Ninguno"]], ok: "siguiente", correcta: "“Siguiente”" },
     { nombre: "¿Tapado a medias cumple?", instr: "Los números de página quedan tapados a medias. ¿Cumple el criterio 2.4.11?",
       ops: [["si", "Sí, cumple"], ["no", "No, falla"]], ok: "si", correcta: "Sí, cumple: solo falla si queda oculto por completo" }
   ];
-  const NOMBRES = { buscar: "Buscar cursos", sesion: "Iniciar sesión", virtual: "Virtual", hibrida: "Híbrida", presencial: "Presencial", hasta8: "Hasta 8 semanas", mas8: "Más de 8 semanas", filtros: "Mostrar más filtros", "vc-dd": "Ver curso · Diseño Digital", "vc-pw": "Ver curso · Programación web", "vc-md": "Ver curso · Marketing digital", p1: "Página 1", p2: "Página 2", p3: "Página 3", siguiente: "Siguiente", aceptar: "Aceptar" };
-  const B = 'style="font:inherit;font-weight:600;border:1px solid #16202B;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 8px"';
-  const tarjeta = (k, t, d) => `<div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px"><div style="height:52px;border-radius:6px;background:#E8ECEF"></div><b>${t}</b><span style="color:#55606E">${d}</span><button type="button" data-k="${k}" ${B}>Ver curso</button></div>`;
+  /* Imágenes de referencia de cada curso (decorativas) */
+  const SV = '<svg width="100%" height="52" viewBox="0 0 120 52" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" style="display:block">';
+  const IMG = window.IMG_CURSO_T2 = {
+    dd: ["#F1ECFD", SV + '<rect x="14" y="9" width="40" height="34" rx="4" fill="#FFFFFF" stroke="#7B5CD6" stroke-width="1.5"/><rect x="18" y="13" width="32" height="6" rx="2" fill="#D9CCF7"/><rect x="18" y="23" width="14" height="16" rx="2" fill="#B9A3F0"/><rect x="35" y="23" width="15" height="7" rx="2" fill="#E5DCFA"/><rect x="35" y="32" width="15" height="7" rx="2" fill="#E5DCFA"/><path d="M62 38 C70 12, 86 12, 96 30" fill="none" stroke="#5B3CC4" stroke-width="2"/><rect x="59" y="35" width="6" height="6" fill="#FFFFFF" stroke="#5B3CC4" stroke-width="1.5"/><rect x="93" y="27" width="6" height="6" fill="#FFFFFF" stroke="#5B3CC4" stroke-width="1.5"/><circle cx="78" cy="17" r="2.5" fill="#5B3CC4"/><circle cx="104" cy="12" r="5" fill="#FF7A59"/><circle cx="104" cy="24" r="5" fill="#2BB5A0"/><circle cx="104" cy="36" r="5" fill="#FFC53D"/></svg>'],
+    md: ["#FFF3E8", SV + '<path d="M16 22 h8 l16 -9 v26 l-16 -9 h-8 z" fill="#F07B1F"/><rect x="19" y="30" width="5" height="10" rx="2" fill="#C65F12"/><path d="M45 18 q5 8 0 16" fill="none" stroke="#F07B1F" stroke-width="2" stroke-linecap="round"/><path d="M50 14 q8 12 0 24" fill="none" stroke="#F7A65C" stroke-width="2" stroke-linecap="round"/><rect x="66" y="32" width="8" height="10" rx="1.5" fill="#F7A65C"/><rect x="78" y="26" width="8" height="16" rx="1.5" fill="#F39233"/><rect x="90" y="19" width="8" height="23" rx="1.5" fill="#F07B1F"/><path d="M64 26 L80 16 L88 20 L104 9" fill="none" stroke="#1A7340" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M98 9 h6 v6" fill="none" stroke="#1A7340" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
+    ht: ["#E8EFF7", SV + '<rect x="10" y="7" width="100" height="38" rx="5" fill="#1E2A3A"/><circle cx="17" cy="13" r="2" fill="#FF6B6B"/><circle cx="24" cy="13" r="2" fill="#FFC53D"/><circle cx="31" cy="13" r="2" fill="#4DD13C"/><text x="20" y="36" font-family="Menlo, Consolas, monospace" font-size="16" font-weight="700" fill="#FF8A4C">&lt;/&gt;</text><rect x="58" y="21" width="22" height="3" rx="1.5" fill="#7FB2FF"/><rect x="83" y="21" width="16" height="3" rx="1.5" fill="#C792EA"/><rect x="64" y="28" width="30" height="3" rx="1.5" fill="#9AE6B4"/><rect x="58" y="35" width="18" height="3" rx="1.5" fill="#7FB2FF"/></svg>']
+  };
+  const CURSOS = { dd: ["Diseño Digital", "16 semanas · Virtual"], md: ["Marketing digital", "8 semanas · Híbrida"], ht: ["HTML", "12 semanas · Presencial"] };
+  const tarjeta = (k, ord) => `<div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px${ord ? ";order:" + ord : ""}"><div style="height:52px;border-radius:6px;background:${IMG[k][0]};overflow:hidden">${IMG[k][1]}</div><h3 style="margin:0;font-size:13px;font-weight:700">${CURSOS[k][0]}</h3><p style="margin:0;color:#55606E">${CURSOS[k][1]}</p><button type="button" data-k="vc-${k}" style="font:inherit;font-weight:600;border:1px solid #16202B;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 8px;margin-top:auto">Ver curso</button></div>`;
   const pag = (n, act) => `<a href="#" data-k="p${n}"${act ? ' aria-current="page"' : ""} aria-label="Página ${n}" style="width:24px;height:24px;border:1px solid #767676;border-radius:5px;display:grid;place-items:center;color:#0057B8;text-decoration:none${act ? ";font-weight:700" : ""}">${n}</a>`;
-  const catalogo = () => `<div class="catalogo" style="position:relative;border:1px solid #CDD5DF;border-radius:8px;overflow:hidden;font-size:13px">
-    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #CDD5DF"><b style="font-size:14px">Campus Digital</b><label style="flex:1 1 160px;display:flex"><span class="vh">Buscar cursos</span><input type="search" data-k="buscar" class="sin-foco" placeholder="Buscar cursos" style="font:inherit;flex:1;min-width:0;border:1px solid #767676;border-radius:6px;padding:6px 10px"></label><a href="#" data-k="sesion" class="sin-foco">Iniciar sesión</a></div>
+  const chk = (k, t, ord) => `<label style="display:flex;gap:6px;align-items:center${ord ? ";order:" + ord : ""}"><input type="checkbox" data-k="${k}">${t}</label>`;
+  const rad = (k, t) => `<label style="display:flex;gap:6px;align-items:center"><input type="radio" name="t2-dur" data-k="${k}">${t}</label>`;
+  const FS = 'style="border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:4px"', LG = 'style="padding:0;margin-bottom:4px;font-weight:700"';
+  /* q = número de pregunta (0 a 4): decide qué problema tiene el lienzo */
+  const catalogo = q => {
+    const roto = q === 0;
+    const mod = roto ? chk("virtual", "Virtual", 1) + chk("hibrida", "Híbrida", 3) + chk("presencial", "Presencial", 2) : chk("virtual", "Virtual") + chk("presencial", "Presencial") + chk("hibrida", "Híbrida");
+    const tarjetas = roto ? tarjeta("dd", 1) + tarjeta("ht", 3) + tarjeta("md", 2) : tarjeta("dd") + tarjeta("md") + tarjeta("ht");
+    return `<div class="catalogo" style="position:relative;border:1px solid #CDD5DF;border-radius:8px;overflow:hidden;font-size:13px">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #CDD5DF"><b style="font-size:14px">Campus Digital</b><input type="search" data-k="buscar" aria-label="Buscar cursos" placeholder="Buscar cursos" style="font:inherit;flex:1 1 160px;min-width:0;border:1px solid #767676;border-radius:6px;padding:6px 10px"><a href="#" data-k="sesion">Iniciar sesión</a></div>
     <div style="display:flex;flex-wrap:wrap;gap:16px;padding:14px">
-      <div style="flex:0 0 150px;display:flex;flex-direction:column;gap:4px">
-        <b>Modalidad</b>
-        <div class="cat-mod"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-k="virtual">Virtual</label><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-k="hibrida">Híbrida</label><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-k="presencial">Presencial</label></div>
-        <b style="margin-top:8px">Duración</b>
-        <label style="display:flex;gap:6px;align-items:center"><input type="radio" name="t2-dur-a" data-k="hasta8">Hasta 8 semanas</label>
-        <label style="display:flex;gap:6px;align-items:center"><input type="radio" name="t2-dur-b" data-k="mas8">Más de 8 semanas</label>
-        <a href="#" data-k="filtros" style="margin-top:6px;font-weight:600">Mostrar más filtros</a>
+      <div style="flex:0 0 150px;display:flex;flex-direction:column;gap:8px">
+        <fieldset class="cat-mod" ${FS}><legend ${LG}>Modalidad</legend>${mod}</fieldset>
+        <fieldset ${FS}><legend ${LG}>Duración</legend>${rad("hasta8", "Hasta 8 semanas")}${rad("mas8", "Más de 8 semanas")}</fieldset>
+        <a href="#" data-k="filtros"${q === 1 ? ' class="sin-foco"' : ""} style="margin-top:-2px;font-weight:600">Mostrar más filtros</a>
       </div>
-      <div class="cat-tarjetas" style="flex:1 1 300px;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${tarjeta("vc-dd", "Diseño Digital", "16 semanas · Virtual")}${tarjeta("vc-pw", "Programación web", "12 semanas · Presencial")}${tarjeta("vc-md", "Marketing digital", "8 semanas · Híbrida")}</div>
+      <div style="flex:1 1 300px;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${tarjetas}</div>
     </div>
     <div style="display:flex;justify-content:flex-end;align-items:flex-start;gap:16px;padding:0 14px 4px"><nav aria-label="Paginación" style="display:flex;gap:6px;margin-top:9px">${pag(1, true)}${pag(2)}${pag(3)}</nav><button type="button" data-k="siguiente" style="font:inherit;font-weight:600;border:1px solid #16202B;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 10px;margin-top:40px">Siguiente</button></div>
-    <div class="banner" style="position:absolute;left:0;right:0;bottom:0;background:#16202B;color:#FFFFFF;display:flex;justify-content:flex-start;align-items:center;gap:16px;padding:12px 14px"><span>Usamos cookies para mejorar tu experiencia.</span><button type="button" data-k="aceptar" style="font:inherit;font-weight:600;border:0;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 12px">Aceptar</button></div>
+    <div class="banner" style="position:absolute;left:0;right:0;bottom:0;background:#16202B;color:#FFFFFF;display:flex;justify-content:flex-start;align-items:center;gap:16px;padding:12px 14px"><p style="margin:0">Usamos cookies para mejorar tu experiencia.</p><button type="button" data-k="aceptar" style="font:inherit;font-weight:600;border:0;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 12px">Aceptar</button></div>
   </div>`;
+  };
   const vacio = v => v == null || v === "" || (Array.isArray(v) && !v.length);
+  let tmBanner = null;
+  function lienzo(c, q) {
+    const lz = c.lz;
+    clearTimeout(tmBanner);
+    lz.innerHTML = catalogo(q);
+    const el = k => $(`[data-k="${k}"]`, lz);
+    $$("a", lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
+    if (q === 2) {
+      /* Trampa: Tab y Shift + Tab dan vueltas entre Virtual, Presencial e Híbrida. No hay rescate. */
+      const grupo = ["virtual", "presencial", "hibrida"].map(el);
+      grupo.forEach((x, i) => x.addEventListener("keydown", e => {
+        if (e.key !== "Tab") return;
+        e.preventDefault();
+        grupo[(i + (e.shiftKey ? grupo.length - 1 : 1)) % grupo.length].focus();
+      }));
+    }
+    if (q === 3) {
+      /* El banner tapa "Siguiente": después de un momento se vuelve transparente */
+      const sig = el("siguiente"), banner = $(".banner", lz);
+      sig.addEventListener("focus", () => { clearTimeout(tmBanner); tmBanner = setTimeout(() => { if (document.activeElement === sig) { banner.classList.add("transparente"); c.aviso("pista", "El foco quedó tapado", "El foco está en un elemento que el banner tapa por completo. Hicimos el banner transparente para que veas dónde está."); } }, 1500); });
+      sig.addEventListener("blur", () => { clearTimeout(tmBanner); banner.classList.remove("transparente"); });
+    }
+  }
   const def = {
     id: "t2", etapa: 1, titulo: "¿Dónde está el foco?", tiempo: 600,
     consigna: "Recorre la página con Tab y Shift + Tab, y responde qué encontraste.",
     unidad: ["Pregunta", "preguntas"], hechoTxt: "respondida",
     pasos: P.map(p => ({ nombre: p.nombre, instr: p.instr })),
     lzTitulo: "Catálogo de cursos",
-    maxSel: { q0: 2 },
-    llevar: "El orden visual y el orden del foco no siempre coinciden. Un foco que no se ve, que queda atrapado o que queda tapado deja a la persona perdida. Tapado a medias cumple 2.4.11: solo falla si queda oculto por completo.",
-    init: () => ({ resp: {}, m: {}, rastro: [], trampa: false }),
+    init: () => ({ resp: {}, m: {} }),
     estadoPaso: (st, i) => st.m && st.m[i] ? "mouse" : vacio((st.resp || {})["q" + i]) ? null : "hecho",
     pendientes: st => P.filter((p, i) => !def.estadoPaso(st, i)).map(p => p.nombre),
-    zona: (st, k) => opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], { multi: !!P[k].multi, cols: 2, leyenda: P[k].instr }),
-    montar(c) {
-      const lz = c.lz, st = c.st;
-      lz.innerHTML = catalogo();
-      const q = k => $(`[data-k="${k}"]`, lz);
-      $$("a", lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
-      lz.addEventListener("focusin", e => {
-        const k = e.target.dataset && e.target.dataset.k; if (!k) return;
-        const r = c.st.rastro; if (r[r.length - 1] !== k && r.length < 150) { r.push(k); c.guardar(); }
-      });
-      /* El orden del foco no coincide con el que se ve (los grupos se reordenan con CSS) */
-      /* Trampa: Tab y Shift + Tab rebotan dentro de Duración */
-      const hasta = q("hasta8"), mas = q("mas8"); let rebotes = 0;
-      const rescate = () => { rebotes = 0; c.st.trampa = true; c.guardar(); q("filtros").focus(); c.aviso("info", "Saliste con ayuda de la plataforma", "El foco no salía del grupo. Lo pasamos a “Mostrar más filtros” para que sigas."); };
-      const rebote = () => { rebotes++; if (rebotes >= 4) setTimeout(rescate, 0); };
-      [hasta, mas].forEach(r => r.addEventListener("focus", e => { if (e.relatedTarget !== hasta && e.relatedTarget !== mas) rebotes = 0; }));
-      hasta.addEventListener("keydown", e => {
-        if (e.key === "Tab" && e.shiftKey) { e.preventDefault(); mas.focus(); rebote(); }
-        else if (e.key === "Tab") rebote();
-        else if (e.key === "Escape") { e.preventDefault(); rescate(); }
-        else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); mas.focus(); mas.checked = true; hasta.checked = false; }
-      });
-      mas.addEventListener("keydown", e => {
-        if (e.key === "Tab" && !e.shiftKey) { e.preventDefault(); hasta.focus(); rebote(); }
-        else if (e.key === "Tab") rebote();
-        else if (e.key === "Escape") { e.preventDefault(); rescate(); }
-        else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); hasta.focus(); hasta.checked = true; mas.checked = false; }
-      });
-      hasta.addEventListener("change", () => { if (hasta.checked) mas.checked = false; });
-      mas.addEventListener("change", () => { if (mas.checked) hasta.checked = false; });
-      /* El banner tapa "Siguiente": después de un momento se vuelve transparente */
-      const sig = q("siguiente"), banner = $(".banner", lz); let tm = null;
-      sig.addEventListener("focus", () => { clearTimeout(tm); tm = setTimeout(() => { if (document.activeElement === sig) { banner.classList.add("transparente"); c.aviso("info", "El foco quedó tapado", "El foco está en un elemento que el banner tapa por completo. Hicimos el banner transparente para que veas dónde está."); } }, 1500); });
-      sig.addEventListener("blur", () => { clearTimeout(tm); banner.classList.remove("transparente"); });
-    },
+    maxSel: { q0: 2 },
+    zona: (st, k) => opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], { multi: !!P[k].multi, cols: 2, lbl: "instr" }),
+    montar() {},
+    alPaso(c, k) { lienzo(c, k); },
+    clave: () => P.map((p, i) => ({ nombre: p.nombre, pregunta: p.instr, correctas: i === 0 ? ["En Modalidad", "En los botones “Ver curso”"] : [p.correcta] })),
     evaluar(st) {
       const resp = st.resp || {};
       let pts = 0, n = 0;
@@ -1492,27 +1513,9 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
           else pp = v === p.ok ? 2 : 0;
         }
         pts += pp; if (pp === 2) n++;
-        return { paso: `${i + 1} · ${p.nombre}`, pregunta: p.instr, tu: (mouse ? "Con mouse. " : "") + etiquetaDe(p.ops, v), correcta: p.correcta, ok: pp === 2 ? true : pp === 1 ? "parcial" : false, etiqueta: pp === 1 ? "1 de 2" : null };
+        return { paso: `${i + 1} · ${p.nombre}`, pregunta: p.instr, tu: (mouse ? "Con mouse. " : "") + etiquetaDe(p.ops, v), correcta: p.correcta, ok: pp === 2 };
       });
       return { puntos: pts, max: 10, aciertos: `${n} de 5`, fraccion: pts / 10, filas };
-    },
-    extraResultado(st) {
-      const r = (st.rastro || []).slice(0, 40);
-      if (!r.length) return "";
-      return `<div class="panel"><h2>Rastro del foco</h2><p class="nota">El camino que siguió el foco cuando recorriste la página. Cada número es una parada, en orden.</p>
-        <ol class="vh">${r.map(k => `<li>${esc(NOMBRES[k] || k)}</li>`).join("")}</ol>
-        <div class="lz" aria-hidden="true"><div class="rastro" id="rastro" inert>${catalogo()}</div></div></div>`;
-    },
-    alResultado(st) {
-      const cont = $("#rastro"); if (!cont) return;
-      const r = (st.rastro || []).slice(0, 40), base = cont.getBoundingClientRect(), vistos = {};
-      const pts = r.map((k, i) => {
-        const el = $(`[data-k="${k}"]`, cont); if (!el) return null;
-        const b = el.getBoundingClientRect(); vistos[k] = (vistos[k] || 0) + 1;
-        const off = (vistos[k] - 1) * 12;
-        return { x: b.left - base.left + Math.min(b.width, 40) / 2 + off, y: b.top - base.top + b.height / 2 - off, n: i + 1 };
-      }).filter(Boolean);
-      cont.insertAdjacentHTML("beforeend", `<svg class="linea" viewBox="0 0 ${base.width} ${base.height}"><polyline points="${pts.map(p => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ")}" fill="none" stroke="#6B35A0" stroke-width="2" stroke-dasharray="5 4"/></svg>` + pts.map(p => `<span class="parada" style="left:${p.x}px;top:${p.y}px">${p.n}</span>`).join(""));
     }
   };
   EJ.push(def);
@@ -1550,6 +1553,7 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
       return `${teclasDisponibles()}<div class="sep" style="margin-top:10px"></div>${opsHTML("r-final", FINAL, (st.resp || {}).final, { cols: 2, leyenda: "Pregunta final: ¿Qué componente atrapó el foco?", ver: true })}`;
     },
     montar(c) { ficha(c); },
+    clave: () => M.map((m, i) => ({ nombre: m.nombre, pregunta: i === 6 ? "Pulsa “Inscribirme” y responde: ¿Qué componente atrapó el foco?" : m.instr, correctas: i === 6 ? [m.esperada, "El calendario"] : [m.esperada] })),
     evaluar(st) {
       const n = st.est.filter(x => x === "ok").length, fin = (st.resp || {}).final === "calendario";
       const filas = M.map((m, i) => {
@@ -1566,8 +1570,6 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
     c.guardar();
     const sig = c.siguientePendiente(i);
     if (i === c.k) c.ir(sig >= 0 ? sig : 6, false); else c.pasos();
-    if (st.est[i] === "mouse") c.aviso("error", "Cumplida con mouse", "Esta misión no suma. Sigue con el teclado.");
-    else c.aviso("exito", "Misión cumplida", sig >= 0 ? `Sigue con la misión ${sig + 1}: ${M[sig].nombre}.` : "Responde la pregunta final.");
   }
   function ficha(c) {
     const lz = c.lz, st = c.st;
@@ -1576,7 +1578,7 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
     const cal = () => st.calSalio
       ? `<p id="t3-fecha-txt"><b>Fecha de inicio:</b> ${st.fecha ? fechaTxt(st.fecha) : "sin elegir"}</p>`
       : `<b id="t3-cal-tit">Fecha de inicio, diciembre 2026</b>${st.fecha ? `<p class="vh" aria-live="polite" id="t3-fecha-el">Elegiste ${fechaTxt(st.fecha)}</p>` : '<p class="vh" aria-live="polite" id="t3-fecha-el"></p>'}
-        <div role="group" aria-labelledby="t3-cal-tit" id="t3-cal" style="display:grid;grid-template-columns:repeat(7,34px);gap:4px">${["L", "M", "M", "J", "V", "S", "D"].map(x => `<span aria-hidden="true" style="text-align:center;color:#55606E;font-size:11px">${x}</span>`).join("")}${"<span></span>".repeat(offset)}${Array.from({ length: 31 }, (_, i) => dia(i + 1)).join("")}</div>`;
+        <div role="group" aria-labelledby="t3-cal-tit" id="t3-cal" style="display:grid;grid-template-columns:repeat(7,34px);gap:4px">${["L", "M", "M", "J", "V", "S", "D"].map(x => `<span aria-hidden="true" style="text-align:center;color:#55606E;font-size:11px">${x}</span>`).join("")}${"<span></span>".repeat(offset)}${Array.from({ length: 13 }, (_, i) => dia(i + 1)).join("")}</div>`;
     lz.innerHTML = `<div class="ficha" style="position:relative;display:flex;flex-direction:column;gap:10px;font-size:13px">
       <div style="display:flex;flex-direction:column;gap:4px">
         <button type="button" id="t3-cursos" aria-haspopup="true" aria-expanded="false" aria-controls="t3-menu" style="font:inherit;font-weight:600;width:max-content;border:1px solid #767676;border-radius:6px;background:#FFFFFF;color:#16202B;padding:6px 12px">Cursos <span aria-hidden="true">▾</span></button>
@@ -1589,7 +1591,7 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
         <fieldset style="border:0;padding:0;margin:0;display:flex;gap:16px;flex-wrap:wrap;align-items:center"><legend style="font-weight:700;padding:0;margin-bottom:6px">Turno</legend>${["Mañana", "Tarde", "Noche"].map(t => `<label style="display:flex;gap:6px;align-items:center"><input type="radio" name="t3-turno" value="${t}"${st.turno === t ? " checked" : ""}>${t}</label>`).join("")}</fieldset>
         <div id="t3-fecha" style="display:flex;flex-direction:column;gap:6px">${cal()}</div>
       </div>
-      <div role="tabpanel" id="t3-p2" aria-labelledby="t3-tab2" tabindex="0"${st.tab === 2 ? "" : " hidden"}><p style="margin:0;color:#55606E">Clases en vivo con docentes del área de diseño del campus.</p></div>
+      <div role="tabpanel" id="t3-p2" aria-labelledby="t3-tab2"${st.tab === 2 ? "" : " hidden"}></div>
       <button type="button" id="t3-silabo" class="b-sec" style="width:max-content;padding:6px 12px">Ver sílabo</button>
       <label style="display:flex;gap:8px;align-items:center;width:max-content"><input type="checkbox" id="t3-terminos"${st.terminos ? " checked" : ""}>Acepto los términos y condiciones</label>
       <button type="button" id="t3-inscribirme" class="b-pri" style="width:max-content;padding:8px 14px">Inscribirme</button>
@@ -1679,13 +1681,13 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
 /* ---- VoiceOver 1 · ¿Qué escuchas? ---- */
 const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;border-radius:6px;background:#0E6A6A;color:#FFFFFF;display:grid;place-items:center">${icon("libro", 15)}</span>`;
 (function () {
-  const BEL = [["boton", "Botón"], ["enlace", "Enlace"], ["texto", "Texto"]];
+  const BEL = [["boton", "Botón"], ["enlace", "Vínculo"], ["texto", "Texto"]];
   const P = [
-    { nombre: "Ver plan de estudios", instr: "¿Qué escuchas en el elemento 1?", ops: BEL, ok: "enlace", atajo: "VO + Cmd + L, siguiente enlace.", cols: 3 },
+    { nombre: "Ver plan de estudios", instr: "¿Qué escuchas en el elemento 1?", ops: BEL, ok: "enlace", atajo: "VO + Cmd + L, siguiente vínculo.", cols: 3 },
     { nombre: "Descargar sílabo", instr: "¿Qué escuchas en el elemento 2?", ops: BEL, ok: "boton", atajo: "VO + →, siguiente elemento.", cols: 3 },
     { nombre: "Inscribirme", instr: "¿Qué escuchas en el elemento 3?", ops: BEL, ok: "boton", atajo: "VO + →, siguiente elemento.", cols: 3 },
     { nombre: "Foto", instr: "¿Qué tipo de imagen es el elemento 4?", ops: [["decorativa", "Decorativa: VoiceOver no la anuncia"], ["informativa", "Informativa: anuncia su descripción"], ["funcional", "Funcional: se anuncia como un control"]], ok: "decorativa", atajo: "VO + Cmd + G, siguiente imagen.", cols: 1 },
-    { nombre: "Gráfico", instr: "¿Qué dice el texto alternativo del elemento 5?", ops: [["barras", "“Gráfico de barras verdes”"], ["completo", "“Inscritos por mes: de 40 en agosto a 65 en noviembre”"], ["titulo", "“Inscritos por mes”"], ["archivo", "“grafico_inscritos.png”"]], ok: "completo", atajo: "VO + Cmd + G, siguiente imagen.", cols: 1 },
+    { nombre: "Gráfico", instr: "¿Qué dice el texto alternativo del elemento 5?", ops: [["barras", "“Gráfico de barras verdes”"], ["completo", "“De 40 en agosto a 65 en noviembre”"], ["titulo", "“Inscritos por mes”"], ["archivo", "“grafico_inscritos.png”"]], ok: "completo", atajo: "VO + Cmd + G, siguiente imagen.", cols: 1 },
     { nombre: "Lupa", instr: "¿Qué escuchas en el elemento 6?", ops: [["buscar", "“Buscar, botón”"], ["lupa", "“Lupa, imagen”"], ["campo", "“Buscar cursos, campo de búsqueda”"], ["sin", "“Botón”, sin nombre"]], ok: "buscar", atajo: "VO + →, siguiente elemento.", cols: 1 }
   ];
   const num = (n, extra = "") => `<span class="num-vo" aria-hidden="true"${extra}>${n}</span>`;
@@ -1699,10 +1701,10 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     init: () => ({ resp: {} }),
     estadoPaso: (st, i) => (st.resp || {})["q" + i] ? "hecho" : null,
     pendientes: st => P.filter((p, i) => !(st.resp || {})["q" + i]).map(p => p.nombre),
-    zona: (st, k) => `${opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], { cols: P[k].cols, leyenda: "Lo que anuncia VoiceOver", ver: true })}<p class="atajo">Atajo sugerido: ${P[k].atajo}</p>`,
+    zona: (st, k) => `${opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], k < 3 ? { cols: P[k].cols, leyenda: "Lo que anuncia VoiceOver", ver: true } : { cols: P[k].cols, lbl: "instr" })}<p class="atajo">Atajo sugerido: ${P[k].atajo}</p>`,
     montar(c) {
       c.lz.innerHTML = `<div style="border:1px solid #CDD5DF;border-radius:8px;font-size:13px">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #CDD5DF"><b style="font-size:14px">Campus Digital</b><span style="display:flex;gap:6px;align-items:center"><label for="v1-buscar" class="vh">Buscar cursos</label><input id="v1-buscar" type="search" placeholder="Buscar cursos" style="font:inherit;width:170px;max-width:100%;border:1px solid #767676;border-radius:5px;padding:5px 8px"><span class="marca-vo">${num(6)}<button type="button" data-vo="6" aria-label="Buscar" style="width:30px;height:30px;border:1px solid #767676;border-radius:5px;background:#FFFFFF;color:#16202B;display:grid;place-items:center;padding:0">${icon("lupa", 15)}</button></span></span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #CDD5DF"><b style="font-size:14px">Campus Digital</b><span style="display:flex;gap:6px;align-items:center"><input id="v1-buscar" type="search" aria-label="Buscar cursos" placeholder="Buscar cursos" style="font:inherit;width:170px;max-width:100%;border:1px solid #767676;border-radius:5px;padding:5px 8px"><span class="marca-vo">${num(6)}<button type="button" data-vo="6" aria-label="Buscar" style="width:30px;height:30px;border:1px solid #767676;border-radius:5px;background:#FFFFFF;color:#16202B;display:grid;place-items:center;padding:0">${icon("lupa", 15)}</button></span></span></div>
         <div style="padding:14px;display:flex;flex-direction:column;gap:12px">
           <h3 style="margin:0;font-size:20px">Programa de Diseño Digital</h3>
           <p style="margin:0;color:#55606E">16 semanas, en línea. Interfaces, sistemas de diseño y accesibilidad.</p>
@@ -1712,13 +1714,14 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
             <span class="marca-vo">${num(3)}<button type="button" data-vo="3" style="font:inherit;font-weight:600;border:0;border-radius:6px;background:#16202B;color:#FFFFFF;padding:7px 14px">Inscribirme</button></span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
-            <div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px"><div data-vo="4" style="position:relative;height:78px;border-radius:6px;background:#C7D3DD;overflow:hidden"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgOTAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjkwIiBzdHlsZT0iZGlzcGxheTogYmxvY2siPjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iOTAiIGZpbGw9IiNFOERDQzgiLz48cmVjdCB4PSIxMTgiIHk9IjYiIHdpZHRoPSI4NCIgaGVpZ2h0PSI1NiIgZmlsbD0iI0NGRTNGMSIvPjxyZWN0IHg9IjExOCIgeT0iNiIgd2lkdGg9Ijg0IiBoZWlnaHQ9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QTZBNEEiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xNjAgNnY1Nk0xMTggMzRoODQiIHN0cm9rZT0iIzhBNkE0QSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTEyNCAxMmwyMCAwLTE0IDQ0aC0xNnoiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9Ii4zNSIvPjxwYXRoIGQ9Ik0xMTAgNjIgTDIxMCA2MiBMMjUwIDkwIEw3MCA5MFoiIGZpbGw9IiNGNEVCREQiIG9wYWNpdHk9Ii41NSIvPjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSI3IiB5PSI4IiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSI4IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIxMyIgeT0iMTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjEyIiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMTYiIHk9IjExIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjIxIiB5PSIxNSIgd2lkdGg9IjQiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyNSIgeT0iMTUiIHdpZHRoPSI1IiBoZWlnaHQ9IjEyIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMzAiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjM3IiB5PSIxNCIgd2lkdGg9IjMiIGhlaWdodD0iMTMiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI0MSIgeT0iMTUiIHdpZHRoPSI2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iNDgiIHk9IjE1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMiIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjUzIiB5PSI5IiB3aWR0aD0iNiIgaGVpZ2h0PSIxOCIgZmlsbD0iI0M5QTIyNyIvPjxyZWN0IHg9IjU5IiB5PSIxNCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSI2NCIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iNzEiIHk9IjE1IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0E2M0QyRiIvPjxyZWN0IHg9Ijc2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI4MSIgeT0iMTEiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iODUiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iIzRGNkQzQSIvPjxyZWN0IHg9IjkwIiB5PSI5IiB3aWR0aD0iNSIgaGVpZ2h0PSIxOCIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjYiIHk9IjI3IiB3aWR0aD0iOTYiIGhlaWdodD0iMyIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHg9IjciIHk9IjMwIiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSI4IiB5PSIzNSIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIxMiIgeT0iMzciIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMTYiIHk9IjM0IiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjIzIiB5PSIzNSIgd2lkdGg9IjUiIGhlaWdodD0iMTQiIGZpbGw9IiNBNjNEMkYiLz48cmVjdCB4PSIyOCIgeT0iMzMiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjMUYzQjU3Ii8+PHJlY3QgeD0iMzEiIHk9IjM2IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjM1IiB5PSIzMiIgd2lkdGg9IjMiIGhlaWdodD0iMTciIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIzOSIgeT0iMzEiIHdpZHRoPSI2IiBoZWlnaHQ9IjE4IiBmaWxsPSIjQjU1NjJCIi8+PHJlY3QgeD0iNDUiIHk9IjMzIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjUwIiB5PSIzNyIgd2lkdGg9IjUiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI1NSIgeT0iMzIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE3IiBmaWxsPSIjNEY2RDNBIi8+PHJlY3QgeD0iNjAiIHk9IjMyIiB3aWR0aD0iMyIgaGVpZ2h0PSIxNyIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjYzIiB5PSIzMiIgd2lkdGg9IjYiIGhlaWdodD0iMTciIGZpbGw9IiNEOUM3QTEiLz48cmVjdCB4PSI2OSIgeT0iMzIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE3IiBmaWxsPSIjQjU1NjJCIi8+PHJlY3QgeD0iNzQiIHk9IjM1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNCIgZmlsbD0iI0M5QTIyNyIvPjxyZWN0IHg9IjgwIiB5PSIzNCIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM4QzJGMzkiLz48cmVjdCB4PSI4MyIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iODciIHk9IjM0IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjkyIiB5PSIzNCIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSI2IiB5PSI0OSIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjMiIGZpbGw9IiM3QTU2MzgiLz48cmVjdCB4PSI3IiB5PSI1MiIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iOCIgeT0iNTgiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjMUYzQjU3Ii8+PHJlY3QgeD0iMTMiIHk9IjU0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNyIgZmlsbD0iIzFGM0I1NyIvPjxyZWN0IHg9IjE3IiB5PSI1OCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyMiIgeT0iNTgiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMjciIHk9IjU5IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjMyIiB5PSI1NyIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiM2QzRBOEUiLz48cmVjdCB4PSIzNiIgeT0iNTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjE1IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iNDAiIHk9IjU1IiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjQ2IiB5PSI1NSIgd2lkdGg9IjYiIGhlaWdodD0iMTYiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI1MyIgeT0iNTYiIHdpZHRoPSIzIiBoZWlnaHQ9IjE1IiBmaWxsPSIjNEY2RDNBIi8+PHJlY3QgeD0iNTciIHk9IjU2IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iIzFGM0I1NyIvPjxyZWN0IHg9IjYyIiB5PSI1NiIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI2NSIgeT0iNTgiIHdpZHRoPSIzIiBoZWlnaHQ9IjEzIiBmaWxsPSIjMkU1QTg4Ii8+PHJlY3QgeD0iNjgiIHk9IjU4IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMyIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjczIiB5PSI1OSIgd2lkdGg9IjYiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI3OSIgeT0iNTgiIHdpZHRoPSI2IiBoZWlnaHQ9IjEzIiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iODUiIHk9IjU1IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9Ijg5IiB5PSI1NSIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSI5MyIgeT0iNTciIHdpZHRoPSI0IiBoZWlnaHQ9IjE0IiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iNiIgeT0iNzEiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE2IiB5PSI0IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMjE5IiB5PSI4IiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSIyMjAiIHk9IjE1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMiIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjIyNSIgeT0iMTIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE1IiBmaWxsPSIjRDlDN0ExIi8+PHJlY3QgeD0iMjMwIiB5PSIxNCIgd2lkdGg9IjMiIGhlaWdodD0iMTMiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyMzQiIHk9IjEwIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNyIgZmlsbD0iIzZDNEE4RSIvPjxyZWN0IHg9IjIzOCIgeT0iMTEiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjQyIiB5PSIxMyIgd2lkdGg9IjYiIGhlaWdodD0iMTQiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyNDkiIHk9IjE1IiB3aWR0aD0iNiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzdBOEI5OSIvPjxyZWN0IHg9IjI1NSIgeT0iMTAiIHdpZHRoPSIzIiBoZWlnaHQ9IjE3IiBmaWxsPSIjNkM0QThFIi8+PHJlY3QgeD0iMjU5IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNCNTU2MkIiLz48cmVjdCB4PSIyNjMiIHk9IjExIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzdBOEI5OSIvPjxyZWN0IHg9IjI2OSIgeT0iMTEiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMjczIiB5PSIxMCIgd2lkdGg9IjUiIGhlaWdodD0iMTciIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIyNzgiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI4NSIgeT0iMTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNkM0QThFIi8+PHJlY3QgeD0iMjg4IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNFMkIwNEEiLz48cmVjdCB4PSIyOTMiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjI5NyIgeT0iMTUiIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMzAxIiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIzMDUiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iI0E2M0QyRiIvPjxyZWN0IHg9IjIxOCIgeT0iMjciIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE5IiB5PSIzMCIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iMjIwIiB5PSIzNCIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSIyMjMiIHk9IjMxIiB3aWR0aD0iMyIgaGVpZ2h0PSIxOCIgZmlsbD0iIzRGNkQzQSIvPjxyZWN0IHg9IjIyNiIgeT0iMzEiIHdpZHRoPSI1IiBoZWlnaHQ9IjE4IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjMxIiB5PSIzNiIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyMzciIHk9IjM3IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjI0MSIgeT0iMzQiIHdpZHRoPSI1IiBoZWlnaHQ9IjE1IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjQ2IiB5PSIzNiIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyNTAiIHk9IjMzIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjI1NSIgeT0iMzMiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMjU5IiB5PSIzNiIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNjQiIHk9IjM3IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjI2OSIgeT0iMzMiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjcyIiB5PSIzMSIgd2lkdGg9IjUiIGhlaWdodD0iMTgiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIyNzciIHk9IjM1IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNCIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjI4MCIgeT0iMzYiIHdpZHRoPSI2IiBoZWlnaHQ9IjEzIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMjg2IiB5PSIzMyIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyOTAiIHk9IjMyIiB3aWR0aD0iMyIgaGVpZ2h0PSIxNyIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI5MyIgeT0iMzEiIHdpZHRoPSI2IiBoZWlnaHQ9IjE4IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjk5IiB5PSIzNiIgd2lkdGg9IjYiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIzMDUiIHk9IjMzIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjIxOCIgeT0iNDkiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE5IiB5PSI1MiIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iMjIwIiB5PSI1NSIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiM4QzJGMzkiLz48cmVjdCB4PSIyMjQiIHk9IjU4IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjIyOSIgeT0iNTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjMyIiB5PSI1NSIgd2lkdGg9IjYiIGhlaWdodD0iMTYiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyMzgiIHk9IjU1IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjI0MSIgeT0iNTciIHdpZHRoPSI0IiBoZWlnaHQ9IjE0IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjQ1IiB5PSI1NiIgd2lkdGg9IjYiIGhlaWdodD0iMTUiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNTEiIHk9IjU2IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI1NSIgeT0iNTUiIHdpZHRoPSI2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjYxIiB5PSI1NiIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNjYiIHk9IjU1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNiIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjI3MiIgeT0iNTciIHdpZHRoPSI2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjc4IiB5PSI1OCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyODMiIHk9IjU2IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI4OCIgeT0iNTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjE1IiBmaWxsPSIjMkU1QTg4Ii8+PHJlY3QgeD0iMjkyIiB5PSI1MyIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyOTYiIHk9IjU4IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iIzZDNEE4RSIvPjxyZWN0IHg9IjMwMCIgeT0iNTgiIHdpZHRoPSI1IiBoZWlnaHQ9IjEzIiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMzA1IiB5PSI1NiIgd2lkdGg9IjUiIGhlaWdodD0iMTUiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyMTgiIHk9IjcxIiB3aWR0aD0iOTYiIGhlaWdodD0iMyIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHk9Ijc0IiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE2IiBmaWxsPSIjQjM4OTVGIi8+PHJlY3QgeT0iNzQiIHdpZHRoPSIzMjAiIGhlaWdodD0iMiIgZmlsbD0iIzk0NzA0RCIvPjxyZWN0IHg9IjEyOCIgeT0iNjQiIHdpZHRoPSI2NCIgaGVpZ2h0PSI1IiByeD0iMSIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHg9IjEzMiIgeT0iNjkiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMTg1IiB5PSI2OSIgd2lkdGg9IjMiIGhlaWdodD0iMTYiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSIxNDAiIHk9IjU4IiB3aWR0aD0iMTAiIGhlaWdodD0iNiIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjE1MiIgeT0iNjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiBmaWxsPSIjRDlDN0ExIi8+PHBhdGggZD0iTTE3NiA2NHYtMTIiIHN0cm9rZT0iIzJCMkIyQiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNMTcwIDUyaDEybC0zLTZoLTZ6IiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMTEyIiB5PSI2MCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMiIGZpbGw9IiM2QjRBMkYiLz48cmVjdCB4PSIxMTMiIHk9IjYzIiB3aWR0aD0iMiIgaGVpZ2h0PSIyMCIgZmlsbD0iIzVBM0QyNiIvPjxyZWN0IHg9IjEyMSIgeT0iNjMiIHdpZHRoPSIyIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMTEyIiB5PSI0OCIgd2lkdGg9IjIiIGhlaWdodD0iMTUiIGZpbGw9IiM2QjRBMkYiLz48cmVjdCB4PSIxOTYiIHk9IjYwIiB3aWR0aD0iMTIiIGhlaWdodD0iMyIgZmlsbD0iIzZCNEEyRiIvPjxyZWN0IHg9IjE5NyIgeT0iNjMiIHdpZHRoPSIyIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMjA1IiB5PSI2MyIgd2lkdGg9IjIiIGhlaWdodD0iMjAiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSIyMDYiIHk9IjQ4IiB3aWR0aD0iMiIgaGVpZ2h0PSIxNSIgZmlsbD0iIzZCNEEyRiIvPjxyZWN0IHg9IjEwNCIgeT0iNzYiIHdpZHRoPSI5IiBoZWlnaHQ9IjkiIGZpbGw9IiM5QzVCM0EiLz48cGF0aCBkPSJNMTA4IDc2Yy02LTYtNC0xNCAwLTE2IDQgMiA2IDEwIDAgMTZ6IiBmaWxsPSIjNEY4QTRBIi8+PHBhdGggZD0iTTEwOCA3NmMtOC0yLTEwLTgtOC0xMSA0IDAgOCA1IDggMTF6IiBmaWxsPSIjM0Q3QTRGIi8+PC9zdmc+" alt="" style="display:block;width:100%;height:100%;object-fit:cover">${num(4, ' style="top:6px;left:6px"')}</div><b>Inauguramos la nueva biblioteca del campus</b><span style="color:#55606E">Abre sus puertas el lunes 2 de noviembre.</span></div>
-            <div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px"><b>Inscritos por mes</b><div data-vo="5" role="img" aria-label="Inscritos por mes: de 40 en agosto a 65 en noviembre" style="position:relative;display:flex;flex-direction:column;gap:4px"><div style="height:78px;display:flex;align-items:flex-end;gap:10px;padding:4px 6px;border-bottom:1px solid #767676">${num(5, ' style="top:0;left:0"')}<span style="flex:1;height:55%;border-radius:3px 3px 0 0;background:#7DC789"></span><span style="flex:1;height:66%;border-radius:3px 3px 0 0;background:#3F9A50"></span><span style="flex:1;height:80%;border-radius:3px 3px 0 0;background:#2F8541"></span><span style="flex:1;height:92%;border-radius:3px 3px 0 0;background:#185227"></span></div><span style="display:flex;justify-content:space-between;color:#55606E"><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span></span></div></div>
+            <div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px"><div data-vo="4" style="position:relative;height:78px;border-radius:6px;background:#C7D3DD;overflow:hidden"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgOTAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjkwIiBzdHlsZT0iZGlzcGxheTogYmxvY2siPjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iOTAiIGZpbGw9IiNFOERDQzgiLz48cmVjdCB4PSIxMTgiIHk9IjYiIHdpZHRoPSI4NCIgaGVpZ2h0PSI1NiIgZmlsbD0iI0NGRTNGMSIvPjxyZWN0IHg9IjExOCIgeT0iNiIgd2lkdGg9Ijg0IiBoZWlnaHQ9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QTZBNEEiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xNjAgNnY1Nk0xMTggMzRoODQiIHN0cm9rZT0iIzhBNkE0QSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTEyNCAxMmwyMCAwLTE0IDQ0aC0xNnoiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9Ii4zNSIvPjxwYXRoIGQ9Ik0xMTAgNjIgTDIxMCA2MiBMMjUwIDkwIEw3MCA5MFoiIGZpbGw9IiNGNEVCREQiIG9wYWNpdHk9Ii41NSIvPjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSI3IiB5PSI4IiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSI4IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIxMyIgeT0iMTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjEyIiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMTYiIHk9IjExIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjIxIiB5PSIxNSIgd2lkdGg9IjQiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyNSIgeT0iMTUiIHdpZHRoPSI1IiBoZWlnaHQ9IjEyIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMzAiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjM3IiB5PSIxNCIgd2lkdGg9IjMiIGhlaWdodD0iMTMiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI0MSIgeT0iMTUiIHdpZHRoPSI2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iNDgiIHk9IjE1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMiIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjUzIiB5PSI5IiB3aWR0aD0iNiIgaGVpZ2h0PSIxOCIgZmlsbD0iI0M5QTIyNyIvPjxyZWN0IHg9IjU5IiB5PSIxNCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSI2NCIgeT0iMTMiIHdpZHRoPSI2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iNzEiIHk9IjE1IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0E2M0QyRiIvPjxyZWN0IHg9Ijc2IiB5PSIxMyIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI4MSIgeT0iMTEiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iODUiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iIzRGNkQzQSIvPjxyZWN0IHg9IjkwIiB5PSI5IiB3aWR0aD0iNSIgaGVpZ2h0PSIxOCIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjYiIHk9IjI3IiB3aWR0aD0iOTYiIGhlaWdodD0iMyIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHg9IjciIHk9IjMwIiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSI4IiB5PSIzNSIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIxMiIgeT0iMzciIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMTYiIHk9IjM0IiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjIzIiB5PSIzNSIgd2lkdGg9IjUiIGhlaWdodD0iMTQiIGZpbGw9IiNBNjNEMkYiLz48cmVjdCB4PSIyOCIgeT0iMzMiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjMUYzQjU3Ii8+PHJlY3QgeD0iMzEiIHk9IjM2IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjM1IiB5PSIzMiIgd2lkdGg9IjMiIGhlaWdodD0iMTciIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIzOSIgeT0iMzEiIHdpZHRoPSI2IiBoZWlnaHQ9IjE4IiBmaWxsPSIjQjU1NjJCIi8+PHJlY3QgeD0iNDUiIHk9IjMzIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjUwIiB5PSIzNyIgd2lkdGg9IjUiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI1NSIgeT0iMzIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE3IiBmaWxsPSIjNEY2RDNBIi8+PHJlY3QgeD0iNjAiIHk9IjMyIiB3aWR0aD0iMyIgaGVpZ2h0PSIxNyIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjYzIiB5PSIzMiIgd2lkdGg9IjYiIGhlaWdodD0iMTciIGZpbGw9IiNEOUM3QTEiLz48cmVjdCB4PSI2OSIgeT0iMzIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE3IiBmaWxsPSIjQjU1NjJCIi8+PHJlY3QgeD0iNzQiIHk9IjM1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNCIgZmlsbD0iI0M5QTIyNyIvPjxyZWN0IHg9IjgwIiB5PSIzNCIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM4QzJGMzkiLz48cmVjdCB4PSI4MyIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iODciIHk9IjM0IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjkyIiB5PSIzNCIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSI2IiB5PSI0OSIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjMiIGZpbGw9IiM3QTU2MzgiLz48cmVjdCB4PSI3IiB5PSI1MiIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iOCIgeT0iNTgiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjMUYzQjU3Ii8+PHJlY3QgeD0iMTMiIHk9IjU0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNyIgZmlsbD0iIzFGM0I1NyIvPjxyZWN0IHg9IjE3IiB5PSI1OCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyMiIgeT0iNTgiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMjciIHk9IjU5IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjMyIiB5PSI1NyIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIGZpbGw9IiM2QzRBOEUiLz48cmVjdCB4PSIzNiIgeT0iNTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjE1IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iNDAiIHk9IjU1IiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjQ2IiB5PSI1NSIgd2lkdGg9IjYiIGhlaWdodD0iMTYiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI1MyIgeT0iNTYiIHdpZHRoPSIzIiBoZWlnaHQ9IjE1IiBmaWxsPSIjNEY2RDNBIi8+PHJlY3QgeD0iNTciIHk9IjU2IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iIzFGM0I1NyIvPjxyZWN0IHg9IjYyIiB5PSI1NiIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSI2NSIgeT0iNTgiIHdpZHRoPSIzIiBoZWlnaHQ9IjEzIiBmaWxsPSIjMkU1QTg4Ii8+PHJlY3QgeD0iNjgiIHk9IjU4IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMyIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjczIiB5PSI1OSIgd2lkdGg9IjYiIGhlaWdodD0iMTIiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSI3OSIgeT0iNTgiIHdpZHRoPSI2IiBoZWlnaHQ9IjEzIiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iODUiIHk9IjU1IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9Ijg5IiB5PSI1NSIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSI5MyIgeT0iNTciIHdpZHRoPSI0IiBoZWlnaHQ9IjE0IiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iNiIgeT0iNzEiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE2IiB5PSI0IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMjE5IiB5PSI4IiB3aWR0aD0iOTQiIGhlaWdodD0iMTkiIGZpbGw9IiMzQjI4MTgiLz48cmVjdCB4PSIyMjAiIHk9IjE1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxMiIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjIyNSIgeT0iMTIiIHdpZHRoPSI1IiBoZWlnaHQ9IjE1IiBmaWxsPSIjRDlDN0ExIi8+PHJlY3QgeD0iMjMwIiB5PSIxNCIgd2lkdGg9IjMiIGhlaWdodD0iMTMiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyMzQiIHk9IjEwIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNyIgZmlsbD0iIzZDNEE4RSIvPjxyZWN0IHg9IjIzOCIgeT0iMTEiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjQyIiB5PSIxMyIgd2lkdGg9IjYiIGhlaWdodD0iMTQiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyNDkiIHk9IjE1IiB3aWR0aD0iNiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzdBOEI5OSIvPjxyZWN0IHg9IjI1NSIgeT0iMTAiIHdpZHRoPSIzIiBoZWlnaHQ9IjE3IiBmaWxsPSIjNkM0QThFIi8+PHJlY3QgeD0iMjU5IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNCNTU2MkIiLz48cmVjdCB4PSIyNjMiIHk9IjExIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzdBOEI5OSIvPjxyZWN0IHg9IjI2OSIgeT0iMTEiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMjczIiB5PSIxMCIgd2lkdGg9IjUiIGhlaWdodD0iMTciIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIyNzgiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI4NSIgeT0iMTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNkM0QThFIi8+PHJlY3QgeD0iMjg4IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNFMkIwNEEiLz48cmVjdCB4PSIyOTMiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjI5NyIgeT0iMTUiIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMzAxIiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIzMDUiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNSIgZmlsbD0iI0E2M0QyRiIvPjxyZWN0IHg9IjIxOCIgeT0iMjciIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE5IiB5PSIzMCIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iMjIwIiB5PSIzNCIgd2lkdGg9IjMiIGhlaWdodD0iMTUiIGZpbGw9IiM0RjZEM0EiLz48cmVjdCB4PSIyMjMiIHk9IjMxIiB3aWR0aD0iMyIgaGVpZ2h0PSIxOCIgZmlsbD0iIzRGNkQzQSIvPjxyZWN0IHg9IjIyNiIgeT0iMzEiIHdpZHRoPSI1IiBoZWlnaHQ9IjE4IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjMxIiB5PSIzNiIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyMzciIHk9IjM3IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0UyQjA0QSIvPjxyZWN0IHg9IjI0MSIgeT0iMzQiIHdpZHRoPSI1IiBoZWlnaHQ9IjE1IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjQ2IiB5PSIzNiIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyNTAiIHk9IjMzIiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjI1NSIgeT0iMzMiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMjU5IiB5PSIzNiIgd2lkdGg9IjQiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNjQiIHk9IjM3IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjI2OSIgeT0iMzMiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMjcyIiB5PSIzMSIgd2lkdGg9IjUiIGhlaWdodD0iMTgiIGZpbGw9IiMzRDdBNEYiLz48cmVjdCB4PSIyNzciIHk9IjM1IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNCIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjI4MCIgeT0iMzYiIHdpZHRoPSI2IiBoZWlnaHQ9IjEzIiBmaWxsPSIjQTYzRDJGIi8+PHJlY3QgeD0iMjg2IiB5PSIzMyIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyOTAiIHk9IjMyIiB3aWR0aD0iMyIgaGVpZ2h0PSIxNyIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI5MyIgeT0iMzEiIHdpZHRoPSI2IiBoZWlnaHQ9IjE4IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjk5IiB5PSIzNiIgd2lkdGg9IjYiIGhlaWdodD0iMTMiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIzMDUiIHk9IjMzIiB3aWR0aD0iNiIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjIxOCIgeT0iNDkiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzIiBmaWxsPSIjN0E1NjM4Ii8+PHJlY3QgeD0iMjE5IiB5PSI1MiIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjE5IiBmaWxsPSIjM0IyODE4Ii8+PHJlY3QgeD0iMjIwIiB5PSI1NSIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIGZpbGw9IiM4QzJGMzkiLz48cmVjdCB4PSIyMjQiIHk9IjU4IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iI0Q5QzdBMSIvPjxyZWN0IHg9IjIyOSIgeT0iNTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjMyIiB5PSI1NSIgd2lkdGg9IjYiIGhlaWdodD0iMTYiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyMzgiIHk9IjU1IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNiIgZmlsbD0iIzhDMkYzOSIvPjxyZWN0IHg9IjI0MSIgeT0iNTciIHdpZHRoPSI0IiBoZWlnaHQ9IjE0IiBmaWxsPSIjOEMyRjM5Ii8+PHJlY3QgeD0iMjQ1IiB5PSI1NiIgd2lkdGg9IjYiIGhlaWdodD0iMTUiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNTEiIHk9IjU2IiB3aWR0aD0iMyIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI1NSIgeT0iNTUiIHdpZHRoPSI2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjYxIiB5PSI1NiIgd2lkdGg9IjQiIGhlaWdodD0iMTUiIGZpbGw9IiM3QThCOTkiLz48cmVjdCB4PSIyNjYiIHk9IjU1IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNiIgZmlsbD0iIzNEN0E0RiIvPjxyZWN0IHg9IjI3MiIgeT0iNTciIHdpZHRoPSI2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjN0E4Qjk5Ii8+PHJlY3QgeD0iMjc4IiB5PSI1OCIgd2lkdGg9IjUiIGhlaWdodD0iMTMiIGZpbGw9IiMxRjNCNTciLz48cmVjdCB4PSIyODMiIHk9IjU2IiB3aWR0aD0iNSIgaGVpZ2h0PSIxNSIgZmlsbD0iI0I1NTYyQiIvPjxyZWN0IHg9IjI4OCIgeT0iNTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjE1IiBmaWxsPSIjMkU1QTg4Ii8+PHJlY3QgeD0iMjkyIiB5PSI1MyIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIGZpbGw9IiMyRTVBODgiLz48cmVjdCB4PSIyOTYiIHk9IjU4IiB3aWR0aD0iNCIgaGVpZ2h0PSIxMyIgZmlsbD0iIzZDNEE4RSIvPjxyZWN0IHg9IjMwMCIgeT0iNTgiIHdpZHRoPSI1IiBoZWlnaHQ9IjEzIiBmaWxsPSIjRTJCMDRBIi8+PHJlY3QgeD0iMzA1IiB5PSI1NiIgd2lkdGg9IjUiIGhlaWdodD0iMTUiIGZpbGw9IiNDOUEyMjciLz48cmVjdCB4PSIyMTgiIHk9IjcxIiB3aWR0aD0iOTYiIGhlaWdodD0iMyIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHk9Ijc0IiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE2IiBmaWxsPSIjQjM4OTVGIi8+PHJlY3QgeT0iNzQiIHdpZHRoPSIzMjAiIGhlaWdodD0iMiIgZmlsbD0iIzk0NzA0RCIvPjxyZWN0IHg9IjEyOCIgeT0iNjQiIHdpZHRoPSI2NCIgaGVpZ2h0PSI1IiByeD0iMSIgZmlsbD0iIzdBNTYzOCIvPjxyZWN0IHg9IjEzMiIgeT0iNjkiIHdpZHRoPSIzIiBoZWlnaHQ9IjE2IiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMTg1IiB5PSI2OSIgd2lkdGg9IjMiIGhlaWdodD0iMTYiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSIxNDAiIHk9IjU4IiB3aWR0aD0iMTAiIGhlaWdodD0iNiIgZmlsbD0iIzJFNUE4OCIvPjxyZWN0IHg9IjE1MiIgeT0iNjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiBmaWxsPSIjRDlDN0ExIi8+PHBhdGggZD0iTTE3NiA2NHYtMTIiIHN0cm9rZT0iIzJCMkIyQiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNMTcwIDUyaDEybC0zLTZoLTZ6IiBmaWxsPSIjM0Q3QTRGIi8+PHJlY3QgeD0iMTEyIiB5PSI2MCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMiIGZpbGw9IiM2QjRBMkYiLz48cmVjdCB4PSIxMTMiIHk9IjYzIiB3aWR0aD0iMiIgaGVpZ2h0PSIyMCIgZmlsbD0iIzVBM0QyNiIvPjxyZWN0IHg9IjEyMSIgeT0iNjMiIHdpZHRoPSIyIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMTEyIiB5PSI0OCIgd2lkdGg9IjIiIGhlaWdodD0iMTUiIGZpbGw9IiM2QjRBMkYiLz48cmVjdCB4PSIxOTYiIHk9IjYwIiB3aWR0aD0iMTIiIGhlaWdodD0iMyIgZmlsbD0iIzZCNEEyRiIvPjxyZWN0IHg9IjE5NyIgeT0iNjMiIHdpZHRoPSIyIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNUEzRDI2Ii8+PHJlY3QgeD0iMjA1IiB5PSI2MyIgd2lkdGg9IjIiIGhlaWdodD0iMjAiIGZpbGw9IiM1QTNEMjYiLz48cmVjdCB4PSIyMDYiIHk9IjQ4IiB3aWR0aD0iMiIgaGVpZ2h0PSIxNSIgZmlsbD0iIzZCNEEyRiIvPjxyZWN0IHg9IjEwNCIgeT0iNzYiIHdpZHRoPSI5IiBoZWlnaHQ9IjkiIGZpbGw9IiM5QzVCM0EiLz48cGF0aCBkPSJNMTA4IDc2Yy02LTYtNC0xNCAwLTE2IDQgMiA2IDEwIDAgMTZ6IiBmaWxsPSIjNEY4QTRBIi8+PHBhdGggZD0iTTEwOCA3NmMtOC0yLTEwLTgtOC0xMSA0IDAgOCA1IDggMTF6IiBmaWxsPSIjM0Q3QTRGIi8+PC9zdmc+" alt="" style="display:block;width:100%;height:100%;object-fit:cover">${num(4, ' style="top:6px;left:6px"')}</div><h4 style="margin:0;font-size:13px;font-weight:700">Inauguramos la nueva biblioteca del campus</h4><span style="color:#55606E">Abre sus puertas el lunes 2 de noviembre.</span></div>
+            <div style="border:1px solid #CDD5DF;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px"><h4 style="margin:0;font-size:13px;font-weight:700">Inscritos por mes</h4><div data-vo="5" role="img" aria-label="De 40 en agosto a 65 en noviembre" style="position:relative;display:flex;flex-direction:column;gap:4px"><div style="height:78px;display:flex;align-items:flex-end;gap:10px;padding:4px 6px;border-bottom:1px solid #767676">${num(5, ' style="top:0;left:0"')}<span style="flex:1;height:55%;border-radius:3px 3px 0 0;background:#7DC789"></span><span style="flex:1;height:66%;border-radius:3px 3px 0 0;background:#3F9A50"></span><span style="flex:1;height:80%;border-radius:3px 3px 0 0;background:#2F8541"></span><span style="flex:1;height:92%;border-radius:3px 3px 0 0;background:#185227"></span></div><span style="display:flex;justify-content:space-between;color:#55606E"><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span></span></div></div>
           </div>
         </div></div>`;
       $$("a", c.lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
     },
     alPaso(c, k) { $$("[data-vo]", c.lz).forEach(el => el.classList.toggle("actual-vo", +el.dataset.vo === k + 1)); },
+    clave: () => P.map(p => ({ nombre: p.nombre, pregunta: p.instr, correctas: [etiquetaDe(p.ops, p.ok)] })),
     evaluar(st) {
       const resp = st.resp || {}; let n = 0;
       const filas = P.map((p, i) => { const ok = resp["q" + i] === p.ok; if (ok) n++; return { paso: `${i + 1} · ${p.nombre}`, pregunta: p.instr, tu: etiquetaDe(p.ops, resp["q" + i]), correcta: etiquetaDe(p.ops, p.ok), ok }; });
@@ -1736,7 +1739,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     { nombre: "Falso título", instr: "¿Qué título se ve como encabezado pero no lo es?", ops: [["descripcion", "Descripción"], ["aprenderas", "Lo que aprenderás"], ["plan", "Plan de estudios"], ["relacionados", "Cursos relacionados"]], ok: "aprenderas", atajo: ROT_ENC, cols: 2 },
     { nombre: "Encabezado disfrazado", instr: "¿Qué texto se ve normal pero sí es un encabezado?", ops: [["requisitos", "Requisitos"], ["semanas", "16 semanas, en línea"], ["figma", "Conocimientos básicos de Figma"], ["ninguno", "Ninguno"]], ok: "requisitos", atajo: ROT_ENC, cols: 2 },
     { nombre: "Nivel equivocado", instr: "¿Qué encabezado tiene el nivel equivocado y cuál debería ser?", ops: [["modulos", "Los módulos: son nivel 4 y deberían ser nivel 3"], ["plan", "“Plan de estudios”: es nivel 2 y debería ser nivel 1"], ["requisitos", "“Requisitos”: es nivel 2 y debería ser nivel 3"], ["ninguno", "Ninguno: la estructura está bien"]], ok: "modulos", atajo: "VO + Cmd + H, siguiente encabezado. Anuncia su nivel.", cols: 1 },
-    { nombre: "Navegaciones", instr: "¿Cómo anuncia VoiceOver las dos navegaciones?", ops: [["nombres", "“Menú del campus, navegación” y “Migas de pan, navegación”"], ["menu", "“Menú, navegación” y “Ruta, navegación”"], ["enlaces", "“Cursos, enlace” y “Becas, enlace”"], ["sin", "“Navegación” y “Navegación”, sin nombre"]], ok: "nombres", atajo: ROT_REF, cols: 1 },
+    { nombre: "Navegaciones", instr: "¿Cómo anuncia VoiceOver las dos navegaciones?", ops: [["nombres", "“Menú del campus, navegación” y “Migas de pan, navegación”"], ["menu", "“Menú, navegación” y “Ruta, navegación”"], ["enlaces", "“Cursos, vínculo” y “Becas, vínculo”"], ["sin", "“Navegación” y “Navegación”, sin nombre"]], ok: "nombres", atajo: ROT_REF, cols: 1 },
     { nombre: "Formulario", instr: "Según las regiones (landmarks) de la página, ¿dónde se encuentra el formulario “Recibe información”?", ops: [["main", "Contenido principal (main)"], ["aside", "Complementario (aside)"], ["header", "Encabezado (header)"], ["footer", "Pie de página (footer)"]], ok: "main", atajo: ROT_REF, cols: 2 }
   ];
   const tit = 'style="margin:0 0 8px;font-size:17px;font-weight:700"';
@@ -1751,7 +1754,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     init: () => ({ resp: {} }),
     estadoPaso: (st, i) => (st.resp || {})["q" + i] ? "hecho" : null,
     pendientes: st => P.filter((p, i) => !(st.resp || {})["q" + i]).map(p => p.nombre),
-    zona: (st, k) => `${opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], { cols: P[k].cols, leyenda: P[k].instr })}<p class="atajo">Atajo sugerido: ${P[k].atajo}</p>`,
+    zona: (st, k) => `${opsHTML("r-q" + k, P[k].ops, (st.resp || {})["q" + k], { cols: P[k].cols, lbl: "instr" })}<p class="atajo">Atajo sugerido: ${P[k].atajo}</p>`,
     montar(c) {
       c.lz.innerHTML = `<div style="font-size:13px;line-height:1.5">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid #E3E8EE"><span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;letter-spacing:-0.01em">${LOGO_CAMPUS}Campus Digital</span>
@@ -1778,6 +1781,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       </div>`;
       $$("a", c.lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
     },
+    clave: () => P.map(p => ({ nombre: p.nombre, pregunta: p.instr, correctas: [etiquetaDe(p.ops, p.ok)] })),
     evaluar(st) {
       const resp = st.resp || {}; let n = 0;
       const filas = P.map((p, i) => { const ok = resp["q" + i] === p.ok; if (ok) n++; return { paso: `${i + 1} · ${p.nombre}`, pregunta: p.instr, tu: etiquetaDe(p.ops, resp["q" + i]), correcta: etiquetaDe(p.ops, p.ok), ok }; });
@@ -1792,7 +1796,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
 (function () {
   const TEL = [["9dig", "9 dígitos, sin espacios"], ["pais", "Con el código de país +51"], ["guiones", "Con guiones: 987-654-321"], ["no", "No lo indica"]];
   const POP = [["dialogo", "“Confirma tu inscripción, diálogo”, con los datos a confirmar"], ["confirmada", "“Inscripción confirmada”"], ["alerta", "“Alerta”"], ["boton", "“Confirmar inscripción, botón”"]];
-  const CODIGO = "FARO-27";
+  const CODIGO = "FARO 27"; /* se acepta junto, con guion o en minúsculas */
   const telOk = v => /^\d{9}$/.test(String(v || ""));
   const datosOk = d => !!(d.nombre && d.nombre.trim() && telOk(d.tel) && d.mod === "Híbrida" && d.sede === "Lima" && d.terminos);
   const ITEMS = [["nombre", "Tu nombre completo", d => !!(d.nombre && d.nombre.trim())], ["tel", "Tu teléfono celular, en el formato que escuches", d => telOk(d.tel)], ["mod", "Modalidad Híbrida", d => d.mod === "Híbrida"], ["sede", "Sede Lima", d => d.sede === "Lima"], ["terminos", "Acepta los términos y condiciones", d => !!d.terminos]];
@@ -1815,11 +1819,11 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     estadoPaso: (st, i) => i === 0 ? (st.confirmado ? "hecho" : null) : (st.resp || {})[["", "tel", "pop", "codigo"][i]] ? "hecho" : null,
     pendientes: st => P.filter((p, i) => !def.estadoPaso(st, i)).map(p => p.nombre),
     zona(st, k) {
-      if (k === 0) return `<div class="lab-interruptor"><span id="v3-sw-l">Modo a ciegas</span><button type="button" role="switch" id="v3-sw" aria-checked="${st.ciego}" aria-labelledby="v3-sw-l"><span></span></button></div>
+      if (k === 0) return `<div class="lab-interruptor"><span id="v3-sw-l" aria-hidden="true">Modo a ciegas</span><button type="button" role="switch" id="v3-sw" aria-checked="${st.ciego}" aria-labelledby="v3-sw-l"><span></span></button></div>
         <p class="rotulo" style="margin-top:6px">Datos para la inscripción</p><ol class="datos-lista" id="v3-datos">${datosLista(st)}</ol>
         <p class="nota" style="font-size:13px">Los datos se marcan con check al desactivar el Modo a ciegas.</p>`;
-      if (k === 1) return opsHTML("r-tel", TEL, (st.resp || {}).tel, { cols: 2, leyenda: P[1].instr });
-      if (k === 2) return opsHTML("r-pop", POP, (st.resp || {}).pop, { cols: 1, leyenda: P[2].instr });
+      if (k === 1) return opsHTML("r-tel", TEL, (st.resp || {}).tel, { cols: 2, lbl: "instr" });
+      if (k === 2) return opsHTML("r-pop", POP, (st.resp || {}).pop, { cols: 1, lbl: "instr" });
       return `<div class="campo"><label for="v3-codigo">Código de confirmación</label><input class="input" id="v3-codigo" name="r-codigo" type="text" autocomplete="off" value="${esc((st.resp || {}).codigo || "")}"></div>`;
     },
     alPaso(c, k) {
@@ -1831,6 +1835,12 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       });
     },
     montar(c) { formulario(c); },
+    clave: () => [
+      { nombre: "Formulario", pregunta: P[0].instr, correctas: ["Nombre completo, teléfono de 9 dígitos sin espacios, Modalidad Híbrida, Sede Lima y términos aceptados", "“Confirmar inscripción” en el pop-up"] },
+      { nombre: "Teléfono", pregunta: P[1].instr, correctas: ["9 dígitos, sin espacios"] },
+      { nombre: "Pop-up", pregunta: P[2].instr, correctas: ["“Confirma tu inscripción, diálogo”, con los datos a confirmar"] },
+      { nombre: "Código", pregunta: P[3].instr, correctas: [CODIGO] }
+    ],
     evaluar(st) {
       const r = st.resp || {}, form = st.confirmado && st.confirmados && datosOk(st.confirmados);
       const tel = r.tel === "9dig", pop = r.pop === "dialogo", cod = nCod(r.codigo) === nCod(CODIGO);
@@ -1855,12 +1865,12 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     lz.innerHTML = `<div id="v3-form" style="position:relative;border:1px solid #CDD5DF;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:13px">
       <h3 style="margin:0;font-size:17px">Inscríbete en Diseño Digital</h3>
       <div class="campo-v3"><label for="v3-nombre" style="font-weight:600">Nombre completo</label><input id="v3-nombre" aria-required="true" autocomplete="off" aria-describedby="v3-nombre-err" value="${esc(d.nombre)}">${err("v3-nombre-err")}</div>
-      <div class="campo-v3"><label for="v3-tel" style="font-weight:600">Teléfono celular</label><input id="v3-tel" inputmode="numeric" autocomplete="off" aria-describedby="v3-tel-ayuda v3-tel-err" value="${esc(d.tel)}"><span id="v3-tel-ayuda" class="vh">9 dígitos, sin espacios</span>${err("v3-tel-err")}</div>
+      <div class="campo-v3"><label for="v3-tel" style="font-weight:600">Teléfono celular</label><input id="v3-tel" inputmode="numeric" autocomplete="off" aria-describedby="v3-tel-ayuda v3-tel-err" value="${esc(d.tel)}"><span id="v3-tel-ayuda" hidden>9 dígitos, sin espacios</span>${err("v3-tel-err")}</div>
       <fieldset id="v3-mod" aria-describedby="v3-mod-err" style="border:0;padding:0;margin:0;display:flex;gap:16px;flex-wrap:wrap"><legend style="font-weight:600;padding:0;margin-bottom:6px">Modalidad</legend>${["Presencial", "Virtual", "Híbrida"].map(m => `<label style="display:flex;gap:6px;align-items:center"><input type="radio" name="v3-mod" value="${m}"${d.mod === m ? " checked" : ""}>${m}</label>`).join("")}</fieldset>${err("v3-mod-err")}
       <div class="campo-v3"><label for="v3-sede" style="font-weight:600">Sede</label><select id="v3-sede" aria-describedby="v3-sede-err" style="padding:0 8px"><option value="">Elige una sede</option>${["Lima", "Arequipa", "Trujillo"].map(s => `<option${d.sede === s ? " selected" : ""}>${s}</option>`).join("")}</select>${err("v3-sede-err")}</div>
       <label style="display:flex;gap:8px;align-items:center;width:max-content;max-width:100%"><input type="checkbox" id="v3-terminos" aria-required="true" aria-describedby="v3-term-err"${d.terminos ? " checked" : ""}>Acepto los términos y condiciones</label>${err("v3-term-err")}
       <button type="button" id="v3-enviar" class="b-pri" style="width:max-content;padding:8px 14px">Enviar inscripción</button>
-      <p class="confirmado" id="v3-estado" role="status">${st.confirmado ? `Inscripción confirmada. Te enviamos un SMS a tu celular con tu código<span class="vh">: ${CODIGO}</span>.` : ""}</p>
+      <p class="confirmado" id="v3-estado" role="alert">${st.confirmado ? `Inscripción confirmada. Te enviamos un SMS a tu celular con tu código<span class="vh">: ${CODIGO}</span>.` : ""}</p>
       <div class="velo" id="v3-velo" hidden style="inset:0"><div role="dialog" aria-modal="true" aria-labelledby="v3-dlg" aria-describedby="v3-dlg-datos" class="dialogo" style="max-width:400px">
         <h4 id="v3-dlg">Confirma tu inscripción</h4>
         <ul id="v3-dlg-datos" style="margin:0;padding-left:18px;color:#55606E;line-height:1.6"></ul>
@@ -1908,16 +1918,17 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
 /* ---- 26-rf.js ---- */
 /* ---- Recorrido final · Teclado y VoiceOver ---- */
 (function () {
+  const IMG_CURSO = window.IMG_CURSO_T2; /* las mismas imágenes de referencia que en ¿Dónde está el foco? (decorativas) */
   const T = [
     { tipo: "teclado", instr: "Recorre toda la página hasta llegar a “Privacidad”, en el footer.", teclas: "Teclas: Tab. Sin mouse.", correcta: "Tab desde el buscador hasta “Privacidad”, en el footer" },
     { tipo: "teclado", instr: "Desde “Ver horario”, vuelve hasta el buscador.", teclas: "Teclas: Shift + Tab.", correcta: "Shift + Tab desde “Ver horario” hasta “Buscar en mis cursos”" },
-    { tipo: "teclado", instr: "Abre “Ver horario” y ciérralo.", teclas: "Teclas: Enter y Esc.", correcta: "Enter para abrir y Esc para cerrar; el foco vuelve a “Ver horario”" },
+    { tipo: "teclado", instr: "Abre “Ver horario” y ciérralo.", teclas: "Teclas: Enter para abrir; Esc o el botón Cerrar para cerrar.", correcta: "Enter para abrir y Esc o el botón Cerrar para cerrar; el foco vuelve a “Ver horario”" },
     { tipo: "teclado", instr: "Marca “Recordatorio un día antes de cada clase”.", teclas: "Teclas: Espacio.", correcta: "Espacio sobre la casilla" },
     { tipo: "teclado", instr: "Cambia a la pestaña “Terminados”.", teclas: "Teclas: flechas.", correcta: "→ desde “En curso” hasta “Terminados”" },
-    { tipo: "vo", instr: "Escucha la página completa hasta el footer.", teclas: "Atajo: VO + A.", preg: "¿Cómo anuncia VoiceOver “Términos”?", ops: [["enlace", "Enlace"], ["boton", "Botón"], ["texto", "Texto"], ["encabezado", "Encabezado"]], ok: "enlace" },
+    { tipo: "vo", instr: "Escucha la página completa hasta el footer.", teclas: "Atajo: VO + A.", preg: "¿Cómo anuncia VoiceOver “Términos”?", ops: [["enlace", "Vínculo"], ["boton", "Botón"], ["texto", "Texto"], ["encabezado", "Encabezado"]], ok: "enlace" },
     { tipo: "vo", instr: "En el rotor, busca el encabezado “Preferencias”.", teclas: "Atajo: VO + U y flechas.", preg: "¿Qué nivel de encabezado es “Preferencias”?", ops: [["1", "Nivel 1"], ["2", "Nivel 2"], ["3", "Nivel 3"], ["4", "Nivel 4"]], ok: "2" },
     { tipo: "vo", instr: "En el rotor, revisa los puntos de referencia.", teclas: "Atajo: VO + U y flechas.", preg: "¿Cómo se llama la navegación del menú lateral?", ops: [["secciones", "Secciones del aula"], ["principal", "Menú principal"], ["navegacion", "Navegación"], ["miaula", "Mi aula"]], ok: "secciones" },
-    { tipo: "vo", instr: "Llega a la barra de progreso de “Diseño Digital”.", teclas: "Atajo: VO + →.", preg: "¿Cómo anuncia VoiceOver la barra de progreso de “Diseño Digital”?", ops: [["indicador", "“60 %, indicador de progreso”"], ["imagen", "“60 %, imagen”"], ["texto", "“60 % completado, texto”"], ["barra", "“Barra”"]], ok: "indicador" },
+    { tipo: "vo", instr: "Llega a la barra de progreso de “Diseño Digital”.", teclas: "Atajo: VO + →.", preg: "¿Cómo anuncia VoiceOver la barra de progreso de “Diseño Digital”?", ops: [["indicador", "“60 % completado, indicador de progreso”"], ["imagen", "“60 %, imagen”"], ["texto", "“60 %, texto”"], ["barra", "“Barra”"]], ok: "indicador" },
     { tipo: "vo", instr: "Llega a la campana de avisos.", teclas: "Atajo: VO + →.", preg: "¿Qué anuncia VoiceOver en la campana de avisos?", ops: [["avisos", "“Avisos, 3 sin leer, botón”"], ["tres", "“3, botón”"], ["campana", "“Campana, imagen”"], ["boton", "“Botón”"]], ok: "avisos" }
   ];
   const tipoTxt = t => t.tipo === "vo" ? "VoiceOver" : "teclado";
@@ -1936,15 +1947,16 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       const t = T[k], vo = t.tipo === "vo";
       const circ = T.map((x, i) => { const h = def.estadoPaso(st, i), act = i === k; return `<li class="${act ? "actual" : h ? "hecha" : ""}"><span aria-hidden="true">${h && !act ? icon("check", 15) : i + 1}</span><em class="vh">Tarea ${i + 1}, ${tipoTxt(x)}${h ? x.tipo === "vo" ? ", respondida" : ", cumplida" : ""}${act ? ", actual" : ""}</em></li>`; }).join("");
       const cuerpo = vo
-        ? `<div class="pregunta-caja"><p class="rotulo-preg">Pregunta</p><p class="texto-preg">${t.preg}</p>${opsHTML("r-t" + k, t.ops, (st.resp || {})["t" + k], { cols: 1, leyenda: t.preg })}</div>`
+        ? `<div class="pregunta-caja"><p class="rotulo-preg">Pregunta</p><p class="texto-preg" id="rf-preg">${t.preg}</p>${opsHTML("r-t" + k, t.ops, (st.resp || {})["t" + k], { cols: 1, lbl: "rf-preg" })}</div>`
         : verificacion(st.hechas[k]);
-      return `<div class="tarea-cab"><span class="lab-etiqueta lab-etiqueta--${vo ? "voiceover" : "teclado"}">${icon(vo ? "audifonos" : "teclado", 16)}${vo ? "VoiceOver" : "Teclado"}</span><span class="cuenta">Tarea ${k + 1} de 10</span></div>
+      return `<div class="tarea-cab" aria-hidden="true"><span class="lab-etiqueta lab-etiqueta--${vo ? "voiceover" : "teclado"}">${icon(vo ? "audifonos" : "teclado", 16)}${vo ? "VoiceOver" : "Teclado"}</span><span class="cuenta">Tarea ${k + 1} de 10</span></div>
         <ol class="lab-tareas" aria-label="Tareas del recorrido">${circ}</ol>
         <div class="sep" style="margin:10px 0"></div>
         <div class="tarea-txt" data-foco><p class="rot">Tarea</p><p class="que">${t.instr}</p><p class="teclas">${t.teclas}</p></div>
         ${cuerpo}`;
     },
     montar(c) { aula(c); },
+    clave: () => T.map(t => ({ nombre: t.tipo === "vo" ? "VoiceOver" : "Teclado", pregunta: t.tipo === "vo" ? t.preg : t.instr, correctas: [t.tipo === "vo" ? etiquetaDe(t.ops, t.ok) : t.correcta] })),
     evaluar(st) {
       const r = st.resp || {}; let n = 0;
       const filas = T.map((t, i) => {
@@ -1967,15 +1979,14 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
   function aula(c) {
     const lz = c.lz, st = c.st;
     const navA = (k, ic, t, act) => `<a href="#" data-k="${k}"${act ? ' aria-current="page"' : ""}>${icon(ic, 16)}${t}</a>`;
-    const curso = (t, p, color) => `<article style="border:1px solid #CDD5DF;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#FFFFFF"><div style="height:44px;background:${color}"></div><div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font-weight:700;font-size:13px">${t}</h3><div style="display:flex;flex-direction:column;gap:4px"><div role="progressbar" aria-label="${t}" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" style="height:6px;border-radius:999px;background:#E3E8EE"><div style="width:${p}%;height:100%;border-radius:999px;background:#0E6A6A"></div></div><span style="font-size:11px;color:#55606E">${p}% completado</span></div><a href="#" style="font-size:12px;font-weight:600;color:#0057B8;text-decoration:underline;text-underline-offset:2px;width:max-content">Ver más</a></div></article>`;
+    const curso = (t, p, img) => `<article style="border:1px solid #CDD5DF;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#FFFFFF"><div style="height:44px;background:${IMG_CURSO[img][0]};overflow:hidden">${IMG_CURSO[img][1].replace('height="52"', 'height="44"')}</div><div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font-weight:700;font-size:13px">${t}</h3><div style="display:flex;flex-direction:column;gap:4px"><div role="progressbar" aria-label="${t}" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${p} % completado" style="height:6px;border-radius:999px;background:#E3E8EE"><div style="width:${p}%;height:100%;border-radius:999px;background:#0E6A6A"></div></div><span aria-hidden="true" style="font-size:11px;color:#55606E">${p}% completado</span></div><a href="#" style="font-size:12px;font-weight:600;color:#0057B8;text-decoration:underline;text-underline-offset:2px;width:max-content">Ver más</a></div></article>`;
     lz.innerHTML = `<div style="position:relative;font-size:13px;line-height:1.5">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid #E3E8EE">
         <span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px">${LOGO_CAMPUS}Campus Digital</span>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <div role="search" style="position:relative;display:flex;align-items:center"><span aria-hidden="true" style="position:absolute;left:10px;color:#55606E;display:grid">${icon("lupa", 14)}</span><input type="search" data-k="buscar" aria-label="Buscar en mis cursos" placeholder="Buscar en mis cursos" style="font:inherit;width:196px;max-width:100%;height:34px;box-sizing:border-box;border:1px solid #767676;border-radius:999px;padding:0 12px 0 30px;background:#FFFFFF;color:#16202B"></div>
           <button type="button" data-k="avisos" aria-label="Avisos, 3 sin leer" style="position:relative;width:34px;height:34px;border:1px solid #767676;border-radius:999px;background:#FFFFFF;color:#16202B;display:grid;place-items:center;padding:0">${icon("campana", 16)}<span aria-hidden="true" style="position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;border-radius:999px;background:#B3261E;color:#FFFFFF;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid #FFFFFF">3</span></button>
-          <div style="position:relative"><button type="button" data-k="cuenta" id="rf-cuenta" aria-haspopup="menu" aria-expanded="false" aria-controls="rf-menu" style="font:inherit;display:flex;align-items:center;gap:6px;height:34px;box-sizing:border-box;border:1px solid #767676;border-radius:999px;background:#FFFFFF;color:#16202B;padding:0 10px 0 3px;font-weight:600"><span aria-hidden="true" style="width:26px;height:26px;border-radius:999px;background:#E3F1EF;color:#0E6A6A;display:grid;place-items:center;font-size:11px;font-weight:700">AT</span>Mi cuenta${icon("chevron", 14)}</button>
-            <ul role="menu" id="rf-menu" aria-label="Mi cuenta" class="menu-cuenta" hidden><li role="menuitem" tabindex="-1">Mi perfil</li><li role="menuitem" tabindex="-1">Cerrar sesión</li></ul></div>
+          <div style="position:relative"><button type="button" data-k="cuenta" id="rf-cuenta" style="font:inherit;display:flex;align-items:center;gap:6px;height:34px;box-sizing:border-box;border:1px solid #767676;border-radius:999px;background:#FFFFFF;color:#16202B;padding:0 10px 0 3px;font-weight:600"><span aria-hidden="true" style="width:26px;height:26px;border-radius:999px;background:#E3F1EF;color:#0E6A6A;display:grid;place-items:center;font-size:11px;font-weight:700">AT</span>Mi cuenta${icon("chevron", 14)}</button></div>
         </div>
       </div>
       <div class="aula-cuerpo">
@@ -1985,8 +1996,8 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
           <div style="display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Mis cursos</h2><button type="button" data-k="horario" id="rf-horario" style="font:inherit;font-weight:600;display:flex;align-items:center;gap:6px;height:32px;border:1px solid #16202B;border-radius:8px;background:#FFFFFF;color:#16202B;padding:0 12px">${icon("calendario", 15)}Ver horario</button></div>
             <div role="tablist" aria-label="Mis cursos" style="display:flex;gap:20px;border-bottom:1px solid #CDD5DF">${["En curso", "Terminados"].map((t, i) => `<button type="button" role="tab" class="aula-tab" id="rf-tab${i}" aria-controls="rf-panel${i}" aria-selected="${st.tab === i}"${st.tab === i ? "" : ' tabindex="-1"'}>${t}</button>`).join("")}</div>
-            <div role="tabpanel" id="rf-panel0" aria-labelledby="rf-tab0" class="aula-cursos" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"${st.tab === 0 ? "" : " hidden"}>${curso("Diseño Digital", 60, "#CFE3F1")}${curso("Marketing digital", 25, "#F3E2C7")}${curso("Programación web", 80, "#D9EEDC")}</div>
-            <div role="tabpanel" id="rf-panel1" aria-labelledby="rf-tab1" class="aula-cursos" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"${st.tab === 1 ? "" : " hidden"}>${curso("Introducción a Figma", 100, "#E8DCF3")}</div>
+            <div role="tabpanel" id="rf-panel0" aria-labelledby="rf-tab0" class="aula-cursos" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"${st.tab === 0 ? "" : " hidden"}>${curso("Diseño Digital", 60, "dd")}${curso("Marketing digital", 25, "md")}${curso("Programación web", 80, "ht")}</div>
+            <div role="tabpanel" id="rf-panel1" aria-labelledby="rf-tab1" class="aula-cursos" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"${st.tab === 1 ? "" : " hidden"}></div>
           </div>
           <div style="border:1px solid #CDD5DF;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px">
             <h2 style="margin:0;font-size:17px;font-weight:700;width:max-content">Preferencias</h2>
@@ -1999,13 +2010,11 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       <button type="button" style="font:inherit;position:absolute;right:18px;bottom:56px;z-index:2;display:flex;align-items:center;gap:8px;height:40px;border:0;border-radius:999px;background:#16202B;color:#FFFFFF;padding:0 16px 0 8px;font-weight:600;box-shadow:0 6px 18px rgba(22,32,43,.25)"><span aria-hidden="true" style="width:26px;height:26px;border-radius:999px;background:#0E6A6A;display:grid;place-items:center">${icon("chat", 14)}</span>¿Necesitas ayuda?</button>
       <footer style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#16202B;color:#CDD5DF;padding:12px 18px;font-size:12px"><span>© 2026 Campus Digital</span><span style="display:flex;gap:18px"><a href="#" data-k="terminos" style="color:#E3E8EE;text-decoration:underline;text-underline-offset:2px;border-radius:3px">Términos</a><a href="#" data-k="privacidad" style="color:#E3E8EE;text-decoration:underline;text-underline-offset:2px;border-radius:3px">Privacidad</a></span></footer>
       <div class="velo" id="rf-velo" hidden style="inset:0;border-radius:0"><div role="dialog" aria-modal="true" aria-labelledby="rf-dlg" class="dialogo">
-        <h3 id="rf-dlg">Horario de la semana</h3>
-        <ul style="margin:0;padding-left:18px;color:#55606E;line-height:1.6"><li>Martes 10 de noviembre, 7:00 p. m. · Diseño Digital</li><li>Jueves 12 de noviembre, 7:00 p. m. · Programación web</li></ul>
+        <h3 id="rf-dlg">Horario</h3>
         <div style="display:flex;justify-content:flex-end"><button type="button" class="b-osc" id="rf-cerrar">Cerrar</button></div>
       </div></div>
     </div>`;
     $$("a", lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
-    menu(c, $("#rf-cuenta", lz), $("#rf-menu", lz), {});
     /* Tareas 1 y 2: recorrer con Tab y volver con Shift + Tab */
     let conTab = new Set(), conShift = new Set();
     lz.addEventListener("keydown", e => {
@@ -2019,14 +2028,14 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       else if (ej.ultima === "Shift + Tab" && porTeclado()) { conTab.clear(); conShift.add(k); if (k === "buscar" && conShift.has("horario")) marcar(c, 1); }
       else { conTab.clear(); conShift.clear(); }
     });
-    /* Tarea 3: Ver horario se abre con Enter y se cierra con Esc */
+    /* Tarea 3: Ver horario se abre con Enter o Espacio y se cierra con Esc o con el botón Cerrar */
     const horario = $("#rf-horario", lz), velo = $("#rf-velo", lz), dlg = $('[role="dialog"]', velo);
     let abiertoTeclado = false;
     horario.addEventListener("click", () => { abiertoTeclado = porTeclado(); velo.hidden = false; $("#rf-cerrar", lz).focus(); });
-    const cerrar = esc => { velo.hidden = true; horario.focus(); if (esc && abiertoTeclado) marcar(c, 2); };
-    $("#rf-cerrar", lz).addEventListener("click", () => cerrar(false));
+    const cerrar = () => { velo.hidden = true; horario.focus(); if (abiertoTeclado) marcar(c, 2); };
+    $("#rf-cerrar", lz).addEventListener("click", () => cerrar());
     dlg.addEventListener("keydown", e => {
-      if (e.key === "Escape") { e.preventDefault(); cerrar(true); }
+      if (e.key === "Escape") { e.preventDefault(); cerrar(); }
       else if (e.key === "Tab") { e.preventDefault(); $("#rf-cerrar", lz).focus(); }
     });
     /* Tarea 4: el recordatorio se marca con Espacio */
@@ -2055,13 +2064,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
 
 /* ---- 30-vistas.js ---- */
 /* ============ Vistas de participante ============ */
-function pintarYo() {
-  const box = $("#yo-box");
-  if (ES_FACILITADOR) { box.innerHTML = `<span class="pill">Facilitador · sala ${esc(SALA)}</span>`; return; }
-  if (!yo) { box.innerHTML = ""; return; }
-  const pts = Object.values(misPuntajes()).reduce((s, x) => s + (x.pts || 0), 0);
-  box.innerHTML = `${avatarImg(yo.avatar, 30)}<span>${esc(yo.nombre)}</span><span class="pill">${pts} ${pts === 1 ? "punto" : "puntos"}</span>`;
-}
+function pintarYo() { /* La barra superior solo dice "Laboratorio A11Y" y "Sesión 2", como en el lienzo */ }
 
 function dondeVa(p) {
   const etapa = (sala && sala.etapa) || 0;
@@ -2091,7 +2094,7 @@ function vistaInicio(op = {}) {
   const mostrarEresTu = p => {
     candidato = p;
     const pts = totalDe(p);
-    $("#eres-tu").innerHTML = `<div class="lab-alerta lab-alerta--info" id="eres-alerta" tabindex="-1">${icon("info")}<p class="titulo">Ya hay una persona llamada ${esc(p.nombre)} con este mismo avatar en esta sala</p><p class="detalle">Si eres tú, continúa donde quedaste: tienes ${pts} ${pts === 1 ? "punto" : "puntos"} y vas en ${esc(dondeVa(p))}.</p><div class="acciones-alerta"><button type="button" class="lab-btn lab-btn--secundario" id="b-no-soy">No soy yo, cambiar mi nombre</button></div></div>`;
+    $("#eres-tu").innerHTML = `<div class="lab-alerta lab-alerta--info" id="eres-alerta" tabindex="-1">${icon("info")}<p class="titulo">Ya hay una ${esc(p.nombre)} con este mismo avatar en esta sala</p><p class="detalle">Si eres tú, continúa donde quedaste: tienes ${pts} ${pts === 1 ? "punto" : "puntos"} y vas en ${esc(dondeVa(p))}.</p><div class="acciones-alerta"><button type="button" class="lab-btn lab-btn--secundario" id="b-no-soy">No soy yo, cambiar mi nombre</button></div></div>`;
     $("#b-entrar").textContent = "Continuar donde quedé";
     $("#b-no-soy").addEventListener("click", () => { normal(); $("#nombre").focus(); $("#nombre").select(); });
     $("#eres-alerta").focus();
@@ -2127,23 +2130,19 @@ function vistaEspera(titulo, texto) {
 }
 function refrescarEspera() { const l = $("#lista-gente"); if (l) { l.innerHTML = listaGente(); $("#n-gente").textContent = conectados(); } }
 
-/* ---- Resultado de un ejercicio ---- */
-function tablaFilas(filas, def) {
-  const c = { paso: "Paso", pregunta: "Pregunta", tu: "Tu respuesta", ...(def.cols || {}) };
-  const res = f => f.ok === true ? `<span class="lab-resultado lab-resultado--si">${icon("check", 16)}Acertaste</span>` : f.ok === "parcial" ? `<span class="lab-resultado lab-resultado--parcial">${icon("info", 16)}${esc(f.etiqueta || "En parte")}</span>` : `<span class="lab-resultado lab-resultado--no">${icon("x", 16)}No acertaste</span>`;
-  return `<div class="tabla-wrap"><table class="lab-tabla"><thead><tr><th scope="col">${c.paso}</th><th scope="col">${c.pregunta}</th><th scope="col">${c.tu}</th><th scope="col">Respuesta correcta</th><th scope="col">Resultado</th></tr></thead><tbody>${filas.map(f => `<tr><th scope="row">${esc(f.paso)}</th><td>${esc(f.pregunta)}</td><td>${esc(f.tu)}</td><td><span class="resp-ok">${icon("check", 16)}${esc(f.correcta)}</span></td><td>${res(f)}</td></tr>`).join("")}</tbody></table></div>`;
-}
+/* ---- Respuestas de un ejercicio (pantallas R del lienzo) ---- */
 function vistaResultado() {
-  const { def, r, dato, auto, st } = resultado;
-  const ok = r.fraccion >= 0.5, tramo = r.fraccion >= 0.8 ? "¡Bien hecho!" : ok ? "Vas bien." : "Sigue practicando.";
-  const etq = def.rotuloEtapa || ETAPAS.find(e => e.n === def.etapa).nombre;
-  V().innerHTML = `<main class="contenedor vista" id="contenido" tabindex="-1"><section style="display:grid;gap:24px">
-    <div class="res-cab"><span class="lab-etiqueta">${etq} · Resultado</span><h1>${def.titulo}</h1>${auto ? '<p class="lede">Se acabó el tiempo. Enviamos lo que habías respondido.</p>' : ""}</div>
-    <div class="lab-franja lab-franja--${ok ? "acierto" : "error"}"><div class="texto"><span class="icono" aria-hidden="true">${icon(ok ? "check" : "x", 22)}</span><div><p class="titulo">${tramo} Aciertos: ${esc(r.aciertos)}</p><p class="detalle">Sumaste ${dato.pts} de ${r.max} puntos.</p></div></div><button class="lab-btn lab-btn--principal" type="button" id="b-siguiente">Siguiente${icon("flecha")}</button></div>
-    <div class="lab-llevar"><span class="icono" aria-hidden="true">${icon("idea", 22)}</span><div style="display:grid;gap:4px"><h2 class="titulo">Para llevar</h2><p>${def.llevar}</p></div></div>
-    ${def.extraResultado ? def.extraResultado(st) : ""}
-    <div class="panel"><h2>Tus respuestas y las correctas</h2>${tablaFilas(r.filas, def)}</div></section></main>`;
-  if (def.alResultado) requestAnimationFrame(() => def.alResultado(st));
+  const { def } = resultado;
+  const c = { paso: "Paso", pregunta: "Pregunta", ...(def.cols || {}) };
+  const lista = ejDeEtapa(def.etapa), idx = lista.indexOf(def) + 1;
+  const rotIzq = def.rotuloEtapa || ETAPAS.find(e => e.n === def.etapa).nombre, rotDer = def.rotuloAvance || `Ejercicio ${idx} de ${lista.length}`;
+  const pct = def.avanceTareas ? 100 : Math.round(idx / lista.length * 100);
+  const item = t => `<span class="resp-item"><span class="resp-marca" aria-hidden="true">${icon("check", 14)}</span><span>${esc(t)}</span></span>`;
+  V().innerHTML = `<main class="contenedor vista vista--ej" id="contenido" tabindex="-1">
+    <div class="lab-progreso"><div class="rotulo"><span>${rotIzq}</span><span>${rotDer}</span></div><div class="riel" aria-hidden="true"><div class="lleno" style="width:${pct}%"></div></div></div>
+    <div class="res-cab"><div class="sep"></div><div class="res-tit"><p class="lab-etiqueta lab-etiqueta--respuestas">${icon("check", 14)}Respuestas</p><h1>${def.titulo}</h1></div></div>
+    <div class="tabla-resp"><div class="tabla-wrap"><table><thead><tr><th scope="col">${c.paso}</th><th scope="col">${c.pregunta}</th><th scope="col">Respuesta correcta</th></tr></thead><tbody>${def.clave().map((f, i) => `<tr><th scope="row"><span class="resp-num" aria-hidden="true">${i + 1}</span><span class="vh">${i + 1}. </span>${esc(f.nombre)}</th><td>${esc(f.pregunta)}</td><td><div class="resp-lista">${f.correctas.map(item).join("")}</div></td></tr>`).join("")}</tbody></table></div></div>
+    <div class="res-pie"><button class="lab-btn lab-btn--principal" type="button" id="b-siguiente">Siguiente${icon("flecha")}</button></div></main>`;
   $("#b-siguiente").addEventListener("click", () => { const id = def.id; resultado = null; if (PROTO) { const i = PROTO_P.findIndex(x => x[0] === "ej:" + id); protoIr(PROTO_P[Math.min(PROTO_P.length - 1, i + 1)][0]); return; } actualizar(true); });
 }
 
@@ -2297,7 +2296,7 @@ function protoIr(k) {
   else if (k.startsWith("ej:")) { const id = k.slice(3); delete yo.deadlines[id]; delete local.hechos[id]; iniciarEjercicio(EJ.find(e => e.id === id)); return; }
   else if (k === "resultado") {
     const def = EJ.find(e => e.id === "t2");
-    const st = { ...def.init(), resp: { q0: ["modalidad", "vercurso"], q1: "encabezado", q2: "modalidad", q3: "siguiente", q4: "no" }, rastro: ["buscar", "sesion", "virtual", "hibrida", "presencial", "hasta8", "mas8", "hasta8", "mas8", "filtros", "vc-dd", "vc-pw", "vc-md", "p1", "p2", "p3", "siguiente", "aceptar"] };
+    const st = { ...def.init(), resp: { q0: ["modalidad", "vercurso"], q1: "encabezado", q2: "modalidad", q3: "siguiente", q4: "no" } };
     const r = def.evaluar(st); resultado = { def, r, dato: { pts: r.puntos }, auto: false, st }; vistaResultado();
   }
   else if (k === "final") { sala = { ...(sala || {}), ranking: true }; vistaFinal(); }
