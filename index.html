@@ -604,6 +604,26 @@ select.input { background: var(--fondo); }
 .lz [role="tab"][aria-selected="true"] { border-bottom-color: #0E6A6A; color: #0E6A6A; font-weight: 600; }
 .lz .cal-dia { font: inherit; height: 28px; border: 1px solid #CDD5DF; border-radius: 5px; background: #FFFFFF; color: #16202B; padding: 0; }
 .lz .cal-dia[aria-pressed="true"] { background: #0E6A6A; border-color: #0E6A6A; color: #FFFFFF; font-weight: 700; }
+/* Circuito sin mouse: lista de Cursos y selector de fecha (se abren encima del contenido) */
+.lz .t3-lista { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 6; list-style: none; margin: 0; padding: 4px; border: 1px solid #767676; border-radius: 8px; background: #FFFFFF; box-shadow: 0 6px 18px rgba(22, 32, 43, .18); }
+.lz .t3-lista [role="option"] { padding: 7px 10px; border-radius: 6px; cursor: pointer; }
+.lz .t3-lista [role="option"][hidden] { display: none; }
+.lz .t3-lista [role="option"]:hover { background: #F3F4F6; }
+.lz .t3-lista [role="option"].activa { background: #E6F2F2; box-shadow: inset 3px 0 0 #0E6A6A; font-weight: 600; }
+.lz .t3-cal { position: absolute; top: calc(100% + 4px); left: 0; z-index: 6; width: 250px; box-sizing: border-box; padding: 10px; border: 1px solid #767676; border-radius: 10px; background: #FFFFFF; box-shadow: 0 6px 18px rgba(22, 32, 43, .18); display: flex; flex-direction: column; gap: 6px; }
+.lz .t3-cal[hidden] { display: none; }
+.lz .t3-mesbtn { font: inherit; width: 28px; height: 28px; border: 1px solid #CDD5DF; border-radius: 6px; background: #FFFFFF; color: #16202B; padding: 0; }
+.lz .t3-cal .cal-dia { width: 30px; height: 26px; }
+/* Recorrido final: modal "Horario de la semana" */
+.lz .tabla-horario { width: 100%; border-collapse: collapse; font-size: 13px; }
+.lz .tabla-horario th { text-align: left; font-size: 12px; font-weight: 600; color: #55606E; padding: 6px 8px; border-bottom: 1px solid #767676; }
+.lz .tabla-horario td { padding: 6px 8px; border-bottom: 1px solid #CDD5DF; vertical-align: top; }
+/* Vínculo "Ir al ejercicio" (VinculoSalto del sistema de diseño) */
+.lab-salto { display: inline-flex; align-items: center; gap: 6px; width: max-content; font-size: 14px; font-weight: 600; color: var(--acento-claro); text-decoration: underline; text-underline-offset: 3px; }
+.lab-salto svg { width: 16px; height: 16px; flex: none; }
+.lab-salto:hover { text-decoration-thickness: 2px; }
+.lab-salto:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
 .lz .marca-vo { position: relative; display: inline-flex; }
 .lz .num-vo { position: absolute; top: -10px; left: -10px; width: 20px; height: 20px; border-radius: 999px; background: #6B35A0; color: #FFFFFF; font-size: 11px; font-weight: 700; display: grid; place-items: center; z-index: 1; pointer-events: none; }
 .lz .actual-vo { outline: 2px dashed #6B35A0; outline-offset: 4px; border-radius: 6px; }
@@ -619,6 +639,7 @@ select.input { background: var(--fondo); }
 /* Catálogo (¿Dónde está el foco?) */
 .lz .banner { transition: opacity .2s ease; }
 .lz .banner.transparente { opacity: 0.2; }
+.lz .banner[hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .lz .banner { transition: none; } }
 /* Mapa de la página: el formulario dentro de main y la barra lateral fuera */
 .lz .mapa { display: grid; grid-template-columns: minmax(0, 1fr) 200px; }
@@ -1155,10 +1176,11 @@ function iniciarEjercicio(def) {
         <div class="sep"></div>
         ${def.avanceTareas ? "" : `<p class="instr" id="instr" tabindex="-1"></p><ol class="lab-pasos" id="pasos" aria-label="${esc(def.unidad[1].charAt(0).toUpperCase() + def.unidad[1].slice(1))} del ejercicio"></ol><div class="sep"></div>`}
         <div class="zona" id="zona"></div>
+        <a href="#lz-sec" class="lab-salto" id="ir-ej">Ir al ejercicio${icon("flecha", 16)}</a>
         <div class="aviso" id="aviso" role="status"></div>
       </div>
       <div class="ej-der">
-        ${def.lzLabel ? `<div class="lz${def.lzPlano ? " lz--plano" : ""}${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" role="group" aria-label="${esc(def.lzLabel)}">` : `<section class="lz${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" aria-labelledby="lz-tit"><h2 id="lz-tit"></h2>`}<div id="lz" style="position:relative;min-width:0"></div></${def.lzLabel ? "div" : "section"}>
+        ${def.lzLabel ? `<div class="lz${def.lzPlano ? " lz--plano" : ""}${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" tabindex="-1" role="group" aria-label="${esc(def.lzLabel)}">` : `<section class="lz${def.etapa === 1 ? " sin-cursor" : ""}" id="lz-sec" tabindex="-1" aria-labelledby="lz-tit"><h2 id="lz-tit"></h2>`}<div id="lz" style="position:relative;min-width:0"></div></${def.lzLabel ? "div" : "section"}>
         <div class="nav-pasos"><button class="lab-btn lab-btn--secundario" type="button" id="b-ant">${icon("atras")}Anterior</button><button class="lab-btn lab-btn--secundario" type="button" id="b-sig">Siguiente${icon("flecha")}</button></div>
       </div>
     </div>
@@ -1172,6 +1194,8 @@ function iniciarEjercicio(def) {
   def.montar(ctx);
   irPaso(ej.k, false);
   $("#pasos") && $("#pasos").addEventListener("click", e => { const b = e.target.closest(".lab-paso"); if (b) irPaso(+b.dataset.i, true); });
+  /* "Ir al ejercicio": lleva el foco al inicio del lienzo; VoiceOver anuncia su nombre. Está fuera del lienzo, así que un clic no cuenta como mouse. */
+  $("#ir-ej").addEventListener("click", e => { e.preventDefault(); const s = $("#lz-sec"); if (s) { s.focus({ preventScroll: true }); s.scrollIntoView({ block: "nearest" }); } });
   $("#b-ant").addEventListener("click", () => irPaso(ej.k - 1, true));
   $("#b-sig").addEventListener("click", () => irPaso(ej.k + 1, true));
   const zona = $("#zona");
@@ -1306,7 +1330,9 @@ async function enviar(auto) {
     montar() {},
     alPaso(c, k) { estacion(c, k); if (c.st.est[k]) cumplida(c, k); },
     clave: () => EST.map((e, i) => ({ nombre: e.nombre, pregunta: e.instr, correctas: i === 3 ? ["← → hasta “Híbrida”", "↑ ↓ hasta “Prototipado”"] : [e.correcta] })),
-    evaluar(st) {
+    evaluar(st0) {
+      const st = { ...st0, est: [...st0.est] };
+      if (st.est[3] && st.est[3] !== "mouse" && !(st.mod === "Híbrida" && st.curso === "Prototipado")) st.est[3] = null;
       const pts = st.est.reduce((s, x) => s + (x === "ok" ? 2 : x === "pista" ? 1 : 0), 0);
       const filas = EST.map((e, i) => {
         const x = st.est[i], tk = ((st.teclas || {})[i] || []).join(", ");
@@ -1372,6 +1398,8 @@ async function enviar(auto) {
           else { st.curso = inp.value; if (inp.value === "Prototipado") st.ejeCurso = ejes["t1-curso"]; }
           c.guardar();
           if (st.mod === "Híbrida" && st.curso === "Prototipado") cumplir(c, 3);
+          /* Si después cambia a otra opción, la estación deja de estar cumplida */
+          else if (st.est[3] && st.est[3] !== "mouse") { st.est[3] = null; c.limpiarAviso(); c.pasos(); c.guardar(); }
         });
       });
     } else {
@@ -1418,7 +1446,8 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
 /* ---- Teclado 2 · ¿Dónde está el foco? ----
    Cada pregunta tiene su propio lienzo con la página del catálogo y solo el problema de esa pregunta:
    1. el orden se rompe en Modalidad y en las tarjetas; 2. "Mostrar más filtros" no muestra el foco;
-   3. Modalidad atrapa el foco (sin rescate); 4 y 5. el banner tapa "Siguiente" y, a medias, los números. */
+   3. Modalidad atrapa el foco (sin rescate); 4. el banner aparece al pulsar "Siguiente" con Enter y lo tapa;
+   5. el banner está desde el inicio y tapa el paginador a medias. En las preguntas 1 a 3 no hay banner. */
 (function () {
   const P = [
     { nombre: "¿Dónde se rompe?", instr: "¿Dónde se rompe el orden del foco? Elige dos.", multi: true,
@@ -1427,9 +1456,9 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
       ops: [["filtros", "En “Mostrar más filtros”"], ["encabezado", "En “Buscar cursos” e “Iniciar sesión”"], ["vercurso", "En los botones “Ver curso”"], ["paginacion", "En la paginación"]], ok: "filtros", correcta: "En “Mostrar más filtros”" },
     { nombre: "¿Dónde queda atrapado?", instr: "¿En qué grupo queda atrapado el foco?",
       ops: [["modalidad", "En Modalidad"], ["duracion", "En Duración"], ["tarjetas", "En las tarjetas"], ["no", "No queda atrapado"]], ok: "modalidad", correcta: "En Modalidad" },
-    { nombre: "¿Qué queda tapado?", instr: "¿Qué elemento queda tapado por completo?",
-      ops: [["vercurso", "Los botones “Ver curso”"], ["siguiente", "“Siguiente”"], ["numeros", "Los números de página"], ["ninguno", "Ninguno"]], ok: "siguiente", correcta: "“Siguiente”" },
-    { nombre: "¿Tapado a medias cumple?", instr: "Los números de página quedan tapados a medias. ¿Cumple el criterio 2.4.11?",
+    { nombre: "¿Qué queda tapado?", instr: "¿Qué componente queda tapado?",
+      ops: [["siguiente", "El botón “Siguiente”"], ["vercurso", "Los botones “Ver curso”"], ["paginador", "El paginador"], ["ninguno", "Ninguno"]], ok: "siguiente", correcta: "El botón “Siguiente”" },
+    { nombre: "¿El paginador cumple?", instr: "El paginador queda tapado a medias por el banner. ¿Cumple el criterio 2.4.11?",
       ops: [["si", "Sí, cumple"], ["no", "No, falla"]], ok: "si", correcta: "Sí, cumple: solo falla si queda oculto por completo" }
   ];
   /* Imágenes de referencia de cada curso (decorativas) */
@@ -1461,7 +1490,7 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
       <div style="flex:1 1 300px;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${tarjetas}</div>
     </div>
     <div style="display:flex;justify-content:flex-end;align-items:flex-start;gap:16px;padding:0 14px 4px"><nav aria-label="Paginación" style="display:flex;gap:6px;margin-top:9px">${pag(1, true)}${pag(2)}${pag(3)}</nav><button type="button" data-k="siguiente" style="font:inherit;font-weight:600;border:1px solid #16202B;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 10px;margin-top:40px">Siguiente</button></div>
-    <div class="banner" style="position:absolute;left:0;right:0;bottom:0;background:#16202B;color:#FFFFFF;display:flex;justify-content:flex-start;align-items:center;gap:16px;padding:12px 14px"><p style="margin:0">Usamos cookies para mejorar tu experiencia.</p><button type="button" data-k="aceptar" style="font:inherit;font-weight:600;border:0;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 12px">Aceptar</button></div>
+    ${q < 3 ? "" : `<div class="banner"${q === 3 ? " hidden" : ""} style="position:absolute;left:0;right:0;bottom:0;background:#16202B;color:#FFFFFF;display:flex;justify-content:flex-start;align-items:center;gap:16px;padding:12px 14px"><p style="margin:0">Usamos cookies para mejorar tu experiencia.</p><button type="button" data-k="aceptar" style="font:inherit;font-weight:600;border:0;border-radius:6px;background:#FFFFFF;color:#16202B;padding:5px 12px">Aceptar</button></div>`}
   </div>`;
   };
   const vacio = v => v == null || v === "" || (Array.isArray(v) && !v.length);
@@ -1482,9 +1511,14 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
       }));
     }
     if (q === 3) {
-      /* El banner tapa "Siguiente": después de un momento se vuelve transparente */
+      /* Al empezar no hay banner. Al pulsar "Siguiente" aparece y lo tapa por completo; el foco se queda en "Siguiente".
+         Después de un momento, el banner se vuelve transparente y aparece el aviso. */
       const sig = el("siguiente"), banner = $(".banner", lz);
-      sig.addEventListener("focus", () => { clearTimeout(tmBanner); tmBanner = setTimeout(() => { if (document.activeElement === sig) { banner.classList.add("transparente"); c.aviso("pista", "El foco quedó tapado", "El foco está en un elemento que el banner tapa por completo. Hicimos el banner transparente para que veas dónde está."); } }, 1500); });
+      const esperar = () => { clearTimeout(tmBanner); tmBanner = setTimeout(() => { if (document.activeElement === sig && !banner.hidden) { banner.classList.add("transparente"); c.aviso("pista", "El foco quedó tapado", "El foco está en un elemento que el banner tapa por completo. Hicimos el banner transparente para que veas dónde está."); } }, 1500); };
+      const mostrar = () => { if (banner.hidden) { banner.hidden = false; esperar(); } };
+      sig.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); mostrar(); } });
+      sig.addEventListener("click", mostrar);
+      sig.addEventListener("focus", () => { if (!banner.hidden) esperar(); });
       sig.addEventListener("blur", () => { clearTimeout(tmBanner); banner.classList.remove("transparente"); });
     }
   }
@@ -1522,92 +1556,150 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
 })();
 
 /* ---- 22-t3.js ---- */
-/* ---- Teclado 3 · Circuito sin mouse ---- */
+/* ---- Teclado 3 · Circuito sin mouse ----
+   Al cumplir una misión, la plataforma se queda en ella, la marca con check y muestra "Misión cumplida".
+   La persona pasa a la siguiente con "Siguiente". Ya no hay calendario-trampa: lo que se abre encima del
+   contenido (la lista de Cursos, el calendario de Fecha y el modal del sílabo) se cierra con Esc. */
 (function () {
   const M = [
-    { nombre: "Menú", instr: "Abre el menú “Cursos” y entra a “Diseño Digital”.", esperada: "Tab, Enter, flechas y Enter" },
-    { nombre: "Pestañas", instr: "Ve a la pestaña “Horarios”.", esperada: "Flechas" },
-    { nombre: "Turno", instr: "Elige el turno “Noche”.", esperada: "Flechas" },
-    { nombre: "Fecha", instr: "Elige el lunes 7 de diciembre como fecha de inicio.", esperada: "Tab y flechas" },
-    { nombre: "Sílabo", instr: "Abre “Ver sílabo” y ciérralo.", esperada: "Enter y Esc" },
-    { nombre: "Términos", instr: "Acepta los términos y condiciones.", esperada: "Espacio" },
-    { nombre: "Inscribirme", instr: "Pulsa “Inscribirme” y responde la pregunta final.", esperada: "Enter o Espacio" }
+    { nombre: "Cursos", instr: "Elige el curso “Diseño Digital” en el campo “Cursos”.", esperada: "↓, flechas y Enter", ok: "Elegiste el curso “Diseño Digital”." },
+    { nombre: "Pestañas", instr: "Ve a la pestaña “Horarios”.", esperada: "Flechas", ok: "Llegaste a la pestaña “Horarios” con las flechas." },
+    { nombre: "Turno", instr: "Elige el turno “Noche”.", esperada: "Flechas", ok: "Elegiste el turno “Noche” con las flechas." },
+    { nombre: "Fecha", instr: "Elige el lunes 7 de diciembre como fecha de inicio.", esperada: "Enter, flechas y Enter", ok: "Elegiste el lunes 7 de diciembre." },
+    { nombre: "Sílabo", instr: "Abre “Ver sílabo” y ciérralo.", esperada: "Enter y Esc", ok: "Abriste el sílabo y lo cerraste; el foco volvió a “Ver sílabo”." },
+    { nombre: "Términos", instr: "Acepta los términos y condiciones.", esperada: "Espacio", ok: "Marcaste la casilla con Espacio." },
+    { nombre: "Inscribirme", instr: "Pulsa “Inscribirme” y responde la pregunta final.", esperada: "Enter o Espacio", ok: "Pulsaste “Inscribirme”. Ahora responde la pregunta final." }
   ];
-  const FINAL = [["modal", "El modal del sílabo"], ["calendario", "El calendario"], ["menu", "El menú"], ["ninguno", "Ninguno"]];
+  const PREG = "¿Qué componentes se cierran con Esc? Elige tres.";
+  const FINAL = [["cursos", "La lista de Cursos"], ["calendario", "El calendario de Fecha"], ["modal", "El modal del sílabo"], ["pestanas", "Las pestañas"], ["turno", "El turno"], ["terminos", "Los términos"]];
+  const OK_FINAL = ["cursos", "calendario", "modal"];
+  const CURSOS = ["Marketing digital", "Diseño Digital", "Programación web"];
+  const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
   const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-  const fechaTxt = d => `${DIAS[new Date(2026, 11, d).getDay()]} ${d} de diciembre de 2026`;
+  const fechaTxt = f => `${DIAS[f.getDay()]} ${f.getDate()} de ${MESES[f.getMonth()]} de ${f.getFullYear()}`;
+  const dd = n => String(n).padStart(2, "0");
+  const fechaCampo = f => `${dd(f.getDate())}/${dd(f.getMonth() + 1)}/${f.getFullYear()}`;
+  const leerCampo = v => { const m = /^\s*(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})\s*$/.exec(v || ""); if (!m) return null; const f = new Date(+m[3], +m[2] - 1, +m[1]); return f.getDate() === +m[1] && f.getMonth() === +m[2] - 1 ? f : null; };
+  const esMeta = f => f && f.getFullYear() === 2026 && f.getMonth() === 11 && f.getDate() === 7;
   const TABS = ["Descripción", "Horarios", "Docente"];
+  const finalPts = st => (((st.resp || {}).final) || []).filter(v => OK_FINAL.includes(v)).length;
   const def = {
     id: "t3", etapa: 1, titulo: "Circuito sin mouse", tiempo: 600,
-    consigna: "Inscríbete en el curso sin tocar el mouse. Al final te preguntaremos qué componente atrapó el foco.",
+    consigna: "Inscríbete en el curso sin tocar el mouse. Al final te preguntaremos qué componentes se cierran con Esc.",
     unidad: ["Misión", "misiones"], verboPend: "cumplir", hechoTxt: "cumplida",
     cols: { paso: "Misión", pregunta: "Instrucción", tu: "Tu resultado" },
     pasos: M.map(m => ({ nombre: m.nombre, instr: m.instr })),
     lzTitulo: "Ficha del curso",
-    llevar: "No todo se usa con Tab: los menús, las pestañas y los grupos de opciones se recorren con flechas, y un checkbox se marca con Espacio. Que un modal retenga el foco no es una trampa, es lo correcto, siempre que se pueda cerrar con Esc. La trampa es un componente del que no se puede salir.",
-    init: () => ({ est: [null, null, null, null, null, null, null], m: {}, resp: {}, curso: "", tab: 0, turno: "", fecha: 0, calSalio: false, trampa: false, terminos: false }),
+    llevar: "No todo se usa con Tab: las pestañas y los grupos de opciones se recorren con flechas, y un checkbox se marca con Espacio. Lo que se abre encima del contenido (una lista, un calendario o un modal) se cierra con Esc, y el foco vuelve al control que lo abrió.",
+    init: () => ({ est: [null, null, null, null, null, null, null], m: {}, resp: { final: [] }, curso: "", tab: 0, turno: "", fecha: "", terminos: false }),
     estadoPaso: (st, i) => st.est[i] === "mouse" || (!st.est[i] && st.m && st.m[i]) ? "mouse" : st.est[i] ? "hecho" : null,
-    pendientes: st => [...M.filter((m, i) => !def.estadoPaso(st, i)).map(m => m.nombre), ...((st.resp || {}).final ? [] : ["Pregunta final"])],
+    pendientes: st => [...M.filter((m, i) => !def.estadoPaso(st, i)).map(m => m.nombre), ...((((st.resp || {}).final) || []).length ? [] : ["Pregunta final"])],
+    maxSel: { final: 3 },
     zona(st, k) {
       if (k < 6) return teclasDisponibles();
-      return `${teclasDisponibles()}<div class="sep" style="margin-top:10px"></div>${opsHTML("r-final", FINAL, (st.resp || {}).final, { cols: 2, leyenda: "Pregunta final: ¿Qué componente atrapó el foco?", ver: true })}`;
+      return `${teclasDisponibles()}<div class="sep" style="margin-top:10px"></div>${opsHTML("r-final", FINAL, (st.resp || {}).final || [], { multi: true, cols: 2, leyenda: "Pregunta final: " + PREG, ver: true })}`;
     },
     montar(c) { ficha(c); },
-    clave: () => M.map((m, i) => ({ nombre: m.nombre, pregunta: i === 6 ? "Pulsa “Inscribirme” y responde: ¿Qué componente atrapó el foco?" : m.instr, correctas: i === 6 ? [m.esperada, "El calendario"] : [m.esperada] })),
+    alPaso(c, k) { if (c.st.est[k] === "ok") c.aviso("exito", "Misión cumplida", M[k].ok); },
+    clave: () => M.map((m, i) => ({ nombre: m.nombre, pregunta: i === 6 ? "Pulsa “Inscribirme” y responde: ¿Qué componentes se cierran con Esc?" : m.instr, correctas: i === 6 ? [m.esperada, "La lista de Cursos", "El calendario de Fecha", "El modal del sílabo"] : [m.esperada] })),
     evaluar(st) {
-      const n = st.est.filter(x => x === "ok").length, fin = (st.resp || {}).final === "calendario";
+      const n = st.est.filter(x => x === "ok").length, fp = finalPts(st);
       const filas = M.map((m, i) => {
         const x = st.est[i], tk = ((st.teclas || {})[i] || []).join(", ");
         return { paso: `${i + 1} · ${m.nombre}`, pregunta: m.instr, tu: (x === "ok" ? "Cumplida" : x === "mouse" || (st.m && st.m[i]) ? "Con mouse" : "No cumplida") + (tk ? `. Teclas que usaste: ${tk}` : ""), correcta: m.esperada, ok: x === "ok" };
       });
-      filas.push({ paso: "Pregunta final", pregunta: "¿Qué componente atrapó el foco?", tu: etiquetaDe(FINAL, (st.resp || {}).final), correcta: "El calendario", ok: fin });
-      return { puntos: n + (fin ? 3 : 0), max: 10, aciertos: `${n} de 7 misiones${fin ? " y la pregunta final" : ""}`, fraccion: (n + (fin ? 3 : 0)) / 10, filas };
+      filas.push({ paso: "Pregunta final", pregunta: PREG, tu: etiquetaDe(FINAL, ((st.resp || {}).final) || []), correcta: "La lista de Cursos, el calendario de Fecha y el modal del sílabo", ok: fp === 3 ? true : fp ? "parcial" : false, etiqueta: fp && fp < 3 ? `${fp} de 3` : null });
+      return { puntos: n + fp, max: 10, aciertos: `${n} de 7 misiones y ${fp} de 3 en la pregunta final`, fraccion: (n + fp) / 10, filas };
     }
   };
+  /* Al cumplir: check en la misión y aviso "Misión cumplida". No avanza solo. */
   function cumplir(c, i, teclado) {
     const st = c.st; if (st.est[i]) return;
     st.est[i] = !teclado || (st.m && st.m[i]) ? "mouse" : "ok";
-    c.guardar();
-    const sig = c.siguientePendiente(i);
-    if (i === c.k) c.ir(sig >= 0 ? sig : 6, false); else c.pasos();
+    c.guardar(); c.pasos();
+    if (st.est[i] === "ok") c.aviso("exito", "Misión cumplida", M[i].ok);
   }
   function ficha(c) {
     const lz = c.lz, st = c.st;
-    const dia = d => `<button type="button" class="cal-dia" data-dia="${d}" aria-pressed="${st.fecha === d}" aria-label="${fechaTxt(d)}">${d}</button>`;
-    const offset = (new Date(2026, 11, 1).getDay() + 6) % 7;
-    const cal = () => st.calSalio
-      ? `<p id="t3-fecha-txt"><b>Fecha de inicio:</b> ${st.fecha ? fechaTxt(st.fecha) : "sin elegir"}</p>`
-      : `<b id="t3-cal-tit">Fecha de inicio, diciembre 2026</b>${st.fecha ? `<p class="vh" aria-live="polite" id="t3-fecha-el">Elegiste ${fechaTxt(st.fecha)}</p>` : '<p class="vh" aria-live="polite" id="t3-fecha-el"></p>'}
-        <div role="group" aria-labelledby="t3-cal-tit" id="t3-cal" style="display:grid;grid-template-columns:repeat(7,34px);gap:4px">${["L", "M", "M", "J", "V", "S", "D"].map(x => `<span aria-hidden="true" style="text-align:center;color:#55606E;font-size:11px">${x}</span>`).join("")}${"<span></span>".repeat(offset)}${Array.from({ length: 13 }, (_, i) => dia(i + 1)).join("")}</div>`;
+    if (typeof st.fecha !== "string") st.fecha = "";
+    if (!Array.isArray((st.resp = st.resp || {}).final)) st.resp.final = [];
+    const elegida = leerCampo(st.fecha);
     lz.innerHTML = `<div class="ficha" style="position:relative;display:flex;flex-direction:column;gap:10px;font-size:13px">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <button type="button" id="t3-cursos" aria-haspopup="true" aria-expanded="false" aria-controls="t3-menu" style="font:inherit;font-weight:600;width:max-content;border:1px solid #767676;border-radius:6px;background:#FFFFFF;color:#16202B;padding:6px 12px">Cursos <span aria-hidden="true">▾</span></button>
-        <ul role="menu" id="t3-menu" aria-label="Cursos" hidden style="list-style:none;margin:0;padding:4px;width:220px;border:1px solid #767676;border-radius:8px;background:#FFFFFF">${["Marketing digital", "Diseño Digital", "Programación web"].map(t => `<li role="menuitem" tabindex="-1" style="padding:7px 10px;border-radius:6px">${t}</li>`).join("")}</ul>
+      <div style="display:flex;flex-direction:column;gap:4px;width:260px;max-width:100%">
+        <label for="t3-cursos" style="font-weight:700">Cursos</label>
+        <div style="position:relative">
+          <input id="t3-cursos" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="t3-lista" autocomplete="off" placeholder="Escribe o elige un curso" value="${esc(st.curso)}" style="font:inherit;box-sizing:border-box;width:100%;border:1px solid #767676;border-radius:6px;padding:6px 30px 6px 10px;background:#FFFFFF;color:#16202B">
+          <span aria-hidden="true" id="t3-flecha" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none">▾</span>
+          <ul role="listbox" id="t3-lista" aria-label="Cursos" hidden class="t3-lista">${CURSOS.map((t, i) => `<li role="option" id="t3-op${i}" aria-selected="${st.curso === t}">${t}</li>`).join("")}</ul>
+        </div>
       </div>
-      <h3 id="t3-titulo" style="margin:0;font-size:18px${st.curso ? "" : ";color:#55606E"}">${st.curso ? "Programa de " + esc(st.curso) : "Elige un curso en el menú"}</h3>
+      <h3 id="t3-titulo" style="margin:0;font-size:18px${st.curso ? "" : ";color:#55606E"}">${st.curso ? "Programa de " + esc(st.curso) : "Elige un curso en el campo “Cursos”"}</h3>
       <div role="tablist" aria-label="Información del curso" style="display:flex;gap:4px;border-bottom:1px solid #CDD5DF">${TABS.map((t, i) => `<button type="button" role="tab" id="t3-tab${i}" aria-controls="t3-p${i}" aria-selected="${st.tab === i}"${st.tab === i ? "" : ' tabindex="-1"'}>${t}</button>`).join("")}</div>
       <div role="tabpanel" id="t3-p0" aria-labelledby="t3-tab0" tabindex="0"${st.tab === 0 ? "" : " hidden"}><p style="margin:0;color:#55606E">16 semanas, en línea. Interfaces, sistemas de diseño y accesibilidad.</p></div>
       <div role="tabpanel" id="t3-p1" aria-labelledby="t3-tab1"${st.tab === 1 ? "" : " hidden"} style="display:flex;flex-direction:column;gap:10px">
         <fieldset style="border:0;padding:0;margin:0;display:flex;gap:16px;flex-wrap:wrap;align-items:center"><legend style="font-weight:700;padding:0;margin-bottom:6px">Turno</legend>${["Mañana", "Tarde", "Noche"].map(t => `<label style="display:flex;gap:6px;align-items:center"><input type="radio" name="t3-turno" value="${t}"${st.turno === t ? " checked" : ""}>${t}</label>`).join("")}</fieldset>
-        <div id="t3-fecha" style="display:flex;flex-direction:column;gap:6px">${cal()}</div>
+        <div style="display:flex;flex-direction:column;gap:4px;position:relative">
+          <label for="t3-fecha" style="font-weight:700">Fecha de inicio <span style="font-weight:400;color:#55606E">(dd/mm/aaaa)</span></label>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input id="t3-fecha" type="text" inputmode="numeric" autocomplete="off" value="${esc(st.fecha)}" style="font:inherit;box-sizing:border-box;width:220px;max-width:100%;border:1px solid #767676;border-radius:6px;padding:6px 10px;background:#FFFFFF;color:#16202B">
+            <button type="button" id="t3-cal-btn" aria-label="Elegir fecha" aria-haspopup="dialog" aria-expanded="false" style="width:34px;height:32px;border:1px solid #767676;border-radius:6px;background:#FFFFFF;color:#16202B;display:grid;place-items:center;padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></button>
+          </div>
+          <div role="dialog" aria-modal="true" aria-label="Elige la fecha de inicio" id="t3-cal" hidden class="t3-cal">
+            <div style="display:flex;justify-content:space-between;align-items:center"><button type="button" id="t3-ant" aria-label="Mes anterior" class="t3-mesbtn">‹</button><h4 id="t3-mes" aria-live="polite" style="margin:0;font-size:13px"></h4><button type="button" id="t3-sig" aria-label="Mes siguiente" class="t3-mesbtn">›</button></div>
+            <table role="grid" aria-labelledby="t3-mes" style="border-collapse:collapse;width:100%"><thead><tr>${[["lunes", "L"], ["martes", "M"], ["miércoles", "M"], ["jueves", "J"], ["viernes", "V"], ["sábado", "S"], ["domingo", "D"]].map(([a, b]) => `<th scope="col" abbr="${a}" style="font-size:11px;font-weight:600;color:#55606E;padding:2px 0">${b}</th>`).join("")}</tr></thead><tbody></tbody></table>
+            <p style="margin:0;font-size:11px;color:#55606E">Flechas para moverte · Enter para elegir · Esc para cerrar</p>
+          </div>
+        </div>
       </div>
       <div role="tabpanel" id="t3-p2" aria-labelledby="t3-tab2"${st.tab === 2 ? "" : " hidden"}></div>
       <button type="button" id="t3-silabo" class="b-sec" style="width:max-content;padding:6px 12px">Ver sílabo</button>
       <label style="display:flex;gap:8px;align-items:center;width:max-content"><input type="checkbox" id="t3-terminos"${st.terminos ? " checked" : ""}>Acepto los términos y condiciones</label>
       <button type="button" id="t3-inscribirme" class="b-pri" style="width:max-content;padding:8px 14px">Inscribirme</button>
+      <div aria-hidden="true" style="height:110px"></div>
       <div class="velo" id="t3-velo" hidden><div role="dialog" aria-modal="true" aria-labelledby="t3-dlg" class="dialogo" style="max-width:360px">
         <h4 id="t3-dlg">Sílabo del curso</h4><p style="margin:0;color:#55606E">16 semanas: fundamentos, interfaces, sistemas de diseño y accesibilidad.</p>
         <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button type="button" class="b-sec" id="t3-pdf">Descargar PDF</button><button type="button" class="b-osc" id="t3-cerrar">Cerrar</button></div>
       </div></div>
     </div>`;
-    /* 1. Menú */
-    menu(c, $("#t3-cursos", lz), $("#t3-menu", lz), {
-      alElegir: (el, teclado) => {
-        st.curso = el.textContent.trim(); c.guardar();
-        const h = $("#t3-titulo", lz); h.textContent = "Programa de " + st.curso; h.style.color = "";
-        if (st.curso === "Diseño Digital") cumplir(c, 0, teclado);
-      }
+
+    /* 1. Cursos: campo con lista de opciones (patrón combobox de la W3C). El foco se queda en el campo. */
+    const inp = $("#t3-cursos", lz), lista = $("#t3-lista", lz), flecha = $("#t3-flecha", lz);
+    let activa = -1;
+    const visibles = () => $$('[role="option"]', lista).filter(o => !o.hidden);
+    const marcarActiva = i => {
+      const vs = visibles(); activa = vs.length && i >= 0 ? Math.min(i, vs.length - 1) : -1;
+      $$('[role="option"]', lista).forEach(o => o.classList.remove("activa"));
+      if (activa >= 0) { vs[activa].classList.add("activa"); inp.setAttribute("aria-activedescendant", vs[activa].id); } else inp.removeAttribute("aria-activedescendant");
+    };
+    const cerrarLista = () => { lista.hidden = true; inp.setAttribute("aria-expanded", "false"); inp.removeAttribute("aria-activedescendant"); flecha.textContent = "▾"; activa = -1; $$('[role="option"]', lista).forEach(o => o.classList.remove("activa")); };
+    const abrirLista = (filtro, i) => {
+      const f = norm(filtro || "");
+      $$('[role="option"]', lista).forEach(o => { o.hidden = !!f && !norm(o.textContent).includes(f); });
+      if (!visibles().length) { cerrarLista(); return; }
+      lista.hidden = false; inp.setAttribute("aria-expanded", "true"); flecha.textContent = "▴";
+      marcarActiva(i);
+    };
+    const elegirCurso = (o, teclado) => {
+      st.curso = o.textContent.trim(); inp.value = st.curso; c.guardar();
+      $$('[role="option"]', lista).forEach(x => x.setAttribute("aria-selected", String(x === o)));
+      cerrarLista();
+      const h = $("#t3-titulo", lz); h.textContent = "Programa de " + st.curso; h.style.color = "";
+      if (st.curso === "Diseño Digital") cumplir(c, 0, teclado);
+    };
+    inp.addEventListener("keydown", e => {
+      const abierta = !lista.hidden, n = visibles().length;
+      if (e.key === "ArrowDown") { e.preventDefault(); if (!abierta) abrirLista("", 0); else marcarActiva(activa < 0 ? 0 : (activa + 1) % n); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); if (!abierta) abrirLista("", CURSOS.length - 1); else marcarActiva(activa <= 0 ? n - 1 : activa - 1); }
+      else if (e.key === "Enter") { if (abierta && activa >= 0) { e.preventDefault(); elegirCurso(visibles()[activa], true); } }
+      else if (e.key === "Escape") { if (abierta) { e.preventDefault(); e.stopPropagation(); cerrarLista(); } }
+      else if (e.key === "Tab") cerrarLista();
     });
+    inp.addEventListener("input", () => abrirLista(inp.value, inp.value.trim() ? 0 : -1));
+    inp.addEventListener("click", () => { if (lista.hidden) abrirLista("", -1); else cerrarLista(); });
+    lista.addEventListener("mousedown", e => e.preventDefault());
+    lista.addEventListener("click", e => { const o = e.target.closest('[role="option"]'); if (o) elegirCurso(o, false); });
+    inp.addEventListener("blur", () => cerrarLista());
+
     /* 2. Pestañas */
     const tabs = $$('[role="tab"]', lz);
     const elegirTab = (i, teclado, foco) => {
@@ -1624,36 +1716,66 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
         if (j !== null) { e.preventDefault(); elegirTab(j, true, true); }
       });
     });
+
     /* 3. Turno */
     $$('input[name="t3-turno"]', lz).forEach(r => r.addEventListener("change", () => { st.turno = r.value; c.guardar(); if (r.value === "Noche") cumplir(c, 2, porTeclado()); }));
-    /* 4. Calendario: es la trampa. Tab y Shift + Tab solo recorren los días y Esc no hace nada */
-    let vueltas = 0;
-    const salir = () => {
-      vueltas = 0; st.calSalio = true; st.trampa = true; c.guardar();
-      $("#t3-fecha", lz).innerHTML = cal();
-      $("#t3-silabo", lz).focus();
-      if (c.k === 3 || !st.est[3]) c.ir(st.est[4] ? c.k : 4, false);
-      c.aviso("info", "Saliste con ayuda de la plataforma", "El foco no salía del calendario. Lo pasamos a “Ver sílabo” para que sigas.");
+
+    /* 4. Fecha: selector de fecha estándar (patrón Date Picker Dialog de la W3C). Esc lo cierra y el foco vuelve al botón. */
+    const campo = $("#t3-fecha", lz), btnCal = $("#t3-cal-btn", lz), cal = $("#t3-cal", lz), cuerpo = $("tbody", cal), mesTit = $("#t3-mes", lz);
+    let vista = new Date(2026, 11, 1), foco = elegida || new Date(2026, 11, 1);
+    const mismoDia = (a, b) => !!(a && b) && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    const pintarMes = () => {
+      const sel = leerCampo(st.fecha), mes = MESES[vista.getMonth()];
+      mesTit.textContent = `${mes.charAt(0).toUpperCase() + mes.slice(1)} ${vista.getFullYear()}`;
+      const ini = (vista.getDay() + 6) % 7, total = new Date(vista.getFullYear(), vista.getMonth() + 1, 0).getDate();
+      let h = "", d = 1;
+      for (let fila = 0; d <= total; fila++) {
+        h += "<tr>";
+        for (let col = 0; col < 7; col++) {
+          if ((fila === 0 && col < ini) || d > total) { h += "<td></td>"; continue; }
+          const f = new Date(vista.getFullYear(), vista.getMonth(), d);
+          h += `<td style="padding:1px;text-align:center"><button type="button" class="cal-dia" data-d="${d}" tabindex="${mismoDia(f, foco) ? 0 : -1}" aria-label="${fechaTxt(f)}" aria-pressed="${mismoDia(f, sel)}">${d}</button></td>`;
+          d++;
+        }
+        h += "</tr>";
+      }
+      cuerpo.innerHTML = h;
     };
-    const calEl = $("#t3-cal", lz);
-    if (calEl) {
-      const dias = () => $$(".cal-dia", calEl);
-      calEl.addEventListener("keydown", e => {
-        const ds = dias(), i = ds.indexOf(document.activeElement); if (i < 0) return;
-        if (e.key === "Tab" && !e.shiftKey && i === ds.length - 1) { e.preventDefault(); ds[0].focus(); if (++vueltas >= 2) setTimeout(salir, 0); }
-        else if (e.key === "Tab" && e.shiftKey && i === 0) { e.preventDefault(); ds[ds.length - 1].focus(); if (++vueltas >= 2) setTimeout(salir, 0); }
-        else if (e.key === "Escape") { e.preventDefault(); salir(); }
-        else if (esFlecha(e.key)) { e.preventDefault(); const d = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key]; const j = Math.max(0, Math.min(ds.length - 1, i + d)); ds[j].focus(); }
-      });
-      calEl.addEventListener("click", e => {
-        const b = e.target.closest(".cal-dia"); if (!b) return;
-        st.fecha = +b.dataset.dia; c.guardar();
-        dias().forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-        const msg = $("#t3-fecha-el", lz); if (msg) msg.textContent = "Elegiste " + fechaTxt(st.fecha);
-        if (st.fecha === 7) cumplir(c, 3, porTeclado());
-      });
-    }
-    /* 5. Modal del sílabo: retiene el foco a propósito, y se cierra con Esc */
+    const enfocarDia = () => { const b = $(`.cal-dia[data-d="${foco.getDate()}"]`, cuerpo); if (b) b.focus(); };
+    const moverA = f => { foco = f; if (f.getMonth() !== vista.getMonth() || f.getFullYear() !== vista.getFullYear()) vista = new Date(f.getFullYear(), f.getMonth(), 1); pintarMes(); enfocarDia(); };
+    const abrirCal = () => { const sel = leerCampo(campo.value); foco = sel || foco; vista = new Date(foco.getFullYear(), foco.getMonth(), 1); cal.hidden = false; btnCal.setAttribute("aria-expanded", "true"); pintarMes(); enfocarDia(); };
+    const cerrarCal = foco => { cal.hidden = true; btnCal.setAttribute("aria-expanded", "false"); if (foco !== false) btnCal.focus(); };
+    const elegirFecha = (f, teclado) => {
+      st.fecha = fechaCampo(f); campo.value = st.fecha; c.guardar(); cerrarCal();
+      if (esMeta(f)) cumplir(c, 3, teclado);
+    };
+    btnCal.addEventListener("click", () => { if (cal.hidden) abrirCal(); else cerrarCal(); });
+    cuerpo.addEventListener("click", e => { const b = e.target.closest(".cal-dia"); if (b && e.detail !== 0) elegirFecha(new Date(vista.getFullYear(), vista.getMonth(), +b.dataset.d), false); });
+    cal.addEventListener("keydown", e => {
+      const enDia = !!(e.target.classList && e.target.classList.contains("cal-dia"));
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); cerrarCal(); return; }
+      if (e.key === "Tab") {
+        /* Mientras está abierto, Tab recorre mes anterior, mes siguiente y el día con foco */
+        const orden = [$("#t3-ant", lz), $("#t3-sig", lz), $('.cal-dia[tabindex="0"]', cuerpo)].filter(Boolean);
+        const i = orden.indexOf(document.activeElement);
+        e.preventDefault(); orden[(i + (e.shiftKey ? orden.length - 1 : 1)) % orden.length].focus(); return;
+      }
+      if (!enDia) return;
+      const paso = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key], g = (y, m, d) => new Date(y, m, d);
+      if (paso) { e.preventDefault(); moverA(g(foco.getFullYear(), foco.getMonth(), foco.getDate() + paso)); }
+      else if (e.key === "Home") { e.preventDefault(); moverA(g(foco.getFullYear(), foco.getMonth(), foco.getDate() - (foco.getDay() + 6) % 7)); }
+      else if (e.key === "End") { e.preventDefault(); moverA(g(foco.getFullYear(), foco.getMonth(), foco.getDate() + 6 - (foco.getDay() + 6) % 7)); }
+      else if (e.key === "PageUp") { e.preventDefault(); moverA(g(foco.getFullYear(), foco.getMonth() - 1, Math.min(foco.getDate(), 28))); }
+      else if (e.key === "PageDown") { e.preventDefault(); moverA(g(foco.getFullYear(), foco.getMonth() + 1, Math.min(foco.getDate(), 28))); }
+      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); elegirFecha(foco, true); }
+    });
+    const cambiarMes = d => { vista = new Date(vista.getFullYear(), vista.getMonth() + d, 1); foco = new Date(vista.getFullYear(), vista.getMonth(), Math.min(foco.getDate(), 28)); pintarMes(); };
+    $("#t3-ant", lz).addEventListener("click", () => cambiarMes(-1));
+    $("#t3-sig", lz).addEventListener("click", () => cambiarMes(1));
+    cal.addEventListener("focusout", e => { if (!cal.hidden && e.relatedTarget && !cal.contains(e.relatedTarget)) cerrarCal(false); });
+    campo.addEventListener("change", () => { st.fecha = campo.value.trim(); c.guardar(); if (esMeta(leerCampo(st.fecha))) cumplir(c, 3, porTeclado()); });
+
+    /* 5. Modal del sílabo: retiene el foco mientras está abierto, y se cierra con Esc o con "Cerrar" */
     const velo = $("#t3-velo", lz), silabo = $("#t3-silabo", lz), dlg = $('[role="dialog"]', velo);
     let abiertoTeclado = false;
     const abrir = () => { abiertoTeclado = porTeclado(); velo.hidden = false; $("#t3-pdf", lz).focus(); };
@@ -1663,14 +1785,16 @@ function menu(c, boton, lista, { alCerrarEsc, alSalirTab, alElegir } = {}) {
     $("#t3-pdf", lz).addEventListener("click", e => e.preventDefault());
     dlg.addEventListener("keydown", e => {
       const f = $$("button", dlg), i = f.indexOf(document.activeElement);
-      if (e.key === "Escape") { e.preventDefault(); cerrar(true); }
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); cerrar(true); }
       else if (e.key === "Tab" && !e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
       else if (e.key === "Tab" && e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
     });
+
     /* 6. Términos */
     const term = $("#t3-terminos", lz);
     term.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); c.aviso("pista", "Pista", "Enter no marca un checkbox. Prueba con Espacio."); } });
     term.addEventListener("change", () => { st.terminos = term.checked; c.guardar(); if (term.checked) cumplir(c, 5, porTeclado()); });
+
     /* 7. Inscribirme */
     $("#t3-inscribirme", lz).addEventListener("click", () => cumplir(c, 6, porTeclado()));
   }
@@ -1798,6 +1922,8 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
   const POP = [["dialogo", "“Confirma tu inscripción, diálogo”, con los datos a confirmar"], ["confirmada", "“Inscripción confirmada”"], ["alerta", "“Alerta”"], ["boton", "“Confirmar inscripción, botón”"]];
   const CODIGO = "FARO 27"; /* se acepta junto, con guion o en minúsculas */
   const telOk = v => /^\d{9}$/.test(String(v || ""));
+  /* El teléfono solo acepta números, hasta 9. Si faltan dígitos al enviar, el error dice cuántos. */
+  const faltanTxt = v => { const n = 9 - String(v || "").replace(/\D/g, "").length; return n === 1 ? "Te falta 1 dígito. El número de celular tiene 9." : `Te faltan ${n} dígitos. El número de celular tiene 9.`; };
   const datosOk = d => !!(d.nombre && d.nombre.trim() && telOk(d.tel) && d.mod === "Híbrida" && d.sede === "Lima" && d.terminos);
   const ITEMS = [["nombre", "Tu nombre completo", d => !!(d.nombre && d.nombre.trim())], ["tel", "Tu teléfono celular, en el formato que escuches", d => telOk(d.tel)], ["mod", "Modalidad Híbrida", d => d.mod === "Híbrida"], ["sede", "Sede Lima", d => d.sede === "Lima"], ["terminos", "Acepta los términos y condiciones", d => !!d.terminos]];
   const P = [
@@ -1865,7 +1991,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     lz.innerHTML = `<div id="v3-form" style="position:relative;border:1px solid #CDD5DF;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:13px">
       <h3 style="margin:0;font-size:17px">Inscríbete en Diseño Digital</h3>
       <div class="campo-v3"><label for="v3-nombre" style="font-weight:600">Nombre completo</label><input id="v3-nombre" aria-required="true" autocomplete="off" aria-describedby="v3-nombre-err" value="${esc(d.nombre)}">${err("v3-nombre-err")}</div>
-      <div class="campo-v3"><label for="v3-tel" style="font-weight:600">Teléfono celular</label><input id="v3-tel" inputmode="numeric" autocomplete="off" aria-describedby="v3-tel-ayuda v3-tel-err" value="${esc(d.tel)}"><span id="v3-tel-ayuda" hidden>9 dígitos, sin espacios</span>${err("v3-tel-err")}</div>
+      <div class="campo-v3"><label for="v3-tel" style="font-weight:600">Teléfono celular</label><input id="v3-tel" type="text" inputmode="numeric" maxlength="9" autocomplete="off" aria-describedby="v3-tel-ayuda v3-tel-err" value="${esc(d.tel)}"><span id="v3-tel-ayuda" hidden>9 dígitos, sin espacios</span>${err("v3-tel-err")}</div>
       <fieldset id="v3-mod" aria-describedby="v3-mod-err" style="border:0;padding:0;margin:0;display:flex;gap:16px;flex-wrap:wrap"><legend style="font-weight:600;padding:0;margin-bottom:6px">Modalidad</legend>${["Presencial", "Virtual", "Híbrida"].map(m => `<label style="display:flex;gap:6px;align-items:center"><input type="radio" name="v3-mod" value="${m}"${d.mod === m ? " checked" : ""}>${m}</label>`).join("")}</fieldset>${err("v3-mod-err")}
       <div class="campo-v3"><label for="v3-sede" style="font-weight:600">Sede</label><select id="v3-sede" aria-describedby="v3-sede-err" style="padding:0 8px"><option value="">Elige una sede</option>${["Lima", "Arequipa", "Trujillo"].map(s => `<option${d.sede === s ? " selected" : ""}>${s}</option>`).join("")}</select>${err("v3-sede-err")}</div>
       <label style="display:flex;gap:8px;align-items:center;width:max-content;max-width:100%"><input type="checkbox" id="v3-terminos" aria-required="true" aria-describedby="v3-term-err"${d.terminos ? " checked" : ""}>Acepto los términos y condiciones</label>${err("v3-term-err")}
@@ -1880,6 +2006,9 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
     </div>`;
     const leer = () => { d.nombre = $("#v3-nombre", lz).value; d.tel = $("#v3-tel", lz).value.trim(); const m = $('input[name="v3-mod"]:checked', lz); d.mod = m ? m.value : ""; d.sede = $("#v3-sede", lz).value; d.terminos = $("#v3-terminos", lz).checked; };
     const refrescarLista = () => { const l = $("#v3-datos"); if (l) l.innerHTML = datosLista(st); };
+    /* Teléfono: solo números y máximo 9; lo demás no se escribe */
+    const telIn = $("#v3-tel", lz);
+    telIn.addEventListener("input", () => { const v = telIn.value.replace(/\D/g, "").slice(0, 9); if (v !== telIn.value) telIn.value = v; });
     $("#v3-form", lz).addEventListener("input", () => { leer(); refrescarLista(); c.guardar(); });
     $("#v3-form", lz).addEventListener("change", () => { leer(); refrescarLista(); c.guardar(); });
     const ponerError = (campo, id, txt) => { const e = $("#" + id, lz); e.textContent = txt; if (campo) { if (txt) campo.setAttribute("aria-invalid", "true"); else campo.removeAttribute("aria-invalid"); } };
@@ -1889,7 +2018,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       const errores = [];
       const nom = $("#v3-nombre", lz), tel = $("#v3-tel", lz), sede = $("#v3-sede", lz), term = $("#v3-terminos", lz), mod = $('input[name="v3-mod"]', lz);
       ponerError(nom, "v3-nombre-err", d.nombre.trim() ? "" : "Escribe tu nombre completo."); if (!d.nombre.trim()) errores.push(nom);
-      ponerError(tel, "v3-tel-err", telOk(d.tel) ? "" : "Ingresa 9 dígitos."); if (!telOk(d.tel)) errores.push(tel);
+      ponerError(tel, "v3-tel-err", telOk(d.tel) ? "" : faltanTxt(d.tel)); if (!telOk(d.tel)) errores.push(tel);
       ponerError(null, "v3-mod-err", d.mod ? "" : "Elige una modalidad."); if (!d.mod) errores.push(mod);
       ponerError(sede, "v3-sede-err", d.sede ? "" : "Elige una sede."); if (!d.sede) errores.push(sede);
       ponerError(term, "v3-term-err", d.terminos ? "" : "Acepta los términos y condiciones."); if (!d.terminos) errores.push(term);
@@ -1922,7 +2051,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
   const T = [
     { tipo: "teclado", instr: "Recorre toda la página hasta llegar a “Privacidad”, en el footer.", teclas: "Teclas: Tab. Sin mouse.", correcta: "Tab desde el buscador hasta “Privacidad”, en el footer" },
     { tipo: "teclado", instr: "Desde “Ver horario”, vuelve hasta el buscador.", teclas: "Teclas: Shift + Tab.", correcta: "Shift + Tab desde “Ver horario” hasta “Buscar en mis cursos”" },
-    { tipo: "teclado", instr: "Abre “Ver horario” y ciérralo.", teclas: "Teclas: Enter para abrir; Esc o el botón Cerrar para cerrar.", correcta: "Enter para abrir y Esc o el botón Cerrar para cerrar; el foco vuelve a “Ver horario”" },
+    { tipo: "teclado", instr: "Abre “Ver horario” y ciérralo.", teclas: "Teclas: Enter para abrir; Esc, la X o “Aceptar” para cerrar.", correcta: "Enter para abrir y Esc, la X o “Aceptar” para cerrar; el foco vuelve a “Ver horario”" },
     { tipo: "teclado", instr: "Marca “Recordatorio un día antes de cada clase”.", teclas: "Teclas: Espacio.", correcta: "Espacio sobre la casilla" },
     { tipo: "teclado", instr: "Cambia a la pestaña “Terminados”.", teclas: "Teclas: flechas.", correcta: "→ desde “En curso” hasta “Terminados”" },
     { tipo: "vo", instr: "Escucha la página completa hasta el footer.", teclas: "Atajo: VO + A.", preg: "¿Cómo anuncia VoiceOver “Términos”?", ops: [["enlace", "Vínculo"], ["boton", "Botón"], ["texto", "Texto"], ["encabezado", "Encabezado"]], ok: "enlace" },
@@ -1979,7 +2108,7 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
   function aula(c) {
     const lz = c.lz, st = c.st;
     const navA = (k, ic, t, act) => `<a href="#" data-k="${k}"${act ? ' aria-current="page"' : ""}>${icon(ic, 16)}${t}</a>`;
-    const curso = (t, p, img) => `<article style="border:1px solid #CDD5DF;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#FFFFFF"><div style="height:44px;background:${IMG_CURSO[img][0]};overflow:hidden">${IMG_CURSO[img][1].replace('height="52"', 'height="44"')}</div><div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font-weight:700;font-size:13px">${t}</h3><div style="display:flex;flex-direction:column;gap:4px"><div role="progressbar" aria-label="${t}" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${p} % completado" style="height:6px;border-radius:999px;background:#E3E8EE"><div style="width:${p}%;height:100%;border-radius:999px;background:#0E6A6A"></div></div><span aria-hidden="true" style="font-size:11px;color:#55606E">${p}% completado</span></div><a href="#" style="font-size:12px;font-weight:600;color:#0057B8;text-decoration:underline;text-underline-offset:2px;width:max-content">Ver más</a></div></article>`;
+    const curso = (t, p, img) => `<article style="border:1px solid #CDD5DF;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#FFFFFF"><div style="height:44px;background:${IMG_CURSO[img][0]};overflow:hidden">${IMG_CURSO[img][1].replace('height="52"', 'height="44"')}</div><div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px"><h3 style="margin:0;font-weight:700;font-size:13px">${t}</h3><div style="display:flex;flex-direction:column;gap:4px"><div role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${p} % completado" style="height:6px;border-radius:999px;background:#E3E8EE"><div style="width:${p}%;height:100%;border-radius:999px;background:#0E6A6A"></div></div><span aria-hidden="true" style="font-size:11px;color:#55606E">${p}% completado</span></div><a href="#" style="font-size:12px;font-weight:600;color:#0057B8;text-decoration:underline;text-underline-offset:2px;width:max-content">Ver más</a></div></article>`;
     lz.innerHTML = `<div style="position:relative;font-size:13px;line-height:1.5">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid #E3E8EE">
         <span style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px">${LOGO_CAMPUS}Campus Digital</span>
@@ -2010,8 +2139,9 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       <button type="button" style="font:inherit;position:absolute;right:18px;bottom:56px;z-index:2;display:flex;align-items:center;gap:8px;height:40px;border:0;border-radius:999px;background:#16202B;color:#FFFFFF;padding:0 16px 0 8px;font-weight:600;box-shadow:0 6px 18px rgba(22,32,43,.25)"><span aria-hidden="true" style="width:26px;height:26px;border-radius:999px;background:#0E6A6A;display:grid;place-items:center">${icon("chat", 14)}</span>¿Necesitas ayuda?</button>
       <footer style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#16202B;color:#CDD5DF;padding:12px 18px;font-size:12px"><span>© 2026 Campus Digital</span><span style="display:flex;gap:18px"><a href="#" data-k="terminos" style="color:#E3E8EE;text-decoration:underline;text-underline-offset:2px;border-radius:3px">Términos</a><a href="#" data-k="privacidad" style="color:#E3E8EE;text-decoration:underline;text-underline-offset:2px;border-radius:3px">Privacidad</a></span></footer>
       <div class="velo" id="rf-velo" hidden style="inset:0;border-radius:0"><div role="dialog" aria-modal="true" aria-labelledby="rf-dlg" class="dialogo">
-        <h3 id="rf-dlg">Horario</h3>
-        <div style="display:flex;justify-content:flex-end"><button type="button" class="b-osc" id="rf-cerrar">Cerrar</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h3 id="rf-dlg">Horario de la semana</h3><button type="button" id="rf-x" aria-label="Cerrar" style="width:32px;height:32px;border:1px solid #CDD5DF;border-radius:8px;background:#FFFFFF;color:#16202B;display:grid;place-items:center;padding:0">${icon("x", 16)}</button></div>
+        <table class="tabla-horario"><thead><tr><th scope="col">Día y hora</th><th scope="col">Curso</th><th scope="col">Aula</th></tr></thead><tbody>${[["Lunes 9 de noviembre, 7:00 p. m.", "Diseño Digital", "Aula 204"], ["Miércoles 11 de noviembre, 7:00 p. m.", "Marketing digital", "Aula 105"], ["Viernes 13 de noviembre, 6:00 p. m.", "Programación web", "Laboratorio 3"]].map(([d, cu, a]) => `<tr><td>${d}</td><td style="font-weight:600">${cu}</td><td>${a}</td></tr>`).join("")}</tbody></table>
+        <div style="display:flex;justify-content:flex-end"><button type="button" class="b-pri" id="rf-aceptar" style="padding:8px 18px;border-radius:8px">Aceptar</button></div>
       </div></div>
     </div>`;
     $$("a", lz).forEach(a => a.addEventListener("click", e => e.preventDefault()));
@@ -2028,15 +2158,17 @@ const LOGO_CAMPUS = `<span aria-hidden="true" style="width:24px;height:24px;bord
       else if (ej.ultima === "Shift + Tab" && porTeclado()) { conTab.clear(); conShift.add(k); if (k === "buscar" && conShift.has("horario")) marcar(c, 1); }
       else { conTab.clear(); conShift.clear(); }
     });
-    /* Tarea 3: Ver horario se abre con Enter o Espacio y se cierra con Esc o con el botón Cerrar */
-    const horario = $("#rf-horario", lz), velo = $("#rf-velo", lz), dlg = $('[role="dialog"]', velo);
+    /* Tarea 3: "Ver horario" abre el modal "Horario de la semana" con Enter o Espacio. Al abrirse, el foco va a la X;
+       Tab y Shift + Tab se mueven entre la X y "Aceptar". Se cierra con Esc, la X o "Aceptar", y el foco vuelve a "Ver horario". */
+    const horario = $("#rf-horario", lz), velo = $("#rf-velo", lz), dlg = $('[role="dialog"]', velo), bx = $("#rf-x", lz), bAceptar = $("#rf-aceptar", lz);
     let abiertoTeclado = false;
-    horario.addEventListener("click", () => { abiertoTeclado = porTeclado(); velo.hidden = false; $("#rf-cerrar", lz).focus(); });
+    horario.addEventListener("click", () => { abiertoTeclado = porTeclado(); velo.hidden = false; bx.focus(); });
     const cerrar = () => { velo.hidden = true; horario.focus(); if (abiertoTeclado) marcar(c, 2); };
-    $("#rf-cerrar", lz).addEventListener("click", () => cerrar());
+    bx.addEventListener("click", () => cerrar());
+    bAceptar.addEventListener("click", () => cerrar());
     dlg.addEventListener("keydown", e => {
-      if (e.key === "Escape") { e.preventDefault(); cerrar(); }
-      else if (e.key === "Tab") { e.preventDefault(); $("#rf-cerrar", lz).focus(); }
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); cerrar(); }
+      else if (e.key === "Tab") { e.preventDefault(); (document.activeElement === bx ? bAceptar : bx).focus(); }
     });
     /* Tarea 4: el recordatorio se marca con Espacio */
     const rec = $("#rf-rec", lz); let conEspacio = false;
