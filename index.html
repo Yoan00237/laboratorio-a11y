@@ -728,6 +728,18 @@ select.input { background: var(--fondo); }
 .res-pie { display: flex; justify-content: flex-end; margin-top: 8px; }
 .res-pie .lab-btn--principal { min-width: 240px; }
 
+/* Diploma en "Tu resultado final" */
+.panel.diploma { display: flex; flex-wrap: wrap; gap: 32px; align-items: center; }
+.dip-mini { flex: 0 0 352px; max-width: 100%; border: 1px solid var(--borde-suave); border-radius: 8px; overflow: hidden; }
+.dip-info { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.dip-info h2 { margin: 0; }
+.dip-info p { margin: 0; }
+.dip-info > p:first-of-type { font-size: 16px; }
+.dip-acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+.dip-acciones .lab-btn { text-decoration: none; }
+.dip-perfil { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--acento-claro); text-decoration: underline; text-underline-offset: 3px; }
+.dip-info .nota { font-size: 13px; color: var(--texto-secundario); }
+
 </style>
 </head>
 <body>
@@ -1064,6 +1076,166 @@ function editorAvatar(cont, inicial, alCambiar) {
   pintar();
   return { valor: () => av };
 }
+
+/* ---- 05-diploma.js ---- */
+/* ---- Diploma de la sesión ----
+   Un mismo diseño sirve para verlo (SVG con texto real) y para descargarlo (PDF con texto real, Helvetica).
+   Medidas en px de un lienzo de 1600 × 1131 (proporción A4 horizontal). */
+const DIP = (() => {
+  const C = { F: "#141915", A: "#4DD13C", AC: "#BDF4B3", AO: "#1C3A1A", VF: "#2E2140", VT: "#E4D2FF", TL: "#0E6A6A", W: "#FFFFFF", INK: "#16202B", GR: "#55606E", TX: "#3A4450" };
+  const S = 118, AN = 1600, AL = 1131, X0 = 3 * S + 96;
+  const LINEAS = ["Por completar la Sesión 2 del Laboratorio A11Y: recorrió y probó", "productos digitales solo con el teclado y con VoiceOver, como lo", "hacen las personas que no usan el mouse o no ven la pantalla."];
+  /* Bloques de la columna izquierda, 3 por fila: [tipo, fondo, color, extra] */
+  const T = [
+    ["sq", "A"], ["sq", "W"], ["st", "VT", "W"],
+    ["qc", "AC", "F", "br"], ["sq", "VF"], ["st", "VT", "W"],
+    ["key", "AC"], ["qc", "A", "AO", "tl"], ["ci", "VT", "TL"],
+    ["sq", "F"], ["sq", "AC"], ["sq", "W"],
+    ["ci", "W", "A"], ["st", "TL", "AC"], ["qc", "VF", "VT", "bl"],
+    ["qc", "A", "F", "tr"], ["spk", "VF", "VT"], ["sq", "AC"],
+    ["st", "AO", "A"], ["sq", "W"], ["qc", "TL", "AC", "tl"],
+    ["sq", "VT"], ["half", "A", "F"], ["sq", "F"],
+    ["ci", "F", "AC"], ["sq", "W"], ["st", "VF", "VT"],
+    ["sq", "TL"], ["qc", "AC", "A", "tr"], ["sq", "W"]
+  ];
+  const HW = { r: [278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584, 761, 556, 0, 222, 556, 333, 1000, 556, 556, 333, 1000, 667, 333, 1000, 0, 611, 0, 0, 222, 222, 333, 333, 350, 556, 1000, 333, 1000, 500, 333, 944, 0, 500, 667, 278, 333, 556, 556, 556, 556, 260, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 556, 537, 278, 333, 333, 365, 556, 834, 834, 834, 611, 667, 667, 667, 667, 667, 667, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556, 556, 556, 556, 584, 611, 556, 556, 556, 556, 500, 556, 500], b: [278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611, 611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556, 500, 389, 280, 389, 584, 761, 556, 0, 278, 556, 500, 1000, 556, 556, 333, 1000, 667, 333, 1000, 0, 611, 0, 0, 278, 278, 500, 500, 350, 556, 1000, 333, 1000, 556, 333, 944, 0, 500, 667, 278, 333, 556, 556, 556, 556, 280, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 611, 556, 278, 333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611, 611, 611, 611, 584, 611, 611, 611, 611, 611, 556, 611, 556] };
+  const ancho = (t, px, negrita) => { let w = 0; for (const ch of t) { const c = cp1252(ch); w += (c >= 32 ? (negrita ? HW.b : HW.r)[c - 32] : 556) || 556; } return w * px / 1000; };
+  function cp1252(ch) {
+    const u = ch.codePointAt(0);
+    if (u < 128 || (u >= 160 && u <= 255)) return u;
+    const m = { 8364: 128, 8218: 130, 8222: 132, 8230: 133, 8226: 149, 8211: 150, 8212: 151, 8216: 145, 8217: 146, 8220: 147, 8221: 148, 352: 138, 353: 154, 338: 140, 339: 156, 381: 142, 382: 158, 376: 159 };
+    return m[u] || 63;
+  }
+  const fechaTxt = f => { const d = new Date(f); return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`; };
+  const tamNombre = n => Math.min(72, 72 * 1000 / Math.max(1, ancho(n, 72, false)));
+
+  /* ---------- SVG ---------- */
+  function svg(nombre, fecha, { generico = false, titulo = true } = {}) {
+    const e = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    let s = "";
+    const rect = (x, y, w, h, c) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C[c] || c}"/>`;
+    T.forEach(([tipo, bg, fg, ex], i) => {
+      const x = (i % 3) * S, y = Math.floor(i / 3) * S;
+      s += rect(x, y, S, S, bg);
+      if (tipo === "qc") { const cx = { tl: x + S, tr: x, br: x, bl: x + S }[ex], cy = { tl: y + S, tr: y + S, br: y, bl: y }[ex]; const sx = cx === x ? 1 : -1, sy = cy === y ? 1 : -1; s += `<path d="M${cx} ${cy}h${sx * S}a${S} ${S} 0 0 ${sx * sy > 0 ? 1 : 0} ${-sx * S} ${sy * S}z" fill="${C[fg]}"/>`; }
+      if (tipo === "ci") s += `<circle cx="${x + S / 2}" cy="${y + S / 2}" r="${S * 0.42}" fill="${C[fg]}"/>`;
+      if (tipo === "half") s += `<path d="M${x} ${y + S}a${S / 2} ${S / 2} 0 0 1 ${S} 0z" fill="${C[fg]}"/>`;
+      if (tipo === "st") { s += `<g clip-path="url(#dc${i})"><clipPath id="dc${i}"><rect x="${x}" y="${y}" width="${S}" height="${S}"/></clipPath>`; for (let k = -S; k < S; k += 22.6) s += `<line x1="${x + k}" y1="${y + S}" x2="${x + k + S}" y2="${y}" stroke="${C[fg]}" stroke-width="2"/>`; s += "</g>"; }
+      if (tipo === "key") s += `<rect x="${x + 13}" y="${y + 26}" width="${S * 0.78}" height="${S * 0.56}" rx="12" fill="${C.INK}"/><rect x="${x + 16}" y="${y + 29}" width="${S * 0.78 - 6}" height="${S * 0.56 - 12}" rx="10" fill="${C.W}"/><text x="${x + S / 2}" y="${y + S / 2 + 4}" text-anchor="middle" font-size="26" font-weight="700" fill="${C.INK}">Tab</text>`;
+      if (tipo === "spk") s += `<g transform="translate(${x + 24} ${y + 24}) scale(1.75)"><path d="M6 15H13L22 7V33L13 25H6Z" fill="${C[fg]}"/><path d="M27 13Q32 20 27 27M31 9Q39 20 31 31" fill="none" stroke="${C[fg]}" stroke-width="3" stroke-linecap="round"/></g>`;
+    });
+    const xd = AN - S;
+    s += `<circle cx="${xd + S / 2}" cy="${S / 2}" r="${S / 2}" fill="${C.A}"/>`;
+    s += `<path d="M${AN} ${S}a${S} ${S} 0 0 0 0 ${2 * S}z" fill="${C.VF}"/>`;
+    s += `<g clip-path="url(#dcd)"><clipPath id="dcd"><rect x="${xd}" y="${AL - 3 * S}" width="${S}" height="${3 * S}"/></clipPath>${rect(xd, AL - 3 * S, S, 3 * S, "AC")}`;
+    for (let k = -S; k < 3 * S; k += 22.6) s += `<line x1="${xd + k}" y1="${AL - S}" x2="${xd + k + 2 * S}" y2="${AL - 3 * S}" stroke="${C.W}" stroke-width="2"/>`;
+    s += `</g><circle cx="${xd + S / 2}" cy="${AL - S / 2}" r="${S / 2}" fill="${C.F}"/>`;
+    const dec = `<g aria-hidden="true">${s}</g>`;
+    const X = X0;
+    let txt = `<text x="${X}" y="300" font-size="104" font-weight="600" letter-spacing="4" fill="${C.INK}">CERTIFICADO</text>`
+      + `<text x="${X}" y="352" font-size="30" font-weight="500" letter-spacing="2" fill="${C.INK}">LABORATORIO A11Y · SESIÓN 2</text>`;
+    { const n = generico ? "Participantes de la Sesión 2" : nombre;
+      txt += `<text x="${X}" y="494" font-size="26" font-weight="500" letter-spacing="1.3" fill="${C.GR}">SE OTORGA A:</text>`
+        + `<text x="${X}" y="580" font-size="${tamNombre(n).toFixed(1)}" font-weight="600" fill="${C.INK}">${e(n)}</text>`;
+    }
+    txt += `<rect x="${X}" y="616" width="120" height="6" rx="3" fill="${C.A}" aria-hidden="true"/>`
+      + LINEAS.map((l, i) => `<text x="${X}" y="${676 + i * 38}" font-size="26" fill="${C.TX}">${e(l)}</text>`).join("");
+    if (!generico) txt += `<text x="${X}" y="878" font-size="26" font-weight="500" fill="${C.TL}">Fecha:</text><text x="${X}" y="916" font-size="28" font-weight="700" fill="${C.INK}">${fechaTxt(fecha)}</text>`;
+    const nom = generico ? "Certificado del Laboratorio A11Y, Sesión 2" : `Certificado del Laboratorio A11Y, Sesión 2, otorgado a ${nombre} el ${fechaTxt(fecha)}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${AN} ${AL}" role="img" aria-label="${e(nom)}" style="display:block;width:100%;height:auto;background:#FFFFFF;font-family:Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">${titulo ? `<title>${e(nom)}</title>` : ""}<rect width="${AN}" height="${AL}" fill="#FFFFFF"/>${dec}<g aria-hidden="true">${txt}</g></svg>`;
+  }
+
+  /* ---------- PDF (texto real con Helvetica, formas vectoriales) ---------- */
+  function pdf(nombre, fecha) {
+    const PW = 842, PH = 595, k = PW / AN;
+    let tecla = null;
+    const X = v => (v * k).toFixed(2), Y = v => (PH - v * k).toFixed(2);
+    const rgb = c => { const h = (C[c] || c).slice(1); return [0, 2, 4].map(i => (parseInt(h.substr(i, 2), 16) / 255).toFixed(3)).join(" "); };
+    let o = "";
+    const fill = c => { o += `${rgb(c)} rg\n`; };
+    const rect = (x, y, w, h, c) => { fill(c); o += `${X(x)} ${Y(y + h)} ${X(w)} ${X(h)} re f\n`; };
+    const K = 0.5523;
+    const elipse = (cx, cy, r, c) => { fill(c); const a = r * K; o += `${X(cx + r)} ${Y(cy)} m ${X(cx + r)} ${Y(cy - a)} ${X(cx + a)} ${Y(cy - r)} ${X(cx)} ${Y(cy - r)} c ${X(cx - a)} ${Y(cy - r)} ${X(cx - r)} ${Y(cy - a)} ${X(cx - r)} ${Y(cy)} c ${X(cx - r)} ${Y(cy + a)} ${X(cx - a)} ${Y(cy + r)} ${X(cx)} ${Y(cy + r)} c ${X(cx + a)} ${Y(cy + r)} ${X(cx + r)} ${Y(cy + a)} ${X(cx + r)} ${Y(cy)} c f\n`; };
+    /* cuarto de círculo con centro (cx, cy): de (cx+dx, cy) a (cx, cy+dy) */
+    const cuarto = (cx, cy, dx, dy, c) => { fill(c); o += `${X(cx)} ${Y(cy)} m ${X(cx + dx)} ${Y(cy)} l ${X(cx + dx)} ${Y(cy + dy * K)} ${X(cx + dx * K)} ${Y(cy + dy)} ${X(cx)} ${Y(cy + dy)} c h f\n`; };
+    /* medio círculo en un solo trazo (sin costura): centro (cx, cy), radio r, hacia "arriba" o "izquierda" */
+    const medio = (cx, cy, r, lado, c) => { fill(c); const a = r * K;
+      if (lado === "arriba") o += `${X(cx - r)} ${Y(cy)} m ${X(cx - r)} ${Y(cy - a)} ${X(cx - a)} ${Y(cy - r)} ${X(cx)} ${Y(cy - r)} c ${X(cx + a)} ${Y(cy - r)} ${X(cx + r)} ${Y(cy - a)} ${X(cx + r)} ${Y(cy)} c h f\n`;
+      else o += `${X(cx)} ${Y(cy - r)} m ${X(cx - a)} ${Y(cy - r)} ${X(cx - r)} ${Y(cy - a)} ${X(cx - r)} ${Y(cy)} c ${X(cx - r)} ${Y(cy + a)} ${X(cx - a)} ${Y(cy + r)} ${X(cx)} ${Y(cy + r)} c h f\n`; };
+    const rayas = (x, y, w, h, c, paso = 22.6) => { o += `q ${X(x)} ${Y(y + h)} ${X(w)} ${X(h)} re W n ${rgb(c).replace(/ rg$/, "")} RG ${(2 * k).toFixed(2)} w\n`; for (let t = -h; t < w; t += paso) o += `${X(x + t)} ${Y(y + h)} m ${X(x + t + h)} ${Y(y)} l S\n`; o += "Q\n"; };
+    T.forEach(([tipo, bg, fg, ex], i) => {
+      const x = (i % 3) * S, y = Math.floor(i / 3) * S;
+      rect(x, y, S, S, bg);
+      if (tipo === "qc") { const cx = { tl: x + S, tr: x, br: x, bl: x + S }[ex], cy = { tl: y + S, tr: y + S, br: y, bl: y }[ex]; cuarto(cx, cy, cx === x ? S : -S, cy === y ? S : -S, fg); }
+      if (tipo === "ci") elipse(x + S / 2, y + S / 2, S * 0.42, fg);
+      if (tipo === "half") medio(x + S / 2, y + S, S / 2, "arriba", fg);
+      if (tipo === "st") rayas(x, y, S, S, fg);
+      if (tipo === "key") { rect(x + 13, y + 26, S * 0.78, S * 0.56, "INK"); rect(x + 16, y + 29, S * 0.78 - 6, S * 0.56 - 12, "W"); tecla = [x + S / 2 - ancho("Tab", 26, true) / 2, y + S / 2 + 4]; }
+      if (tipo === "spk") { const sx = x + 24, sy = y + 24, f = 1.75; fill(fg); o += `${X(sx + 6 * f)} ${Y(sy + 15 * f)} m ${X(sx + 13 * f)} ${Y(sy + 15 * f)} l ${X(sx + 22 * f)} ${Y(sy + 7 * f)} l ${X(sx + 22 * f)} ${Y(sy + 33 * f)} l ${X(sx + 13 * f)} ${Y(sy + 25 * f)} l ${X(sx + 6 * f)} ${Y(sy + 25 * f)} l h f\n`;
+        o += `${rgb(fg)} RG ${(3 * f * k).toFixed(2)} w 1 J\n`;
+        for (const [p0, q, p2] of [[[27, 13], [32, 20], [27, 27]], [[31, 9], [39, 20], [31, 31]]]) {
+          const c1 = [p0[0] + 2 / 3 * (q[0] - p0[0]), p0[1] + 2 / 3 * (q[1] - p0[1])], c2 = [p2[0] + 2 / 3 * (q[0] - p2[0]), p2[1] + 2 / 3 * (q[1] - p2[1])];
+          o += `${X(sx + p0[0] * f)} ${Y(sy + p0[1] * f)} m ${X(sx + c1[0] * f)} ${Y(sy + c1[1] * f)} ${X(sx + c2[0] * f)} ${Y(sy + c2[1] * f)} ${X(sx + p2[0] * f)} ${Y(sy + p2[1] * f)} c S\n`;
+        } }
+    });
+    const xd = AN - S;
+    elipse(xd + S / 2, S / 2, S / 2, "A");
+    medio(AN, 2 * S, S, "izquierda", "VF");
+    rect(xd, AL - 3 * S, S, 2 * S, "AC"); rayas(xd, AL - 3 * S, S, 2 * S, "W"); rect(xd, AL - S, S, S, "AC"); elipse(xd + S / 2, AL - S / 2, S / 2, "F");
+    function texto(t, x, y, px, negrita, c, tc = 0) {
+      const b = [...t].map(ch => { const n = cp1252(ch); return n === 40 || n === 41 || n === 92 ? "\\" + String.fromCharCode(n) : n > 126 ? "\\" + n.toString(8).padStart(3, "0") : String.fromCharCode(n); }).join("");
+      o += `BT /${negrita ? "F2" : "F1"} ${(px * k).toFixed(2)} Tf ${tc ? (tc * k).toFixed(2) + " Tc " : ""}${rgb(c)} rg ${X(x)} ${Y(y)} Td (${b}) Tj ET\n`;
+    }
+    const x0 = X0;
+    texto("CERTIFICADO", x0, 300, 104, true, "INK", 4);
+    texto("LABORATORIO A11Y · SESIÓN 2", x0, 352, 30, false, "INK", 2);
+    texto("SE OTORGA A:", x0, 494, 26, false, "GR", 1.3);
+    texto(nombre, x0, 580, tamNombre(nombre), true, "INK");
+    rect(x0, 616, 120, 6, "A");
+    LINEAS.forEach((l, i) => texto(l, x0, 676 + i * 38, 26, false, "TX"));
+    texto("Fecha:", x0, 878, 26, false, "TL");
+    texto(fechaTxt(fecha), x0, 916, 28, true, "INK");
+    if (tecla) texto("Tab", tecla[0], tecla[1], 26, true, "INK");
+    /* Ensamblar el PDF */
+    const tit = `Certificado del Laboratorio A11Y, Sesión 2 – ${nombre}`;
+    /* Texto de los metadatos en UTF-16BE, para que el título se vea bien con tildes y guiones */
+    const pstr = t => "<FEFF" + [...t].map(ch => { const u = ch.codePointAt(0); const h = x => x.toString(16).padStart(4, "0"); if (u > 0xFFFF) { const v = u - 0x10000; return h(0xD800 + (v >> 10)) + h(0xDC00 + (v & 1023)); } return h(u); }).join("").toUpperCase() + ">";
+    const objs = [
+      "<< /Type /Catalog /Pages 2 0 R /Lang (es) /ViewerPreferences << /DisplayDocTitle true >> >>",
+      "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>`,
+      `<< /Length ${o.length} >>\nstream\n${o}endstream`,
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
+      `<< /Title ${pstr(tit)} /Author (Laboratorio A11Y) /Subject (Sesion 2: teclado y VoiceOver) /Creator (Laboratorio A11Y) >>`
+    ];
+    let out = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n"; const off = [];
+    objs.forEach((ob, i) => { off.push(out.length); out += `${i + 1} 0 obj\n${ob}\nendobj\n`; });
+    const xref = out.length;
+    out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + off.map(n => String(n).padStart(10, "0") + " 00000 n \n").join("");
+    out += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R /Info 7 0 R >>\nstartxref\n${xref}\n%%EOF`;
+    const bytes = new Uint8Array(out.length); for (let i = 0; i < out.length; i++) bytes[i] = out.charCodeAt(i) & 255;
+    return new Blob([bytes], { type: "application/pdf" });
+  }
+  function descargar(nombre, fecha) {
+    const url = URL.createObjectURL(pdf(nombre, fecha));
+    const a = document.createElement("a");
+    a.href = url; a.download = `Diploma Laboratorio A11Y Sesion 2 - ${String(nombre).replace(/[\\/:*?"<>|]/g, "").trim() || "participante"}.pdf`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+  /* Enlaces para compartir: la página del diploma vive junto a index.html */
+  const NOMBRE_CERT = "Laboratorio A11Y · Sesión 2: navegación por teclado y VoiceOver";
+  function enlace(nombre, fecha, base) {
+    const d = new Date(fecha), f = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const u = new URL("diploma.html", base || location.href); u.search = ""; u.hash = "";
+    u.searchParams.set("n", nombre); u.searchParams.set("f", f);
+    return u.toString();
+  }
+  const linkedinCompartir = link => "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(link);
+  const linkedinPerfil = (link, fecha) => { const d = new Date(fecha); return "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=" + encodeURIComponent(NOMBRE_CERT) + "&organizationName=" + encodeURIComponent("Laboratorio A11Y") + "&issueYear=" + d.getFullYear() + "&issueMonth=" + (d.getMonth() + 1) + "&certUrl=" + encodeURIComponent(link); };
+  return { svg, pdf, descargar, enlace, linkedinCompartir, linkedinPerfil, fechaTxt };
+})();
 
 /* ---- 10-motor.js ---- */
 /* ============ Etapas, estado y motor de ejercicios ============ */
@@ -2338,13 +2510,32 @@ function vistaFinal() {
   const total = totalDe(p);
   const podio = sala && sala.ranking ? `<section class="panel d-3"><h2>Podio de la sesión</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px">${rk.slice(0, 3).map(x => `<li><b>${esc(x.nombre)}</b> · ${x.total} puntos</li>`).join("")}</ol></section>` : "";
   const foco = document.activeElement && document.activeElement.id;
+  /* Diploma: fecha del día en que la persona hizo la sesión (cuando entró a la sala) */
+  const fecha = me.creado || (sala && sala.creada) || Date.now();
+  const enlace = DIP.enlace(yo.nombre, fecha);
   V().innerHTML = `<main class="contenedor vista" id="contenido" tabindex="-1"><div class="cab"><div><span class="eyebrow">Fin de la sesión</span><h1>Tu resultado final</h1></div></div>
     <div class="grilla">
       <section class="panel d-4 final-yo">${avatarImg(yo.avatar, 56)}<b>${esc(yo.nombre)}</b><span class="puesto">Puesto ${pos || "–"} de ${rk.length || 1}</span><span class="nota">${total} de 100 puntos<br>El puesto se actualiza mientras los demás terminan</span></section>
       <section class="panel ${podio ? "d-5" : "d-8"}"><h2>Puntaje por etapa</h2><div class="tabla-wrap"><table class="lab-tabla"><thead><tr><th scope="col">Etapa</th><th scope="col" class="num">Puntos</th></tr></thead><tbody>${ETAPAS.map(e => `<tr><td>${e.nombre}</td><td class="num">${etapaPts(p, e.n)} de ${e.max}</td></tr>`).join("")}<tr class="total"><td>Total</td><td class="num">${total} de 100</td></tr></tbody></table></div></section>
-      ${podio}</div></main>`;
+      ${podio}
+      <section class="panel diploma" aria-labelledby="dip-tit">
+        <div class="dip-mini" aria-hidden="true">${DIP.svg(yo.nombre, fecha, { titulo: false })}</div>
+        <div class="dip-info">
+          <h2 id="dip-tit">Tu diploma</h2>
+          <p>Completaste la Sesión 2. Descárgalo o compártelo en LinkedIn.</p>
+          <div class="dip-acciones">
+            <button type="button" class="lab-btn lab-btn--principal" id="dip-pdf">${DESCARGA}Descargar diploma (PDF)</button>
+            <a class="lab-btn lab-btn--secundario" id="dip-li" href="${esc(DIP.linkedinCompartir(enlace))}" target="_blank" rel="noopener">Compartir en LinkedIn${EXTERNO}<span class="vh"> (se abre en una pestaña nueva)</span></a>
+          </div>
+          <a class="dip-perfil" id="dip-perfil" href="${esc(DIP.linkedinPerfil(enlace, fecha))}" target="_blank" rel="noopener">Agregar a mi perfil de LinkedIn${EXTERNO}<span class="vh"> (se abre en una pestaña nueva)</span></a>
+          <p class="nota" aria-hidden="true">Los enlaces de LinkedIn se abren en una pestaña nueva.</p>
+        </div>
+      </section></div></main>`;
+  $("#dip-pdf").addEventListener("click", () => DIP.descargar(yo.nombre, fecha));
   if (foco && $("#" + foco)) $("#" + foco).focus();
 }
+const DESCARGA = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+const EXTERNO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
 
 function claveVista() {
   if (!yo) return "inicio";
