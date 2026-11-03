@@ -728,7 +728,7 @@ select.input { background: var(--fondo); }
 .res-pie { display: flex; justify-content: flex-end; margin-top: 8px; }
 .res-pie .lab-btn--principal { min-width: 240px; }
 
-/* Diploma en "Tu resultado final" */
+/* Constancia de participación en "Tu resultado final" */
 .panel.diploma { display: flex; flex-wrap: wrap; gap: 32px; align-items: center; }
 .dip-mini { flex: 0 0 352px; max-width: 100%; border: 1px solid var(--borde-suave); border-radius: 8px; overflow: hidden; }
 .dip-info { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
@@ -1078,13 +1078,13 @@ function editorAvatar(cont, inicial, alCambiar) {
 }
 
 /* ---- 05-diploma.js ---- */
-/* ---- Diploma de la sesión ----
+/* ---- Constancia de participación de la sesión ----
    Un mismo diseño sirve para verlo (SVG con texto real) y para descargarlo (PDF con texto real, Helvetica).
    Medidas en px de un lienzo de 1600 × 1131 (proporción A4 horizontal). */
 const DIP = (() => {
   const C = { F: "#141915", A: "#4DD13C", AC: "#BDF4B3", AO: "#1C3A1A", VF: "#2E2140", VT: "#E4D2FF", TL: "#0E6A6A", W: "#FFFFFF", INK: "#16202B", GR: "#55606E", TX: "#3A4450" };
   const S = 118, AN = 1600, AL = 1131, X0 = 3 * S + 96;
-  const LINEAS = ["Por completar la Sesión 2 del Laboratorio A11Y: recorrió y probó", "productos digitales solo con el teclado y con VoiceOver, como lo", "hacen las personas que no usan el mouse o no ven la pantalla."];
+  const LINEAS = ["Por participar en la Sesión 2 del Laboratorio A11Y: recorrió y probó", "productos digitales solo con el teclado y con VoiceOver, como lo", "hacen las personas que no usan el mouse o no ven la pantalla."];
   /* Bloques de la columna izquierda, 3 por fila: [tipo, fondo, color, extra] */
   const T = [
     ["sq", "A"], ["sq", "W"], ["st", "VT", "W"],
@@ -1132,8 +1132,9 @@ const DIP = (() => {
     s += `</g><circle cx="${xd + S / 2}" cy="${AL - S / 2}" r="${S / 2}" fill="${C.F}"/>`;
     const dec = `<g aria-hidden="true">${s}</g>`;
     const X = X0;
-    let txt = `<text x="${X}" y="300" font-size="104" font-weight="600" letter-spacing="4" fill="${C.INK}">CERTIFICADO</text>`
-      + `<text x="${X}" y="352" font-size="30" font-weight="500" letter-spacing="2" fill="${C.INK}">LABORATORIO A11Y · SESIÓN 2</text>`;
+    let txt = `<text x="${X}" y="262" font-size="104" font-weight="600" letter-spacing="4" fill="${C.INK}">CONSTANCIA</text>`
+      + `<text x="${X}" y="330" font-size="50" font-weight="600" letter-spacing="3" fill="${C.INK}">DE PARTICIPACIÓN</text>`
+      + `<text x="${X}" y="388" font-size="30" font-weight="500" letter-spacing="2" fill="${C.INK}">LABORATORIO A11Y · SESIÓN 2</text>`;
     { const n = generico ? "Participantes de la Sesión 2" : nombre;
       txt += `<text x="${X}" y="494" font-size="26" font-weight="500" letter-spacing="1.3" fill="${C.GR}">SE OTORGA A:</text>`
         + `<text x="${X}" y="580" font-size="${tamNombre(n).toFixed(1)}" font-weight="600" fill="${C.INK}">${e(n)}</text>`;
@@ -1141,12 +1142,13 @@ const DIP = (() => {
     txt += `<rect x="${X}" y="616" width="120" height="6" rx="3" fill="${C.A}" aria-hidden="true"/>`
       + LINEAS.map((l, i) => `<text x="${X}" y="${676 + i * 38}" font-size="26" fill="${C.TX}">${e(l)}</text>`).join("");
     if (!generico) txt += `<text x="${X}" y="878" font-size="26" font-weight="500" fill="${C.TL}">Fecha:</text><text x="${X}" y="916" font-size="28" font-weight="700" fill="${C.INK}">${fechaTxt(fecha)}</text>`;
-    const nom = generico ? "Certificado del Laboratorio A11Y, Sesión 2" : `Certificado del Laboratorio A11Y, Sesión 2, otorgado a ${nombre} el ${fechaTxt(fecha)}`;
+    const nom = generico ? "Constancia de participación del Laboratorio A11Y, Sesión 2" : `Constancia de participación del Laboratorio A11Y, Sesión 2, otorgada a ${nombre} el ${fechaTxt(fecha)}`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${AN} ${AL}" role="img" aria-label="${e(nom)}" style="display:block;width:100%;height:auto;background:#FFFFFF;font-family:Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">${titulo ? `<title>${e(nom)}</title>` : ""}<rect width="${AN}" height="${AL}" fill="#FFFFFF"/>${dec}<g aria-hidden="true">${txt}</g></svg>`;
   }
 
   /* ---------- PDF (texto real con Helvetica, formas vectoriales) ---------- */
-  function pdf(nombre, fecha) {
+  function pdf(nombre, fecha, { generico = false } = {}) {
+    if (generico) nombre = "Participantes de la Sesión 2";
     const PW = 842, PH = 595, k = PW / AN;
     let tecla = null;
     const X = v => (v * k).toFixed(2), Y = v => (PH - v * k).toFixed(2);
@@ -1187,17 +1189,17 @@ const DIP = (() => {
       o += `BT /${negrita ? "F2" : "F1"} ${(px * k).toFixed(2)} Tf ${tc ? (tc * k).toFixed(2) + " Tc " : ""}${rgb(c)} rg ${X(x)} ${Y(y)} Td (${b}) Tj ET\n`;
     }
     const x0 = X0;
-    texto("CERTIFICADO", x0, 300, 104, true, "INK", 4);
-    texto("LABORATORIO A11Y · SESIÓN 2", x0, 352, 30, false, "INK", 2);
+    texto("CONSTANCIA", x0, 262, 104, true, "INK", 4);
+    texto("DE PARTICIPACIÓN", x0, 330, 50, true, "INK", 3);
+    texto("LABORATORIO A11Y · SESIÓN 2", x0, 388, 30, false, "INK", 2);
     texto("SE OTORGA A:", x0, 494, 26, false, "GR", 1.3);
     texto(nombre, x0, 580, tamNombre(nombre), true, "INK");
     rect(x0, 616, 120, 6, "A");
     LINEAS.forEach((l, i) => texto(l, x0, 676 + i * 38, 26, false, "TX"));
-    texto("Fecha:", x0, 878, 26, false, "TL");
-    texto(fechaTxt(fecha), x0, 916, 28, true, "INK");
+    if (!generico) { texto("Fecha:", x0, 878, 26, false, "TL"); texto(fechaTxt(fecha), x0, 916, 28, true, "INK"); }
     if (tecla) texto("Tab", tecla[0], tecla[1], 26, true, "INK");
     /* Ensamblar el PDF */
-    const tit = `Certificado del Laboratorio A11Y, Sesión 2 – ${nombre}`;
+    const tit = generico ? "Constancia de participación del Laboratorio A11Y, Sesión 2" : `Constancia de participación del Laboratorio A11Y, Sesión 2 – ${nombre}`;
     /* Texto de los metadatos en UTF-16BE, para que el título se vea bien con tildes y guiones */
     const pstr = t => "<FEFF" + [...t].map(ch => { const u = ch.codePointAt(0); const h = x => x.toString(16).padStart(4, "0"); if (u > 0xFFFF) { const v = u - 0x10000; return h(0xD800 + (v >> 10)) + h(0xDC00 + (v & 1023)); } return h(u); }).join("").toUpperCase() + ">";
     const objs = [
@@ -1220,15 +1222,15 @@ const DIP = (() => {
   function descargar(nombre, fecha) {
     const url = URL.createObjectURL(pdf(nombre, fecha));
     const a = document.createElement("a");
-    a.href = url; a.download = `Diploma Laboratorio A11Y Sesion 2 - ${String(nombre).replace(/[\\/:*?"<>|]/g, "").trim() || "participante"}.pdf`;
+    a.href = url; a.download = `Constancia de participacion Laboratorio A11Y Sesion 2 - ${String(nombre).replace(/[\\/:*?"<>|]/g, "").trim() || "participante"}.pdf`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 4000);
   }
-  /* Enlaces para compartir: la página del diploma vive junto a index.html */
-  const NOMBRE_CERT = "Laboratorio A11Y · Sesión 2: navegación por teclado y VoiceOver";
+  /* Enlaces para compartir: la página de la constancia vive junto a index.html */
+  const NOMBRE_CERT = "Constancia de participación · Laboratorio A11Y · Sesión 2";
   function enlace(nombre, fecha, base) {
     const d = new Date(fecha), f = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    const u = new URL("diploma.html", base || location.href); u.search = ""; u.hash = "";
+    const u = new URL("constancia.html", base || location.href); u.search = ""; u.hash = "";
     u.searchParams.set("n", nombre); u.searchParams.set("f", f);
     return u.toString();
   }
@@ -2510,7 +2512,7 @@ function vistaFinal() {
   const total = totalDe(p);
   const podio = sala && sala.ranking ? `<section class="panel d-3"><h2>Podio de la sesión</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px">${rk.slice(0, 3).map(x => `<li><b>${esc(x.nombre)}</b> · ${x.total} puntos</li>`).join("")}</ol></section>` : "";
   const foco = document.activeElement && document.activeElement.id;
-  /* Diploma: fecha del día en que la persona hizo la sesión (cuando entró a la sala) */
+  /* Constancia de participación: fecha del día en que la persona hizo la sesión (cuando entró a la sala) */
   const fecha = me.creado || (sala && sala.creada) || Date.now();
   const enlace = DIP.enlace(yo.nombre, fecha);
   V().innerHTML = `<main class="contenedor vista" id="contenido" tabindex="-1"><div class="cab"><div><span class="eyebrow">Fin de la sesión</span><h1>Tu resultado final</h1></div></div>
@@ -2521,10 +2523,10 @@ function vistaFinal() {
       <section class="panel diploma" aria-labelledby="dip-tit">
         <div class="dip-mini" aria-hidden="true">${DIP.svg(yo.nombre, fecha, { titulo: false })}</div>
         <div class="dip-info">
-          <h2 id="dip-tit">Tu diploma</h2>
-          <p>Completaste la Sesión 2. Descárgalo o compártelo en LinkedIn.</p>
+          <h2 id="dip-tit">Tu constancia de participación</h2>
+          <p>Participaste en la Sesión 2. Descárgala o compártela en LinkedIn.</p>
           <div class="dip-acciones">
-            <button type="button" class="lab-btn lab-btn--principal" id="dip-pdf">${DESCARGA}Descargar diploma (PDF)</button>
+            <button type="button" class="lab-btn lab-btn--principal" id="dip-pdf">${DESCARGA}Descargar constancia (PDF)</button>
             <a class="lab-btn lab-btn--secundario" id="dip-li" href="${esc(DIP.linkedinCompartir(enlace))}" target="_blank" rel="noopener">Compartir en LinkedIn${EXTERNO}<span class="vh"> (se abre en una pestaña nueva)</span></a>
           </div>
           <a class="dip-perfil" id="dip-perfil" href="${esc(DIP.linkedinPerfil(enlace, fecha))}" target="_blank" rel="noopener">Agregar a mi perfil de LinkedIn${EXTERNO}<span class="vh"> (se abre en una pestaña nueva)</span></a>
